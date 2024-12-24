@@ -5,6 +5,7 @@
 In no way am I profiting off of this addon or any sounds / assets not made by.
 
 ## SOUND CREDITS:
-[^1]: Firing Sounds for "Slabshot" by Riot Games.
 
-[^2]: Reload sound / "reloadonce.mp3" by Terraria Calamity.
+Firing Sounds for "Slabshot" by Riot Games.
+
+Reload sound / "reloadonce.mp3" by Terraria Calamity.
