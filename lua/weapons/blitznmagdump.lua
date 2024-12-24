@@ -1,7 +1,14 @@
+util.PrecacheSound("npc/antlion_guard/near_foot_light2.wav")
+util.PrecacheSound("npc/antlion_guard/foot_light1.wav")
+util.PrecacheSound("tray_sounds/reloadonce.mp3")
+
 SWEP.PrintName = "Blitz & MagDump"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = ""
 SWEP.Category = "Artificial Weaponry"
+
+SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
+SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
@@ -12,8 +19,8 @@ SWEP.DrawAmmo = true
 
 SWEP.UseHands = false
 SWEP.HoldType = "ar2"
-SWEP.Slot = 1
-SWEP.BobScale = 1.15
+SWEP.Slot = 3
+
 
 SWEP.Primary.ClipSize = 45
 SWEP.Primary.DefaultClip = 45
@@ -27,6 +34,8 @@ SWEP.Secondary.Automatic	= true
 SWEP.Secondary.Ammo		= "none"
 
 local FirRat = 0.095
+
+local FirTracr = "AR2Tracer"
 
 function SWEP:PrimaryAttack()
     if self:Clip1() <= 0 then return end
@@ -48,7 +57,7 @@ function SWEP:PrimaryAttack()
             ["Src"] = ownerpos + Vector(0,0,0),
             ["Dir"] = forward,
             ["Spread"] = Vector( 0.035, .035),
-            ["TracerName"] = Trcr,
+            ["TracerName"] = FirTracr,
             ["Num"] = 1,
             ["Damage"] = 15,
             ["Attacker"] = owner,
@@ -64,8 +73,6 @@ function SWEP:SecondaryAttack()
     self:TakePrimaryAmmo( 1 )
 
     local owner = self:GetOwner()
-    local ownerpos = owner:GetShootPos()
-    local forward = owner:GetAimVector()
 
     local SFireRate = FirRat - 0.045
 
@@ -76,10 +83,10 @@ function SWEP:SecondaryAttack()
     owner:LagCompensation( true )
 
         self:FireBullets({
-            ["Src"] = ownerpos,
-            ["Dir"] = forward,
+            ["Src"] = owner:GetShootPos(),
+            ["Dir"] = owner:GetAimVector(),
             ["Spread"] = Vector( 0.055, .055),
-            ["TracerName"] = Trcr,
+            ["TracerName"] = FirTracr,
             ["Num"] = 1,
             ["Damage"] = 15,
             ["Attacker"] = owner,
