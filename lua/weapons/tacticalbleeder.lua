@@ -2,6 +2,7 @@ SWEP.PrintName = "Tactical Bleeder"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Hits return 1 round to the mag, 3 hits cause a powerful shot."
 SWEP.IconOverride = "materials/tactbee/vgui/tacticalbee.png"
+--this coco amazing very nice
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
