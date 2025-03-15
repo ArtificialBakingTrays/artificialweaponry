@@ -107,14 +107,6 @@ function SWEP:Think()
 	end
 end
 
-function SWEP:HUDShouldDraw()
-	if self.EnDis == true then
-		return false
-	else
-		return true
-	end
-end
-
 local function drawCircle(x, y, sx, sy, itr)
 	for i = 0, (itr - 1) do
 	local delta = (i / itr) * (math.pi * 2)
@@ -158,8 +150,6 @@ function SWEP:DrawHUD()
 --Attempting to draw the hud for scoping in
 	local scope = surface.GetTextureID("vgui/hud/xbox_reticle")
 
-	local corner = surface.GetTextureID("vgui/servers/icon_secure_deny")
-
 	if self.EnDis == true then
 		local w = ScrW() / 2
 		local h = ScrH() / 2
@@ -169,9 +159,5 @@ function SWEP:DrawHUD()
 
 		surface.DrawTexturedRectRotated(w, h, w / 4, w / 4, 0)
 
-		surface.SetTexture(corner)
-		surface.SetDrawColor(255, 255, 255, 255)
-
-		surface.DrawTexturedRectRotated(w, h, w, h, 0)
 	end
 end

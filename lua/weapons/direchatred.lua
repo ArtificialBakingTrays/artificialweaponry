@@ -24,7 +24,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
 function SWEP:Initialize()
-    self.ROF = 0.1
+    self.ROF = 0.085
     self.Pitch = 60
     self.Spred = 0.025
     self.Dmg = 12
@@ -36,7 +36,7 @@ function SWEP:Reload()
             self:DefaultReload( ACT_VM_RELOAD )
              self:EmitSound("npc/manhack/gib.wav", 100 )
 
-        self.ROF = 0.1
+        self.ROF = 0.085
         self.Pitch = 60
         self.Spred = 0.025
         self.Dmg = 12

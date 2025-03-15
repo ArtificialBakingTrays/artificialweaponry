@@ -1,0 +1,51 @@
+SWEP.PrintName = "Compacted Ice Chucker"
+SWEP.Author	= "ArtificialBakingTrays"
+SWEP.Instructions = "Projectile Based Shotgun, Benefits from GLACIER_ORBS"
+SWEP.Category = "Artificial Weaponry"
+
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
+SWEP.DrawCrosshair = false
+SWEP.ViewModel	= "models/weapons/c_shotgun.mdl"
+SWEP.WorldModel	= "models/weapons/w_shotgun.mdl"
+SWEP.DrawAmmo = true
+SWEP.UseHands = true
+SWEP.HoldType = "shotgun"
+SWEP.Slot = 1
+SWEP.BobScale = 1.15
+
+SWEP.Primary.ClipSize = 25
+SWEP.Primary.DefaultClip = 25
+SWEP.Primary.Automatic	= true
+SWEP.Primary.Ammo = "buckshot"
+SWEP.Primary.Force = 500
+
+SWEP.Secondary.ClipSize		= -1
+SWEP.Secondary.DefaultClip	= -1
+SWEP.Secondary.Automatic	= false
+SWEP.Secondary.Ammo		= "none"
+
+local pitch = 95
+
+function SWEP:PrimaryAttack()
+    if self:Clip1() <= 0 then return end -- No Shoot
+    self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+    self:TakePrimaryAmmo( 5 )
+
+    local owner = self:GetOwner()
+    local Ownerpos = owner:GetShootPos()
+    local Forwar = owner:GetAimVector()
+
+    self:SetNextPrimaryFire( CurTime() + .33 )
+
+    self:EmitSound("tray_sounds/glacialchuck.mp3", 100, math.random( pitch - 10, pitch ), 15, 1 )
+    self:EmitSound("npc/antlion/foot2.wav", 100, math.random( pitch + 10, pitch + 20), 7, 6 )
+end
+
+function SWEP:Reload()
+    if ( not self:HasAmmo() ) or ( CurTime() < self:GetNextPrimaryFire() ) then return end
+    if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
+        self:DefaultReload( ACT_VM_RELOAD )
+        self:EmitSound("tray_sounds/ice_reload.mp3", 100, 150 )
+    end
+end
