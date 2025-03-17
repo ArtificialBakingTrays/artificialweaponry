@@ -2,16 +2,19 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+-- THANK YOU LOKA FOR HELPING ME PORT THIS NIGHTMARE FROM THE SWEP CODE
+
 -- Server-side initialization function for the Entity
 function ENT:Initialize()
-	self:SetModel("models/hunter/plates/plate.mdl")
+	self:SetModel("models/gibs/shield_scanner_gib4.mdl")
+	self:SetModelScale(0.25)
 	self:SetMaterial("model_color")
 	self:SetColor(Color(35, 255, 12))
 
 	self.IsTraysProjectile = true
 	self.IsAvailable = true
 
-	self:PhysicsInit( SOLID_VPHYSICS ) -- Initializes physics for the Entity, making it solid and interactable.
+	self:PhysicsInitSphere(5, SOLID_VPHYSICS ) -- Initializes physics for the Entity, making it solid and interactable.
 	self:SetMoveType( MOVETYPE_VPHYSICS ) -- Sets how the Entity moves, using physics.
 	self:SetSolid( SOLID_VPHYSICS ) -- Makes the Entity solid, allowing for collisions.
 	local phys = self:GetPhysicsObject() -- Retrieves the physics object of the Entity.
@@ -23,11 +26,11 @@ function ENT:Initialize()
 	end
 
 	phys:SetBuoyancyRatio(0)
-	phys:SetMass(250)
+	phys:SetMass(5)
 
 	phys:EnableGravity(false)
 
-	util.SpriteTrail(self, 0, Color(35, 255, 12), false, 0.2, 0, 0.2, 1, "trails/smoke")
+	self.trailObj = util.SpriteTrail(self, 0, Color(35, 255, 12), false, 0.2, 0, 0.2, 1, "trails/smoke")
 
 	phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG) --Thank you zynx for superball fix :pray:
 
@@ -48,7 +51,10 @@ function ENT:PhysicsCollide(data)
 
 	if (self.NextHit or 0) > CurTime() then return end
 
-	if not IsValid(enthit) then return end
+	if not IsValid(enthit) then
+		if self.HadApplied then self:Remove() end
+		return
+	end
 
 	if enthit == self:GetOwner() then return end
 
@@ -82,5 +88,11 @@ function ENT:Think()
 		return
 	end
 
+	if self.NoDrag then return end
 	phys:ApplyForceCenter( -phys:GetVelocity() * dt * phys:GetMass() * 70 )
+end
+
+function ENT:BugTrailSize(startSize, endSize)
+	self.trailObj:SetKeyValue("startwidth", startSize)
+	self.trailObj:SetKeyValue("endwidth", endSize)
 end

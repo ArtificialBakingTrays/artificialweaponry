@@ -1,6 +1,14 @@
 include("shared.lua")
 
--- Client-side draw function for the Entity
+local spritemat = Material("sprites/light_glow02_add")
+local ColorGreen = Color(35, 255, 12)
+
 function ENT:Draw()
-    self:DrawModel() -- Draws the model of the Entity. This function is called every frame.
+	self:DrawModel()
+	render.PushFilterMin(TEXFILTER.POINT)
+	render.PushFilterMag(TEXFILTER.POINT)
+		render.SetMaterial(spritemat)
+		render.DrawSprite(self:GetPos(), 32, 32, ColorGreen)
+	render.PopFilterMag()
+	render.PopFilterMin()
 end

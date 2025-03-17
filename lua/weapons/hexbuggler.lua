@@ -39,13 +39,12 @@ SWEP.Primary.Force = 75
 
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
-SWEP.Secondary.Automatic	= true
+SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
 function SWEP:Initialize()
 	self.Pitch = 100
 	self.ROF = 0.125
-	self:EmitSound( "tray_sounds/laser_lockin.mp3", 100, 90, 1, 1 )
 end
 
 
@@ -75,7 +74,42 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+	self:SetNextSecondaryFire( CurTime() + 0.1 )
 
+	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
+	if CLIENT then return end
+
+	local ownerply = self:GetOwner()
+
+	local ownertr = ownerply:GetEyeTrace()
+	local targetpos = ownertr.HitPos
+
+	for k, v in ipairs(ents.GetAll()) do
+		local ent = v
+		if ent:GetClass() ~= "hexbug" then continue end
+		if ent:GetOwner() ~= ownerply then continue end
+		if ent.HadApplied then continue end
+
+		local entphys = ent:GetPhysicsObject()
+
+		if not IsValid(entphys) then continue end
+
+		local entpos = ent:GetPos()
+
+		local vecapply = targetpos - entpos
+
+		vecapply:Normalize()
+
+		vecapply:Mul( entphys:GetMass() * 1000 * 5)
+
+		entphys:ApplyForceCenter(vecapply)
+
+		ent.NoDrag = true
+		ent.HadApplied = true
+
+		ent:BugTrailSize( 4, 0.3 )
+
+	end
 end
 
 function SWEP:Reload()
