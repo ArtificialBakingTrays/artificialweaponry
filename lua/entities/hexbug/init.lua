@@ -20,7 +20,6 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject() -- Retrieves the physics object of the Entity.
 
 	if not phys:IsValid() then
-		print("no work")
 		self:Remove()
 		return
 	end
@@ -52,7 +51,15 @@ function ENT:PhysicsCollide(data)
 	if (self.NextHit or 0) > CurTime() then return end
 
 	if not IsValid(enthit) then
-		if self.HadApplied then self:Remove() end
+		if self.HadApplied then
+			local effectdata = EffectData() --I love copy pasting
+			effectdata:SetOrigin( self:GetPos() )
+			effectdata:SetScale(0.1)
+
+			util.Effect("cball_explode", effectdata, true, true)
+
+			self:Remove()
+		end
 		return
 	end
 

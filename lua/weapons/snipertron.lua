@@ -125,8 +125,7 @@ local function drawCircle(x, y, sx, sy, itr)
 end
 
 local c_Start = Color(255, 255, 255)
-local c_End = Color(255, 0, 78)
-
+local c_plyclr = Color(0, 0, 0)
 
 local function lerpColorVarArg(t, a, b)
 	return Lerp(t, a.r, b.r), Lerp(t, a.g, b.g), Lerp(t, a.b, b.b)
@@ -139,8 +138,11 @@ function SWEP:DrawHUD()
 		delta = math.min(delta, 1)
 	end
 
-	local r, g, b = lerpColorVarArg(delta, c_Start, c_End)
-	surface.SetDrawColor(255, 255, 255, 128)
+	local PlyClr = self:GetOwner():GetWeaponColor()
+	c_plyclr:SetUnpacked(PlyClr[1] * 255, PlyClr[2] * 255, PlyClr[3] * 255, 255)
+
+	local r, g, b = lerpColorVarArg(delta, c_Start, c_plyclr)
+	surface.SetDrawColor(c_plyclr)
 	render.SetColorMaterialIgnoreZ()
 
 	drawCircle(ScrW() * .5, ScrH() * .5, 5.5, 5.5,  24)

@@ -2,14 +2,14 @@ SWEP.PrintName = "Captain BootSector's Cannon"
 SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
 SWEP.Contact 		= "Not Needed"
 SWEP.Instructions	= "Bouncy Cannonball Weapon"
-SWEP.Category 		= "MHNS Exclusives"
+SWEP.Category 		= "Artificial Weaponry"
 
 util.PrecacheSound("physics/metal/metal_barrel_impact_hard7.wav")
 util.PrecacheSound("buttons/lever6.wav")
 util.PrecacheSound("weapons/grenade_launcher1.wav")
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.ViewModel = "models/weapons/c_rpg.mdl"
 SWEP.WorldModel	= "models/weapons/w_rocket_launcher.mdl"
 SWEP.DrawAmmo = true
@@ -35,7 +35,7 @@ function SWEP:PrimaryAttack()
 	--local ownerpos = owner:GetShootPos()
 	--local forward = owner:GetAimVector()
 
-	self:SetNextPrimaryFire( CurTime() + 2.45 )
+	self:SetNextPrimaryFire( CurTime() + 0.45 )
 
 	local pitch = math.random(90, 110)
 
@@ -70,7 +70,16 @@ function SWEP:CannonLaunch()
 	local ownereyes = owner:EyeAngles()
 	local aimvec = owner:GetAimVector()
 
-	ent:SetPos( ownerpos + Vector(0, 0, 10) )
+	local hullSize = 12
+	local tr = util.TraceHull({
+		start = ownerpos,
+		endpos = ownerpos + Vector(0, 0, 10) + aimvec * 16,
+		filter = self:GetOwner(),
+		mins = Vector(-hullSize, -hullSize, -hullSize),
+		maxs = Vector(hullSize, hullSize, hullSize),
+	})
+
+	ent:SetPos( tr.HitPos )
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
 	ent:Spawn()
 	ent:SetOwner( owner )
@@ -111,8 +120,8 @@ function SWEP:CannonLaunch()
 				return
 			end
 
-			data.HitEntity:TakeDamage(50, owner)
-			ent.NextHit = CurTime() + 0.3
+			data.HitEntity:TakeDamage(30, owner)
+			ent.NextHit = CurTime() + 0.1
 		end
 
 	end)

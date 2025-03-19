@@ -39,7 +39,7 @@ function SWEP:PrimaryAttack()
     local owner = self:GetOwner()
     local Ownerpos = owner:GetShootPos()
     local Forwar = owner:GetAimVector()
-    local rof = 0.54
+    local rof = 0.34
     local pitch = math.random(90, 110)
 
     self:SetNextPrimaryFire( CurTime() + rof )

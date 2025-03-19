@@ -32,9 +32,9 @@ function SWEP:PrimaryAttack()
     self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
     self:TakePrimaryAmmo( 5 )
 
-    local owner = self:GetOwner()
-    local Ownerpos = owner:GetShootPos()
-    local Forwar = owner:GetAimVector()
+--    local owner = self:GetOwner()
+--    local Ownerpos = owner:GetShootPos()
+--    local Forwar = owner:GetAimVector()
 
     self:SetNextPrimaryFire( CurTime() + .33 )
 
@@ -45,7 +45,10 @@ end
 function SWEP:Reload()
     if ( not self:HasAmmo() ) or ( CurTime() < self:GetNextPrimaryFire() ) then return end
     if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
-        self:DefaultReload( ACT_VM_RELOAD )
-        self:EmitSound("tray_sounds/ice_reload.mp3", 100, 150 )
+        self:EmitSound("tray_sounds/reload_1.mp3", 100, 150 )
+        local time = 0.7
+        timer.Simple(time, function()
+            self:SetClip1( 25 )
+        end)
     end
 end
