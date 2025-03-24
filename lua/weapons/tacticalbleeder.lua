@@ -58,11 +58,10 @@ function SWEP:PrimaryAttack()
         ["Attacker"] = owner,
         ["Callback"] = function( attacker, tr )
             if SERVER and tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
-                self:SetClip1( math.min( self:Clip1() + 1, 16 ) )
                 self:SetClip2( self:Clip2() + 1 )
-                if self:Clip2() >= 3 then
+                if self:Clip2() >= 2 then
                     local dmg = DamageInfo()
-                    dmg:SetDamage( 100 )
+                    dmg:SetDamage( 50 )
                     dmg:SetAttacker( attacker )
                     dmg:SetInflictor( self )
                     dmg:SetDamageType( DMG_DISSOLVE )

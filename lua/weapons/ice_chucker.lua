@@ -4,7 +4,7 @@ SWEP.Instructions = "Projectile Based Shotgun, Benefits from GLACIER_ORBS"
 SWEP.Category = "Artificial Weaponry"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = false
+SWEP.AdminOnly = true
 SWEP.DrawCrosshair = false
 SWEP.ViewModel	= "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel	= "models/weapons/w_shotgun.mdl"

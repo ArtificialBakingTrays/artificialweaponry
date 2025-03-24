@@ -34,7 +34,7 @@ function SWEP:Reload()
     if ( not self:HasAmmo() ) or ( CurTime() < self:GetNextPrimaryFire() ) then return end
         if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
             self:DefaultReload( ACT_VM_RELOAD )
-             self:EmitSound("npc/manhack/gib.wav", 100 )
+            self:EmitSound("npc/manhack/gib.wav", 100 )
 
         self.ROF = 0.085
         self.Pitch = 60

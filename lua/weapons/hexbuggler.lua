@@ -74,7 +74,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	self:SetNextSecondaryFire( CurTime() + 0.1 )
+	self:SetNextSecondaryFire( CurTime() + 0.7 )
 
 	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
 	if CLIENT then return end
@@ -139,8 +139,8 @@ function SWEP:DeployBugs()
 
 	ent:SetPos( ownerpos + Vector(0, 0, -5) )
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:Spawn()
 	ent:SetOwner( owner )
+	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()
 

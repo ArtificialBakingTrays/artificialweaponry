@@ -2,7 +2,8 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-local MdlColor = Color(160, 160, 255)
+local sparkler = Color(255, 223, 164)
+--local MdlColor = Color(160, 160, 255)
 
 function ENT:Initialize()
 	self:SetModel("models/weapons/w_bugbait.mdl")
@@ -17,7 +18,7 @@ function ENT:Initialize()
 	local ESize = 0
 	local Duration = 0.1
 
-	util.SpriteTrail(self, 0, MdlColor, false, SSize, ESize, Duration, 1, "materials/trails/smoke")
+	util.SpriteTrail(self, 0, sparkler, false, SSize, ESize, Duration, 1, "materials/trails/smoke.vmt")
 
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then

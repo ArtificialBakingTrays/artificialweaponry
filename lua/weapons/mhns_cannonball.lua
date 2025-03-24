@@ -70,19 +70,21 @@ function SWEP:CannonLaunch()
 	local ownereyes = owner:EyeAngles()
 	local aimvec = owner:GetAimVector()
 
-	local hullSize = 12
+	local hullSize = 8
+	local trmins = Vector(-hullSize, -hullSize, -hullSize)
+	local trmax = Vector(hullSize, hullSize, hullSize)
 	local tr = util.TraceHull({
 		start = ownerpos,
-		endpos = ownerpos + Vector(0, 0, 10) + aimvec * 16,
+		endpos = ownerpos + aimvec * 16,
 		filter = self:GetOwner(),
-		mins = Vector(-hullSize, -hullSize, -hullSize),
-		maxs = Vector(hullSize, hullSize, hullSize),
+		mins = trmins,
+		maxs = trmax,
 	})
 
-	ent:SetPos( tr.HitPos )
+	ent:SetPos( tr.HitPos + tr.HitNormal * 8)
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:Spawn()
 	ent:SetOwner( owner )
+	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()
 

@@ -55,7 +55,7 @@ function SWEP:ChargeAttack( charge )
 		Src = owner:GetShootPos(),
 		Dir = owner:GetAimVector(),
 		Spread = Vector( 0, 0 ),
-
+		Attacker = owner,
 		Num = 1,
 		Damage = 40 + charge * 200,
 	}
