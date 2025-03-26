@@ -14,8 +14,8 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 2
 SWEP.Category = "Artificial Weaponry"
 
-SWEP.Primary.ClipSize = 16
-SWEP.Primary.DefaultClip = 16
+SWEP.Primary.ClipSize = 24
+SWEP.Primary.DefaultClip = 24
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Force = 80
@@ -88,6 +88,7 @@ local function drawCircleLine(x, y, sx, sy, itr)
         surface.DrawLine(x1, y1, x2, y2)
     end
 end
+
 function SWEP:DrawHUD()
     surface.SetDrawColor(255, 255, 255, 125)
     render.SetColorMaterialIgnoreZ()
