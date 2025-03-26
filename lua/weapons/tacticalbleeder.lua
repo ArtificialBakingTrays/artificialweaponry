@@ -1,7 +1,7 @@
 SWEP.PrintName = "Tactical Bleeder"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Hits return 1 round to the mag, 3 hits cause a powerful shot."
-SWEP.IconOverride = "materials/tactbee/vgui/tacticalbee.png"
+SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 --this coco amazing very nice
 
 SWEP.Spawnable = true
@@ -25,8 +25,11 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
-function SWEP:Initialize()
-
+function SWEP:Reload()
+    if ( not self:HasAmmo() ) or ( CurTime() < self:GetNextPrimaryFire() ) then return end
+        if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
+            self:DefaultReload( ACT_VM_RELOAD )
+    end
 end
 
 function SWEP:PrimaryAttack()
@@ -36,27 +39,23 @@ function SWEP:PrimaryAttack()
     self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
     self:TakePrimaryAmmo( 1 )
 
-    local owner = self:GetOwner()
-    local Ownerpos = owner:GetShootPos()
-    local Forwar = owner:GetAimVector()
-    local rof = 0.34
-    local pitch = math.random(90, 110)
+    self:SetNextPrimaryFire( CurTime() + 0.34 )
 
-    self:SetNextPrimaryFire( CurTime() + rof )
-
+    local pitch = math.random( 90, 110 )
     self:EmitSound( "npc/manhack/mh_blade_snick1.wav", 75, pitch, 0.7, 1 )
     self:EmitSound( "npc/roller/blade_cut.wav", 75, pitch, 0.7, 6 )
+
+    local owner = self:GetOwner()
     owner:LagCompensation( true )
 
-    self:FireBullets({
-        ["Src"] = Ownerpos,
-        ["Dir"] = Forwar,
-        ["Spread"] = Vector( 0 ),
-        ["TracerName"] = Trcr, -- https://wiki.facepunch.com/gmod/Default_Effects
-        ["Num"] = 1,
-        ["Damage"] = 15,
-        ["Attacker"] = owner,
-        ["Callback"] = function( attacker, tr )
+    owner:FireBullets {
+        Src = owner:GetShootPos(),
+        Dir = owner:GetAimVector(),
+
+        Damage = 15,
+        Attacker = owner,
+
+        Callback = function( attacker, tr )
             if SERVER and tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
                 self:SetClip2( self:Clip2() + 1 )
                 if self:Clip2() >= 2 then
@@ -73,7 +72,8 @@ function SWEP:PrimaryAttack()
                 self:SetClip2( 0 )
             end
         end,
-    })
+    }
+
     owner:LagCompensation( false )
 end
 

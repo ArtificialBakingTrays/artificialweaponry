@@ -9,7 +9,7 @@ function ENT:Initialize()
 	self:SetModel("models/gibs/shield_scanner_gib4.mdl")
 	self:SetModelScale(0.25)
 	self:SetMaterial("model_color")
-	self:SetColor(Color(35, 255, 12))
+	self:SetColor(Color(198, 255, 106))
 
 	self.IsTraysProjectile = true
 	self.IsAvailable = true
@@ -29,15 +29,11 @@ function ENT:Initialize()
 
 	phys:EnableGravity(false)
 
-	self.trailObj = util.SpriteTrail(self, 0, Color(35, 255, 12), false, 0.2, 0, 0.2, 1, "trails/smoke")
+	self.trailObj = util.SpriteTrail(self, 0, Color(166, 255, 106), false, 0.2, 0, 0.2, 1, "trails/smoke")
 
 	phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG) --Thank you zynx for superball fix :pray:
 
-	local Time = 12.5 -- TAKEN FROM CANNOBALL
-	timer.Simple( Time, function()
-		if not IsValid( self ) then return end
-		   	self:Remove() --Eliminate yourself
-	end)
+	self:Fire( "Kill", "", 12.5 )
 
 	if phys:IsValid() then -- Checks if the physics object is valid.
 		phys:Wake() -- Activates the physics object, making the Entity subject to physics (gravity, collisions, etc.).

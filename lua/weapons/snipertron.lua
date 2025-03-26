@@ -2,6 +2,7 @@ SWEP.PrintName = "The Slabshot"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Also known as: The Slopshot, Dexter's own design, a charged sniper rifle that packs an explosive punch."
 SWEP.Category = "Artificial Weaponry"
+SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
@@ -25,15 +26,18 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
-function SWEP:PrimaryAttack()
-	if not IsFirstTimePredicted() then return end
+function SWEP:SetChargeStart( time ) self:SetDTFloat( 0, time ) end
+function SWEP:GetChargeStart() return self:GetDTFloat( 0 ) end
 
+function SWEP:SetScoped( bool ) self:SetDTBool( 0, bool ) end
+function SWEP:GetScoped() return self:GetDTBool( 0 ) end
+
+function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
-	if self.ChargeStart then return end
+	if self:GetChargeStart() ~= 0 then return end
 
 	self:EmitSound( "tray_sounds/chargebegin.mp3", 75, 105 )
-
-	self.ChargeStart = CurTime()
+	self:SetChargeStart( CurTime() )
 end
 
 function SWEP:ChargeAttack( charge )
@@ -51,12 +55,10 @@ function SWEP:ChargeAttack( charge )
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
 
-	self:FireBullets{
+	owner:FireBullets {
 		Src = owner:GetShootPos(),
 		Dir = owner:GetAimVector(),
-		Spread = Vector( 0, 0 ),
 		Attacker = owner,
-		Num = 1,
 		Damage = 40 + charge * 200,
 	}
 
@@ -70,57 +72,51 @@ function SWEP:Reload()
 		self:DefaultReload( ACT_VM_RELOAD )
 		self:EmitSound("tray_sounds/reloadonce.mp3", 100 )
 
-		self.EnDis = false
+		self:SetScoped( false )
 	end
 end
 
 function SWEP:SecondaryAttack()
-	if not IsFirstTimePredicted() then return end
-
-	self.EnDis = not self.EnDis
+	self:SetScoped( not self:GetScoped() )
 end
 
 function SWEP:TranslateFOV( fov )
 	self.LastFOV = fov
 
-	if self.EnDis then
+	if self:GetScoped() then
 		return 25
 	end
 end
 
 function SWEP:AdjustMouseSensitivity()
-	if self.EnDis then
+	if self:GetScoped() then
 		return 25 / self.LastFOV
 	end
 end
 
 function SWEP:Think()
-	if not IsFirstTimePredicted() then return end
+	local start = self:GetChargeStart()
+	if start == 0 then return end
 
-	local start = self.ChargeStart
-	if not start then return end
-
-	local owner = self:GetOwner()
-	if not owner:KeyDown( IN_ATTACK ) then
-		self.ChargeStart = nil
+	if not self:GetOwner():KeyDown( IN_ATTACK ) then
+		self:SetChargeStart( 0 )
 		self:ChargeAttack( CurTime() - start )
 	end
 end
 
 local function drawCircle(x, y, sx, sy, itr)
 	for i = 0, (itr - 1) do
-	local delta = (i / itr) * (math.pi * 2)
+		local delta = (i / itr) * (math.pi * 2)
 
-	local deltaPrev = ((i - 1) / itr) * (math.pi * 2)
+		local deltaPrev = ((i - 1) / itr) * (math.pi * 2)
 
+		local x1 = x + math.cos(delta) * sx
+		local y1 = y + math.sin(delta) * sy
 
-	local x1 = x + math.cos(delta) * sx
-	local y1 = y + math.sin(delta) * sy
+		local x2 = x + math.cos(deltaPrev) * sx
+		local y2 = y + math.sin(deltaPrev) * sy
 
-	local x2 = x + math.cos(deltaPrev) * sx
-	local y2 = y + math.sin(deltaPrev) * sy
-
-	surface.DrawLine(x1, y1, x2, y2)
+		surface.DrawLine(x1, y1, x2, y2)
 	end
 end
 
@@ -131,11 +127,12 @@ local function lerpColorVarArg(t, a, b)
 	return Lerp(t, a.r, b.r), Lerp(t, a.g, b.g), Lerp(t, a.b, b.b)
 end
 
+local scope = surface and surface.GetTextureID("vgui/hud/xbox_reticle")
 function SWEP:DrawHUD()
-	local delta = 0
-	if self.ChargeStart then
-		delta = CurTime() - self.ChargeStart
-		delta = math.min(delta, 1)
+	local delta = self:GetDTFloat( 0 )
+	if delta ~= 0 then
+		delta = CurTime() - delta
+		if delta > 1 then delta = 1 end
 	end
 
 	local PlyClr = self:GetOwner():GetWeaponColor()
@@ -149,10 +146,8 @@ function SWEP:DrawHUD()
 
 	draw.SimpleText("iDELTA; " .. tostring(invDelta), "BudgetLabel", 0, 0, c_White)
 
---Attempting to draw the hud for scoping in
-	local scope = surface.GetTextureID("vgui/hud/xbox_reticle")
-
-	if self.EnDis == true then
+	--Attempting to draw the hud for scoping in
+	if self:GetScoped() then
 		local w = ScrW() / 2
 		local h = ScrH() / 2
 
@@ -160,6 +155,5 @@ function SWEP:DrawHUD()
 		surface.SetDrawColor(r, g, b, 255)
 
 		surface.DrawTexturedRectRotated(w, h, w / 4, w / 4, 0)
-
 	end
 end

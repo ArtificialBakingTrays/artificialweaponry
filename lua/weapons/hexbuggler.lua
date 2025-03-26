@@ -15,6 +15,7 @@ SWEP.PrintName = "Hexbuggler"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Deploy little nano rounds that float in the air with LMB, RMB to track onto a target."
 SWEP.Category = "Artificial Weaponry"
+SWEP.IconOverride = "vgui/weaponvgui/hexbug_generi.png"
 
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
@@ -42,35 +43,28 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
-function SWEP:Initialize()
-	self.Pitch = 100
-	self.ROF = 0.125
-end
-
-
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
 
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
-	if IsFirstTimePredicted() then
-		self.Pitch = self.Pitch + 1
-		self.ROF = self.ROF - 0.0025
-	end
+	-- guesstimating
+	local round = self.Primary.ClipSize - self:Clip1()
+	local pitch = 100 + round
+	local delay = 0.125 - round * 0.0025
+
+	self:SetNextPrimaryFire( CurTime() + delay )
+
+	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, pitch, 1, 1 )
+	self:EmitSound( "physics/cardboard/cardboard_box_impact_bullet4.wav", 100, pitch + 10, 1, 6 )
 
 	local owner = self:GetOwner()
-
-	self:SetNextPrimaryFire( CurTime() + self.ROF )
-
-	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, self.Pitch, 1, 1 )
-	self:EmitSound( "physics/cardboard/cardboard_box_impact_bullet4.wav", 100, self.Pitch + 10, 1, 6 )
-
-	owner:LagCompensation(true)
+	owner:LagCompensation( true )
 
 	self:DeployBugs()
 
-	owner:LagCompensation(false)
+	owner:LagCompensation( false )
 end
 
 function SWEP:SecondaryAttack()
@@ -117,11 +111,8 @@ function SWEP:Reload()
 
 	if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
 		self:DefaultReload( ACT_VM_RELOAD )
-		self:EmitSound("", 100, 100 )
+		self:EmitSound( "", 100, 100 )
 	end
-
-	self.Pitch = 100
-	self.ROF = 0.125
 end
 
 function SWEP:DeployBugs()

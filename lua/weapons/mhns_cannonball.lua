@@ -3,6 +3,7 @@ SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you ha
 SWEP.Contact 		= "Not Needed"
 SWEP.Instructions	= "Bouncy Cannonball Weapon"
 SWEP.Category 		= "Artificial Weaponry"
+SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 util.PrecacheSound("physics/metal/metal_barrel_impact_hard7.wav")
 util.PrecacheSound("buttons/lever6.wav")
@@ -17,9 +18,8 @@ SWEP.UseHands = true
 SWEP.HoldType = "rpg"
 SWEP.Slot = 2
 
-
-SWEP.Primary.ClipSize = -1
-SWEP.Primary.DefaultClip = -1
+SWEP.Primary.ClipSize = 10
+SWEP.Primary.DefaultClip = 10
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 
@@ -29,7 +29,9 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
 function SWEP:PrimaryAttack()
+	if self:Clip1() <= 0 then return end -- No Shoot
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	self:TakePrimaryAmmo( 1 )
 
 	local owner = self:GetOwner()
 	--local ownerpos = owner:GetShootPos()
@@ -51,6 +53,25 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack() end
+
+function SWEP:Reload()
+	if self:GetDTFloat(0) ~= 0 then return end
+	if CurTime() < self:GetNextPrimaryFire() then return end
+	if self:Clip1() == self.Primary.ClipSize then return end
+
+	self:SetDTFloat(0, CurTime() + 1.2)
+	self:SendWeaponAnim(ACT_VM_RELOAD)
+end
+
+function SWEP:Think() --Help from zynx
+	local time = self:GetDTFloat(0)
+	if time == 0 then return end
+
+	if time > CurTime() then return end
+
+	self:SetClip1(10)
+	self:SetDTFloat(0, 0)
+end
 
 function SWEP:CannonLaunch()
 	--ALOT OF THIS SECTION IS BASED ON LOKA CODE. Creds to him for letting me learn from this :D
@@ -149,4 +170,16 @@ function SWEP:CannonLaunch()
 		end --Tempted to remove this water part...
 	end)
 
+end
+
+function SWEP:CustomAmmoDisplay()
+	self.AmmoDisplay = self.AmmoDisplay or {}
+
+	self.AmmoDisplay.Draw = true
+
+	if self.Primary.ClipSize > 0 then
+		self.AmmoDisplay.PrimaryClip = self:Clip1()
+	end
+
+	return self.AmmoDisplay
 end
