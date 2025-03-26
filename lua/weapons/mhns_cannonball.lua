@@ -14,7 +14,7 @@ SWEP.AdminOnly = false
 SWEP.ViewModel = "models/weapons/c_rpg.mdl"
 SWEP.WorldModel	= "models/weapons/w_rocket_launcher.mdl"
 SWEP.DrawAmmo = true
-SWEP.UseHands = true
+SWEP.UseHands = false
 SWEP.HoldType = "rpg"
 SWEP.Slot = 2
 
@@ -61,6 +61,9 @@ function SWEP:Reload()
 
 	self:SetDTFloat(0, CurTime() + 1.2)
 	self:SendWeaponAnim(ACT_VM_RELOAD)
+
+	self:EmitSound("vehicles/tank_readyfire1.wav", 75, 120, .7, 1)
+	self:EmitSound("buttons/lever4.wav", 75, 50, .7, 6)
 end
 
 function SWEP:Think() --Help from zynx
@@ -83,8 +86,8 @@ function SWEP:CannonLaunch()
 
 	--Appearance of Cannon
 	ent:SetModel("models/XQM/Rails/gumball_1.mdl")
-	ent:SetMaterial("models/props_buildings/destroyedbuilldingwall01a")
-	ent:SetColor(Color(41, 41, 41))
+	ent:SetMaterial("models/flesh")
+	ent:SetColor(Color(0, 0, 0))
 
 	local owner = self:GetOwner()
 	local ownerpos = owner:GetShootPos()
@@ -118,7 +121,7 @@ function SWEP:CannonLaunch()
 
 	local Tsize = 35
 
-	util.SpriteTrail(ent, 0, Color(55, 55, 55), false, Tsize, 1, 0.2, 1 / ( Tsize + 1 ) * 0.5, "trails/smoke")
+	util.SpriteTrail(ent, 0, Color(35, 35, 35), false, Tsize, 1, 0.2, 1 / ( Tsize + 1 ) * 0.5, "trails/smoke")
 
 	entphys:EnableGravity(true)
 
@@ -182,4 +185,114 @@ function SWEP:CustomAmmoDisplay()
 	end
 
 	return self.AmmoDisplay
+end--YAARRRGGGHHHH
+
+
+-- ZYNX STUFF HERE
+-- Im so glad i aint the one to do all of this :pray: -Trays
+function SWEP:GetCSModel()
+	local mdl = self.CSModel
+	if not mdl or not mdl:IsValid() then
+		mdl = ClientsideModel( "models/props_phx/cannon.mdl" )
+		mdl:SetNoDraw( true )
+		mdl:SetModelScale( .2 )
+
+		self.CSModel = mdl
+	end
+
+	return mdl
 end
+
+function SWEP:OnRemove()
+	local mdl = self.CSModel
+	if mdl and mdl:IsValid() then
+		mdl:Remove()
+	end
+end
+
+local cannon_vm_pos, cannon_vm_ang = Vector( 0, -9.5, 2 ), Angle( -90, 90, 180 )
+function SWEP:DrawVMCannon( vm )
+	local mdl = self:GetCSModel()
+
+	local index = vm:LookupBone "base"
+	if not index then return end
+
+	local matrix = vm:GetBoneMatrix( index )
+	if not matrix then return end
+
+	local pos, ang = matrix:GetTranslation(), matrix:GetAngles()
+
+	local lpos, lang = LocalToWorld( cannon_vm_pos, cannon_vm_ang, pos, ang )
+	mdl:SetPos( lpos )
+	mdl:SetAngles( lang )
+
+	mdl:SetupBones()
+	mdl:DrawModel()
+end
+
+function SWEP:PreDrawViewModel( vm )
+	self:DrawVMCannon( vm )
+end
+
+local cannon_wm_pos, cannon_wm_ang = Vector(), Angle( 0, 0, 180 )
+function SWEP:DrawWorldModel( flags )
+	if not self:GetOwner():IsValid() then
+		local mdl = self:GetCSModel()
+
+		mdl:SetPos( self:GetPos() )
+		mdl:SetAngles( self:GetAngles() )
+
+		mdl:SetupBones()
+		mdl:DrawModel()
+
+		return
+	end
+
+	self:SetupBones()
+
+	local matrix = self:GetBoneMatrix( 0 )
+	if not matrix then return end
+
+	local mdl = self:GetCSModel()
+	local pos, ang = matrix:GetTranslation(), matrix:GetAngles()
+
+	local lpos, lang = LocalToWorld( cannon_wm_pos, cannon_wm_ang, pos, ang )
+	mdl:SetPos( lpos )
+	mdl:SetAngles( lang )
+
+	mdl:SetupBones()
+	mdl:DrawModel()
+end
+
+--[[
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%-%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@@@@@@@@@%%-----=%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#--##%%@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@@@@@%-----%%%%%#-----@@@@@@@@@@@@@@@@@@@@@@@@@@%#----##%%@@@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@@@%---%@@@@@@@@@@@@%---%@@@@@@@@@@@@@@@@@@@@@@@%%*----=#%%%@@@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%@@@@@@@@@@@---@@@+---------=@@@%--=@@@@@@@@@@@@@@@@@@@@@@%%#------*#%%%@@@@@@@@@@@@@@@@@@@%%%%%
+%%%%%#@@@@@@@@@--%@@---%@@@@@@@%---%@@--=@@@@@@@@@@@@@@@@@@@@@@%%#-------*#%%%%@@@@@@@@@@@@@@@@%%%%%
+%%%%%#@@@@@@@@--%@@--%@@@=----%@@%--%@%--%@@@@@@@@@@@@@@@@@@@%%%%#*---------*##%%%%%%%%@@@@@@@@%%%%%
+%%%%%#@@@@@@@@--@@--#@@%--%@@%--@@%--@@%--@@@@@@@@@@@@@%%%%####**+------------------=***#######%%%%%
+%%%%%#@@@@@@@@-%@@--%@%-#@@@@@@@@@%--@@%--@@@@@@@@@@@@%#---------------------------------------%%%%%
+%%%%%#@@@@@@@@-%@@--@@%-%@@@@@@@@@%--@@%--@@@@@@@@@@@@#%%##########***+---------+*#############%%%%%
+%%%%%#@@@@@@@@--@@--%@@--@@@@@@@@%--%@@%-%@@@@@@@@@@@@@@@@%%%%%%%%%%%##+-------*#%%@@@@@@@@@@@@%%%%%
+%%%%%#@@@@@@@@%-#@%--%@@=--%%%%#---%@@%--@@@@@@@@@@@@@@@@@@@@@%%#--#%%#*------*#%@@@@@@@@@@@@@@%%%%%
+%%%%%#@@@@@@@@@+-%@%---@@@%#----%@@@@%--@@@@@@@@@@@@@@@@@@@@@@%#--+*##*+-----*%%@@@@@@@@@@@@@@@%%%%%
+%%%%%%@@@@@@@@@@+--@@%---%@@@@@@@@@%--%@@@@@@@@@@@@@@@@@@@@@@@%%=-----------#%%@@@@@@@@@@@@@@@@%%%%%
+%%%%%%@@@@@@@@@@@@---%@%+----------%@@@@@@@@@@@@@@@@@@@@@@@@@@@%%#-------+#%%@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@#--=%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%###%%%%@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@%#------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@@@@%%%%####**#####%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@%%##=---------------=##%%%@@@@@@@@@@@@@@@@@@@@@@@%%%=%%@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@%%#----=####%%%%%####----*#%%%@@@@@@@@@@@@@@@@@@%%%##--%%@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@%#---+##%%%%@@@@@@%%%%%##----##%%%@@@@@@@@@@@@%%%%##---*%%@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@%%-*#%%@@@@@@@@@@@@@@@@%%##----###%%%%%%%%%%%%###=---+#%%@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@%%%@@@@@@@@@@@@@@@@@@@@@%%%#+-----*########*------#%%%@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%##*------------+##%%%%@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+]]--
