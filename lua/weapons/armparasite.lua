@@ -2,7 +2,7 @@ SWEP.PrintName = "Parasitical Arm-Implants"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = ""
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/parasite_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

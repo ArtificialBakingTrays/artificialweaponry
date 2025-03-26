@@ -2,7 +2,7 @@ SWEP.PrintName = "Compacted Ice Chucker"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Projectile Based Shotgun, Benefits from GLACIER_ORBS"
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/compacted_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true

@@ -2,7 +2,7 @@ SWEP.PrintName = "Directed Animosity"
 SWEP.Author	= "ArtificialBakingTrays" -- Shows up while hovering
 SWEP.Instructions = "Slow fire rate, Increases Rate of Fire as you hold the trigger. Returns rounds on kills."
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/direcanim_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/directed_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

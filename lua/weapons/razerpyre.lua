@@ -1,6 +1,6 @@
-SWEP.PrintName = "EdgeLighter"
+SWEP.PrintName = "Meatgrinder"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = ""
+SWEP.Instructions = "Groovy"
 SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 

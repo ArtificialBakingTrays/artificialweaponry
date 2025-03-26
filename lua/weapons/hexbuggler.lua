@@ -1,16 +1,3 @@
---util.PrecacheSound("")
-
-
---DO NOT REMOVE THESE CREDITS
---[=====================]
-
---Coded by ArtificialBakingTrays
-
---Helpers:
-	--Lokachop <3
-
---[=====================]
-
 SWEP.PrintName = "Hexbuggler"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Deploy little nano rounds that float in the air with LMB, RMB to track onto a target."

@@ -3,7 +3,7 @@ SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you ha
 SWEP.Contact 		= "Not Needed"
 SWEP.Instructions	= "Bouncy Cannonball Weapon"
 SWEP.Category 		= "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/cannon_generi.png"
 
 util.PrecacheSound("physics/metal/metal_barrel_impact_hard7.wav")
 util.PrecacheSound("buttons/lever6.wav")
