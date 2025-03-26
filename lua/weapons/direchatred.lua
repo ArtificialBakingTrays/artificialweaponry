@@ -45,7 +45,7 @@ function SWEP:PrimaryAttack()
 
 	local pitch = 60 + round
 	local delay = math.max( 0.085 - round * .0004, .001 )
-	local spred = math.max( 0.025 + 0.0001, 0.01 )
+	local spred = math.max( 0.025 + round * 0.0001, 0.01 )
 
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
@@ -62,6 +62,10 @@ function SWEP:PrimaryAttack()
 		Spread = Vector( spred, spred ),
 		Damage = ( self:Clip1() <= 20 ) and 16 or 12,
 		Attacker = owner,
+
+		Callback = function( att, tr, dmg )
+			dmg:SetInflictor( self )
+		end
 	}
 
 	owner:LagCompensation( false )
@@ -105,10 +109,11 @@ function SWEP:DrawHUD()
 	surface.SetDrawColor(255, delta * 255, delta * 255, 128)
 	render.SetColorMaterialIgnoreZ()
 
-	local spread = self.Spred * 20
+	local round = self:Clip2()
+	local spred = math.max( 0.025 + round * 0.0001, 0.01 ) * 20
 
 	-- draws the line circle
-	drawCircleLine(ScrW() * .5, ScrH() * .5, 28 * spread, 28 * spread,  24)
+	drawCircleLine(ScrW() * .5, ScrH() * .5, 28 * spred, 28 * spred,  24)
 
 	draw.SimpleText("iDELTA; " .. tostring(invDelta), "BudgetLabel", 0, 0, c_White)
 end
