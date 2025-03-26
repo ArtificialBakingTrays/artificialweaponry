@@ -50,7 +50,7 @@ function SWEP:PrimaryAttack()
 		Callback = function( attacker, tr, dmg )
 			if tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
 				if SERVER then
-					local newarmor = owner:Armor() + math.floor(dmg:GetDamage() / 4)
+					local newarmor = owner:Armor() + math.floor(dmg:GetDamage() / 3)
 					if newarmor > 100 then newarmor = 100 end
 
 					util.BlastDamage( dmg:GetInflictor(), owner, tr.HitPos, 95, dmg:GetDamage() / 4)
