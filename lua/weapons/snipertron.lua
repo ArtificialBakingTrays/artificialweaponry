@@ -59,7 +59,7 @@ function SWEP:ChargeAttack( charge )
 		Src = owner:GetShootPos(),
 		Dir = owner:GetAimVector(),
 		Attacker = owner,
-		Damage = 20 + charge * 100,
+		Damage = 30 + charge * 110,
 	}
 
 	owner:LagCompensation( false )

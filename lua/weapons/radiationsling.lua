@@ -104,3 +104,20 @@ function SWEP:SpawnProj()
 	entphys:ApplyForceCenter( aimvec )
 
 end
+
+local slingreticle = Material( "vgui/hud/sling_reticle.png", "noclamp smooth" )
+local color = Color(226, 255, 121, 114)
+--Note to self. wait for fucking loka next time before trying rendering bullshit
+function SWEP:DrawHUD()
+	render.SetColorMaterialIgnoreZ()
+	surface.SetMaterial( slingreticle )
+	surface.SetDrawColor( color )
+	local w = ScrW() / 2
+	local h = ScrH() / 2
+
+	local scale = 256
+	local length = scale / 1.5
+
+	surface.DrawTexturedRectRotated(w + 5, h + 30, length, scale, 0)
+end
+--Small crashout on my part- it wasnt even that hard in the end-
