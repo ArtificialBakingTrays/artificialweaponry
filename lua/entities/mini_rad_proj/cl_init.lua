@@ -1,7 +1,7 @@
 include("shared.lua")
 
 local spritemat = Material("sprites/gmdm_pickups/light")
-local ColorSprite = Color(160, 160, 255)
+local ColorSprite =  Color(234, 255, 160)
 
 function ENT:Draw()
 	self:DrawModel()

@@ -6,5 +6,5 @@ ENT.Author = "ArtificialBakingTrays" -- The author's name for this Entity.
 ENT.Category = "Artificial Ents" -- The category for this Entity in the spawn menu.
 ENT.Contact = "" -- The contact details for the author of this Entity.
 ENT.Purpose = "Hexbug projectile" -- The purpose of this Entity.
-ENT.Spawnable = true -- Specifies whether this Entity can be spawned by players in the spawn menu.
+ENT.Spawnable = false -- Specifies whether this Entity can be spawned by players in the spawn menu.
 ENT.AdminOnly = false

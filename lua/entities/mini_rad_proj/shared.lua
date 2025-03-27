@@ -1,8 +1,8 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
-ENT.PrintName = "Compact Ice Projectile"
+ENT.PrintName = "Mini Rad Projectile"
 ENT.Author = "ArtificialBakingTrays"
 ENT.Category = "Artificial Ents"
 ENT.Contact = "ArtificialBakingTrays"
-ENT.Purpose = "Projectile for Compacted Ice Chucker"
-ENT.Spawnable = true
+ENT.Purpose = "Smaller Rad Projectile"
+ENT.Spawnable = false

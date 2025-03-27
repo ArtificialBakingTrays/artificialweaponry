@@ -18,8 +18,8 @@ SWEP.UseHands = false
 SWEP.HoldType = "rpg"
 SWEP.Slot = 2
 
-SWEP.Primary.ClipSize = 10
-SWEP.Primary.DefaultClip = 10
+SWEP.Primary.ClipSize = 5
+SWEP.Primary.DefaultClip = 5
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 
@@ -59,7 +59,7 @@ function SWEP:Reload()
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
 
-	self:SetDTFloat(0, CurTime() + 1.2)
+	self:SetDTFloat(0, CurTime() + 1.6)
 	self:SendWeaponAnim(ACT_VM_RELOAD)
 
 	self:EmitSound("vehicles/tank_readyfire1.wav", 75, 120, .7, 1)
@@ -72,7 +72,7 @@ function SWEP:Think() --Help from zynx
 
 	if time > CurTime() then return end
 
-	self:SetClip1(10)
+	self:SetClip1(5)
 	self:SetDTFloat(0, 0)
 end
 

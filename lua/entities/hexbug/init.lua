@@ -70,7 +70,7 @@ function ENT:PhysicsCollide(data)
 
 		self:Remove() --Eliminate yourself
 
-		data.HitEntity:TakeDamage(12, self:GetOwner())
+		data.HitEntity:TakeDamage(14, self:GetOwner())
 		self.NextHit = CurTime() + 0.3
 		self:EmitSound( "tray_sounds/hexhit.mp3", 100, math.random(100, 105), 1, 6 )
 
