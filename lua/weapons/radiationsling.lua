@@ -69,7 +69,7 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire( CurTime() + delay )
 
 	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
-	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 105, 110 ), 1, 6 )
+	--self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 105, 110 ), 1, 6 )
 
 	owner:LagCompensation( true )
 
@@ -100,13 +100,13 @@ function SWEP:SpawnProj()
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	aimvec:Mul( 3500 * entphys:GetMass() )
+	aimvec:Mul( 3000 * entphys:GetMass() )
 	entphys:ApplyForceCenter( aimvec )
 
 end
 
 local slingreticle = Material( "vgui/hud/sling_reticle.png", "noclamp smooth" )
-local color = Color(226, 255, 121, 114)
+local color = Color(226, 255, 121, 255)
 --Note to self. wait for fucking loka next time before trying rendering bullshit
 function SWEP:DrawHUD()
 	render.SetColorMaterialIgnoreZ()
@@ -118,6 +118,6 @@ function SWEP:DrawHUD()
 	local scale = 256
 	local length = scale / 1.5
 
-	surface.DrawTexturedRectRotated(w + 5, h + 30, length, scale, 0)
+	surface.DrawTexturedRect(w - length / 2 + 5, h - scale / 2 + 30, length, scale)
 end
 --Small crashout on my part- it wasnt even that hard in the end-
