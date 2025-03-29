@@ -6,8 +6,8 @@ SWEP.IconOverride = "vgui/weaponvgui/directed_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
-SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
-SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
+SWEP.ViewModel	= "models/weapons/c_irifle.mdl"
+SWEP.WorldModel	= "models/weapons/w_irifle.mdl"
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"

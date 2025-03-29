@@ -2,7 +2,7 @@ SWEP.PrintName = "The Slabshot"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Also known as: The Slopshot, Dexter's own design, a charged sniper rifle that packs an explosive punch."
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/slabshot_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
@@ -142,18 +142,27 @@ function SWEP:DrawHUD()
 	surface.SetDrawColor(c_plyclr)
 	render.SetColorMaterialIgnoreZ()
 
-	drawCircle(ScrW() * .5, ScrH() * .5, 5.5, 5.5,  24)
+	local h = ScrH()
+	local w = ScrW()
+	local RectSize = 100
+	local RectSizeHalf = RectSize / 2
+	local Speed = 100
 
-	draw.SimpleText("iDELTA; " .. tostring(invDelta), "BudgetLabel", 0, 0, c_White)
+	drawCircle(w * .5, h * .5, 5.5, 5.5,  24)
 
 	--Attempting to draw the hud for scoping in
 	if self:GetScoped() then
-		local w = ScrW() / 2
-		local h = ScrH() / 2
+		local colour = HSVToColor( CurTime() *  Speed, 0.7, 1 )
+		surface.SetDrawColor(colour)
+		surface.DrawRect(w * .555 - RectSizeHalf, h * .485 - RectSizeHalf, RectSize / 3, (RectSize * 1.5) * self:Clip1() / 2)
 
 		surface.SetTexture(scope)
 		surface.SetDrawColor(r, g, b, 255)
+		surface.DrawTexturedRectRotated( w / 2, h / 2, (w / 2) / 4, (w / 2) / 4, 0 )
 
-		surface.DrawTexturedRectRotated(w, h, w / 4, w / 4, 0)
+		draw.SimpleText("Ammo: " .. self:Clip1(), "HudDefault", w * .555, h * .45, Color(255, 255, 255) )
+
+		local dist = LocalPlayer():GetEyeTrace().Fraction * 32768
+		draw.SimpleText("Distance: " .. math.floor(dist), "HudDefault", w * .555, h * .475, Color(255, 255, 255) )
 	end
 end
