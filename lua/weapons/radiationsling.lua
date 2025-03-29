@@ -100,7 +100,7 @@ function SWEP:SpawnProj()
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	aimvec:Mul( 3000 * entphys:GetMass() )
+	aimvec:Mul( 3500 * entphys:GetMass() )
 	entphys:ApplyForceCenter( aimvec )
 
 end
