@@ -1,6 +1,6 @@
 SWEP.PrintName = "Tactical Bleeder"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = "Hits return 1 round to the mag, 3 hits cause a powerful shot."
+SWEP.Instructions = "2 hits cause a powerful shot, Standard Semi Automatic Weapon"
 SWEP.IconOverride = "vgui/weaponvgui/tactical_generi.png"
 --this coco amazing very nice
 

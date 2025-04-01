@@ -1,6 +1,6 @@
 SWEP.PrintName = "The Slabshot"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = "Also known as: The Slopshot, Dexter's own design, a charged sniper rifle that packs an explosive punch."
+SWEP.Instructions = "Also known as: The Slopshot, Dexter's own design, a charged sniper rifle that packs a punch."
 SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/slabshot_generi.png"
 
@@ -78,6 +78,7 @@ end
 
 function SWEP:SecondaryAttack()
 	self:SetScoped( not self:GetScoped() )
+	self:EmitSound("weapons/sniper/sniper_zoomin.wav", 75, math.random(95, 105), 100, 6 )
 end
 
 function SWEP:TranslateFOV( fov )

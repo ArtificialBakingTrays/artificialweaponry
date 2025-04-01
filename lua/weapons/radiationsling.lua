@@ -1,6 +1,6 @@
 SWEP.PrintName = "Lethal Dose of Radiation"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = "Slingshot, but Pebbles of Uranium"
+SWEP.Instructions = "Slingshot, but Pebbles of Uranium. Will bounce off of enemies, when it hits the floor: it will release mini pebbles that also do damage"
 SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/radsling_generi.png"
 
