@@ -95,7 +95,9 @@ function SWEP:AdjustMouseSensitivity()
 	end
 end
 
+local singleplayer = game.SinglePlayer()
 function SWEP:Think()
+	if CLIENT and singleplayer then return end
 	local start = self:GetChargeStart()
 	if start == 0 then return end
 
