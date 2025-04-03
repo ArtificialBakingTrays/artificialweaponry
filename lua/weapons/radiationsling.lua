@@ -6,9 +6,10 @@ SWEP.IconOverride = "vgui/weaponvgui/radsling_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
-SWEP.DrawCrosshair = false
 SWEP.ViewModel	= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel	= "models/weapons/c_pistol.mdl"
+local Bool = true
+SWEP.DrawCrosshair = Bool
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
@@ -25,6 +26,9 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
+
+function SWEP:SetScoped( bool ) self:SetDTBool( 0, bool ) end
+function SWEP:GetScoped() return self:GetDTBool( 0 ) end
 
 function SWEP:CustomAmmoDisplay()
 	self.AmmoDisplay = self.AmmoDisplay or {}
@@ -105,10 +109,19 @@ function SWEP:SpawnProj()
 
 end
 
+
+function SWEP:SecondaryAttack()
+	self:SetScoped( not self:GetScoped() )
+	Bool = not Bool
+	self:EmitSound("weapons/sniper/sniper_zoomin.wav", 75, math.random(95, 105), 100, 6 )
+end
+
+
 local slingreticle = Material( "vgui/hud/sling_reticle.png", "noclamp smooth" )
 local color = Color(226, 255, 121, 255)
 --Note to self. wait for fucking loka next time before trying rendering bullshit
 function SWEP:DrawHUD()
+	if self:GetScoped() then
 	render.SetColorMaterialIgnoreZ()
 	surface.SetMaterial( slingreticle )
 	surface.SetDrawColor( color )
@@ -119,5 +132,7 @@ function SWEP:DrawHUD()
 	local length = scale / 1.5
 
 	surface.DrawTexturedRect(w - length / 2 + 5, h - scale / 2 + 30, length, scale)
+	end
 end
 --Small crashout on my part- it wasnt even that hard in the end-
+

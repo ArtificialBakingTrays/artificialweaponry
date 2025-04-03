@@ -6,14 +6,11 @@ SWEP.IconOverride = "vgui/weaponvgui/hexbug_generi.png"
 
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
-
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
-
 SWEP.DrawCrosshair = true
 SWEP.DrawHUD = false
 SWEP.DrawAmmo = true
-
 SWEP.UseHands = false
 SWEP.HoldType = "ar2"
 SWEP.Slot = 3

@@ -41,14 +41,11 @@ function ENT:PhysicsCollide(data)
 	if not IsValid(enthit) then
 		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
 		self:EmitSound( "tray_sounds/slingfirework.mp3", 100, math.random(95, 105), 1, 6 )
-
 		self:Remove()
 
 		local effectdata = EffectData() --I love copy pasting
 		effectdata:SetOrigin( self:GetPos() )
-		effectdata:SetScale(0.115)
 		util.Effect("GlassImpact", effectdata, true, true)
-
 		return
 	end
 
@@ -57,5 +54,4 @@ function ENT:PhysicsCollide(data)
 	self.NextHit = CurTime() + 0.1
 	data.HitEntity:TakeDamage(DMG, self:GetOwner())
 	self:EmitSound( "tray_sounds/slingfirework.mp3", 100, math.random(105, 115), 1, 6 )
-
 end

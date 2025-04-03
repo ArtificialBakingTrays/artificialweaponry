@@ -64,7 +64,7 @@ function ENT:PhysicsCollide(data)
 	if (self.NextHit or 0) > CurTime() then return end
 
 	if not self.HasSpawned then
-		for i = 1, 4 do
+		for i = 1, 3 do
 			self:SpawnSubProjectile(data)
 		end
 
