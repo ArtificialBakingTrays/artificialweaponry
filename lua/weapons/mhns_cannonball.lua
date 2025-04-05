@@ -18,8 +18,8 @@ SWEP.UseHands = false
 SWEP.HoldType = "rpg"
 SWEP.Slot = 2
 
-SWEP.Primary.ClipSize = 5
-SWEP.Primary.DefaultClip = 5
+SWEP.Primary.ClipSize = 3
+SWEP.Primary.DefaultClip = 3
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 
@@ -39,11 +39,9 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire( CurTime() + 0.45 )
 
-	local pitch = math.random(90, 110)
-
-	self:EmitSound( "buttons/lever6.wav", 100, pitch - 5, 0.7, 1 )
+	self:EmitSound( "buttons/lever6.wav", 100, math.random(90, 110), 0.7, 1 )
 	--Weapon Sounds
-	self:EmitSound( "weapons/grenade_launcher1.wav", 100, pitch - 30, 0.7, 6 )
+	self:EmitSound( "weapons/grenade_launcher1.wav", 100, math.random(90, 110) - 30, 0.7, 6 )
 
 	owner:LagCompensation( true )
 
@@ -55,24 +53,24 @@ end
 function SWEP:SecondaryAttack() end
 
 function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
-	if CurTime() < self:GetNextPrimaryFire() then return end
+	if self:GetDTFloat( 0 ) ~= 0 then return end
+	if CurTime() < ( self:GetNextPrimaryFire() + .5 ) then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
 
-	self:SetDTFloat(0, CurTime() + 1.6)
+	self:SetDTFloat( 0, CurTime() + 1.6 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
 
-	self:EmitSound("vehicles/tank_readyfire1.wav", 75, 120, .7, 1)
-	self:EmitSound("buttons/lever4.wav", 75, 50, .7, 6)
+	self:EmitSound( "vehicles/tank_readyfire1.wav", 75, 120, .7, 1 )
+	self:EmitSound( "buttons/lever4.wav", 75, 50, .7, 6 )
 end
 
 function SWEP:Think() --Help from zynx
-	local time = self:GetDTFloat(0)
+	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end
 
 	if time > CurTime() then return end
 
-	self:SetClip1(5)
+	self:SetClip1( 3 )
 	self:SetDTFloat(0, 0)
 end
 
@@ -136,8 +134,7 @@ function SWEP:CannonLaunch()
 
 		if (ent.NextHit or 0) > CurTime() then return end
 
-		local pitch = math.random(90, 110)
-		ent:EmitSound( "physics/metal/metal_barrel_impact_hard7.wav", 100, pitch - 15, 0.7, 1 )
+		ent:EmitSound( "physics/metal/metal_barrel_impact_hard7.wav", 100, math.random(90, 110), 0.7, 1 )
 
 		if not IsValid(data.HitEntity) then return end
 
