@@ -5,7 +5,7 @@ SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/compacted_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.DrawCrosshair = false
 SWEP.ViewModel = "models/weapons/c_rpg.mdl"
 SWEP.WorldModel	= "models/weapons/w_rocket_launcher.mdl"

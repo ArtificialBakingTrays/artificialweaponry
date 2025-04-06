@@ -8,8 +8,7 @@ SWEP.Spawnable = true
 SWEP.AdminOnly = false
 SWEP.ViewModel	= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel	= "models/weapons/c_pistol.mdl"
-local Bool = true
-SWEP.DrawCrosshair = Bool
+SWEP.DrawCrosshair = true
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
@@ -112,7 +111,6 @@ end
 
 function SWEP:SecondaryAttack()
 	self:SetScoped( not self:GetScoped() )
-	Bool = not Bool
 	self:EmitSound("weapons/sniper/sniper_zoomin.wav", 75, math.random(95, 105), 100, 6 )
 end
 
@@ -136,3 +134,6 @@ function SWEP:DrawHUD()
 end
 --Small crashout on my part- it wasnt even that hard in the end-
 
+function SWEP:DoDrawCrosshair()
+	return self:GetScoped() --Im so marvelous at coding
+end
