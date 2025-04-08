@@ -27,6 +27,7 @@ function ENT:Initialize()
 	self:PhysicsInitSphere(3.5, SOLID_VPHYSICS ) -- Initializes physics for the Entity, making it solid and interactable.
 	self:SetMoveType( MOVETYPE_VPHYSICS ) -- Sets how the Entity moves, using physics.
 	self:SetSolid( SOLID_VPHYSICS ) -- Makes the Entity solid, allowing for collisions.
+
 	local phys = self:GetPhysicsObject() -- Retrieves the physics object of the Entity.
 
 	if not phys:IsValid() then
@@ -37,6 +38,7 @@ function ENT:Initialize()
 	phys:SetBuoyancyRatio(0)
 	phys:SetMass(5)
 	phys:EnableGravity(false)
+	phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 
 	if phys:IsValid() then phys:Wake() end
 
@@ -45,13 +47,13 @@ end
 function ENT:PhysicsCollide(data)
 	local enthit = data.HitEntity
 	if ( not self:IsValid() ) then return end
-	if (self.NextHit or 0) > CurTime() then return end
 
-	local DMG = 10
-	local ExplDMG = 75
+	local DMG = 20
+	local ExplDMG = 65
+	local Radius = 85
 
 	if not IsValid(enthit) then
-		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
+		util.BlastDamage( self:GetOwner(), self:GetOwner(), self:GetPos(), Radius, ExplDMG )
 		self:Remove()
 
 		local effectdata = EffectData() --I love copy pasting
@@ -64,8 +66,8 @@ function ENT:PhysicsCollide(data)
 	effectdata:SetOrigin( self:GetPos() )
 	util.Effect("WaterSurfaceExplosion", effectdata, true, true)
 
-	util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
-	self.NextHit = CurTime() + 0.1
+	util.BlastDamage( self, self:GetOwner(), self:GetPos(), Radius, ExplDMG )
 	data.HitEntity:TakeDamage(DMG, self:GetOwner())
 	self:Remove()
+
 end

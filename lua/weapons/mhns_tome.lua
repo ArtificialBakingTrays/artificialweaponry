@@ -10,7 +10,7 @@ util.PrecacheSound( "tray_sounds/slingfire2.mp3" ) --While I wouldnt reccomend u
 util.PrecacheSound( "tray_sounds/tombfoley2.mp3" ) --Its just to preload the sound before they are used, if you use alot i imagine it can be bad -Trays
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = false
+SWEP.AdminOnly = true
 SWEP.ViewModel = "models/weapons/c_medkit.mdl"
 SWEP.WorldModel	= "models/weapons/w_medkit.mdl"
 SWEP.DrawAmmo = true

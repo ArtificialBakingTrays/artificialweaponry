@@ -97,9 +97,9 @@ function SWEP:SpawnProj()
 	local ownereyes = owner:EyeAngles()
 	local aimvec = owner:GetAimVector()
 
+	ent:SetOwner( owner )
 	ent:SetPos( ownerpos + Vector(0, 0, -5) )
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:SetOwner( owner )
 	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()

@@ -29,8 +29,6 @@ SWEP.Secondary.Ammo		= "none"
 
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
-	if self:Clip1() <= 30 then self.Dmg = 16 end
-
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
