@@ -5,10 +5,6 @@ SWEP.Instructions	= "A book that raises the Sunless,"
 SWEP.Category 		= "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/tome_generi.png"
 
-util.PrecacheSound( "artiwepsv2/tombfire_2.mp3" )
-util.PrecacheSound( "artiwepsv2/slingfire2.mp3" ) --While I wouldnt reccomend using these as they can cause a slight jitter / lag spike
-util.PrecacheSound( "artiwepsv2/tombfoley2.mp3" ) --Its just to preload the sound before they are used, if you use alot i imagine it can be bad -Trays
-
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
 SWEP.ViewModel = "models/weapons/c_medkit.mdl"

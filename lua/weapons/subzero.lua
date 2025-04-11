@@ -5,8 +5,6 @@ SWEP.Instructions	= "Standard Issue technology, fires Ice Bolts that slows targe
 SWEP.Category 		= "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/compacted_generi.png"
 
-util.PrecacheSound( "tray_sounds/subzero_fire.mp3" )
-
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 SWEP.Spawnable = true

@@ -13,9 +13,6 @@ SWEP.HoldType = "rpg"
 SWEP.Slot = 0
 --There are things that you must find, that you cannot see. Use me to seek them out.
 
-util.PrecacheSound("other/use.mp3")
-util.PrecacheSound("other/notify2.mp3")
-
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic	= false
