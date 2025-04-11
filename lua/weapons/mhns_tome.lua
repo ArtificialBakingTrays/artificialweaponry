@@ -5,9 +5,9 @@ SWEP.Instructions	= "A book that raises the Sunless,"
 SWEP.Category 		= "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/tome_generi.png"
 
-util.PrecacheSound( "tray_sounds/tombfire_2.mp3" )
-util.PrecacheSound( "tray_sounds/slingfire2.mp3" ) --While I wouldnt reccomend using these as they can cause a slight jitter / lag spike
-util.PrecacheSound( "tray_sounds/tombfoley2.mp3" ) --Its just to preload the sound before they are used, if you use alot i imagine it can be bad -Trays
+util.PrecacheSound( "artiwepsv2/tombfire_2.mp3" )
+util.PrecacheSound( "artiwepsv2/slingfire2.mp3" ) --While I wouldnt reccomend using these as they can cause a slight jitter / lag spike
+util.PrecacheSound( "artiwepsv2/tombfoley2.mp3" ) --Its just to preload the sound before they are used, if you use alot i imagine it can be bad -Trays
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
@@ -35,7 +35,7 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire( CurTime() + 0.5 )
 	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), 100, 6 )
-	self:EmitSound( "tray_sounds/tombfire_2.mp3", 100, math.random( 95, 105 ), 100, 6 )
+	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), 100, 6 )
 
 end
 
@@ -50,7 +50,7 @@ function SWEP:Reload()
 
 	self:SetDTFloat( 0, CurTime() + 1 )
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:EmitSound( "tray_sounds/tombfoley2.mp3", 100, math.random( 95, 105 ), 100, 6 )
+	self:EmitSound( "artiwepsv2/tombfoley2.mp3", 100, math.random( 95, 105 ), 100, 6 )
 end
 
 function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?

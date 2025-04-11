@@ -17,8 +17,8 @@ SWEP.UseHands = false
 SWEP.HoldType = "rpg"
 SWEP.Slot = 2
 
-SWEP.Primary.ClipSize = 3
-SWEP.Primary.DefaultClip = 3
+SWEP.Primary.ClipSize = 5
+SWEP.Primary.DefaultClip = 5
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 
@@ -69,7 +69,7 @@ function SWEP:Think() --Help from zynx
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 3 )
+	self:SetClip1( 5 )
 	self:SetDTFloat(0, 0)
 end
 

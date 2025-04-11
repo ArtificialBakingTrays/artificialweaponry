@@ -44,7 +44,7 @@ owner:LagCompensation( true )
     owner:FireBullets {
     Src = owner:GetShootPos(),
     Dir = owner:GetAimVector(),
-    Damage = 7,
+    Damage = 9,
     Attacker = owner,
     Callback = function( attacker, tr )
         if SERVER and tr.Entity:IsValid() and tr.Entity:IsPlayer() then

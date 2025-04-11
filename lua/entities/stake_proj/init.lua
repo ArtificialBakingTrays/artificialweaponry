@@ -50,7 +50,7 @@ function ENT:PhysicsCollide(data)
 
 	local DMG = 20
 	local ExplDMG = 65
-	local Radius = 85
+	local Radius = 65
 
 	if not IsValid(enthit) then
 		util.BlastDamage( self:GetOwner(), self:GetOwner(), self:GetPos(), Radius, ExplDMG )

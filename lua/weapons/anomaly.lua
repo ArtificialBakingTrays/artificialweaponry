@@ -1,5 +1,6 @@
 --You were not supposed to find this.
-SWEP.PrintName = "ANOMALY"
+SWEP.PrintName = "A.D.T" --Anomaly Detector Tool
+SWEP.Instructions = "Anomaly Detecting Tool"
 SWEP.Author	= "ArtiBakingTrays"
 
 SWEP.Spawnable = false
@@ -28,9 +29,30 @@ SWEP.Secondary.Ammo		= "none"
 
 function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire( CurTime() + 0.5 )
-	self:EmitSound( "other/use.mp3", 100, math.random(95, 105), 100, 6 )
+	--self:EmitSound( "other/online.mp3", 100, math.random(90, 110), 100, 6 )
+	--self:EmitSound( "other/use.mp3", 100, math.random(90, 110), 100, 6 )
 end
 
 function SWEP:Deploy()
-	self:EmitSound( "other/notify2.mp3", 100, math.random(95, 105), 100, 6 )
+	local random = math.random(1, 2)
+
+	if random == 1 then
+		self:EmitSound( "other/notify2.mp3", 100, math.random(95, 105), 100, 6 )
+	elseif random == 2 then
+		self:EmitSound( "other/notify.mp3", 100, math.random(95, 105), 100, 6 )
+	end
 end
+
+--[[
+DIFFERENT TEXT OPTIONS FOR ANOMALY SCANS:
+	Nothing: YOU FOUND, NOTHING. :(
+
+	Player: YES, THAT IS (NAME). NOTHING ODD HERE.
+
+	Chair: I REALLY WISH I COULD SIT.
+
+	Computer: I HAD A FRIEND WHO WAS ONE OF THESE.
+
+	Sword: Felwinter, IS THAT YOU?
+
+]]--

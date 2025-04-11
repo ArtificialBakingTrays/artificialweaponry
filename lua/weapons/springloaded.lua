@@ -2,7 +2,7 @@ SWEP.PrintName = "SpringLoaded ScatterSearch"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = ""
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/springload_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
@@ -81,7 +81,7 @@ function SWEP:PrimaryAttack()
 		owner:FireBullets({
 			Src = owner:GetShootPos(),
 			Dir = realShootDir,
-			Damage = 7,
+			Damage = 15,
 			Num = 1,
 			Spread = Vector(0.0, 0.0),
 			Attacker = owner,

@@ -1,6 +1,6 @@
 SWEP.PrintName = "Parasitical Arm-Implants"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = "Hold R to consume Armour to gain 2 rounds, Damage enemies to gain Armour"
+SWEP.Instructions = "Hold R to consume Armour to gain 2 rounds, Damage enemies to gain Armour, while at full armor, gain health for hits."
 SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/parasite_generi.png"
 
@@ -48,6 +48,8 @@ function SWEP:PrimaryAttack()
 		Callback = function( attacker, tr, dmg )
 			if tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
 				if SERVER then
+					if owner:Armor() == 100 and owner:Health() < 100 then owner:SetHealth( owner:Health() + 10 ) end
+					if owner:Health() > 100 then owner:SetHealth( owner:GetMaxHealth() ) end
 					local newarmor = owner:Armor() + math.floor(dmg:GetDamage() / 3)
 					if newarmor > 100 then newarmor = 100 end
 
