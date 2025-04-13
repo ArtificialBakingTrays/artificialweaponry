@@ -49,6 +49,9 @@ function ENT:PhysicsCollide(data)
 	local enthit = data.HitEntity
 	if ( not self:IsValid() ) then return end
 	if (self.NextHit or 0) > CurTime() then return end
+	if enthit == self:GetOwner() then return end
+	if enthit.IsTraysProjectile then return end
+	self:EmitSound( "npc/antlion/foot2.wav", 100, math.random(95, 140), 1, 6 )
 
 	if not IsValid(enthit) then
 			local effectdata = EffectData() --I love copy pasting
@@ -60,16 +63,12 @@ function ENT:PhysicsCollide(data)
 		return
 	end
 
-	if enthit == self:GetOwner() then return end
-	if enthit.IsTraysProjectile then return end
-
 	if data.HitSpeed:Length() > 60 then
 		if not IsValid(self) then return end
 		self.NextHit = CurTime() + 0.3
 		self:Remove()
 
-		data.HitEntity:TakeDamage(21, self:GetOwner())
-		self:EmitSound( "", 100, math.random(100, 105), 1, 6 )
+		data.HitEntity:TakeDamage(12, self:GetOwner())
 
 		local effectdata = EffectData()
 		effectdata:SetOrigin( self:GetPos() )

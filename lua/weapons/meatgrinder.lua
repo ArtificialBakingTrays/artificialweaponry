@@ -27,6 +27,20 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 --They say my hungers a problem.
 
+local bannedLUT = {
+	["CHudHealth"]    = true,
+	["CHudAmmo"]      = true,
+	["CHudCrosshair"] = true,
+	["CHudBattery"]	  = true,
+}
+
+function SWEP:HUDShouldDraw(element)
+	if bannedLUT[element] then
+		return false
+	end
+	return true
+end
+
 function SWEP:PrimaryAttack()
 	if self:GetOwner():WaterLevel() > 0 then return end
 
@@ -104,19 +118,48 @@ end
 function SWEP:Reload()
 	--charge up attack
 	self.DoChargeUp = true
+
 end
 
-function SWEP:Deploy()
+function SWEP:Deploy() --Features Lokacode cus 3 line if statements
 	self:EmitSound( "artiwepsv2/chainstartup.mp3", 100, math.random( 95, 105 ), 0.4, 1 )
 	self:SetClip1(0)
-
 	self.AmmoLoseTime = CurTime()
+	self.isEquipped = true
 
-	local time = 1
-	timer.Simple(time, function()
+
+	timer.Simple(1, function()
+		if not self.isEquipped then
+			return
+		end
+
 		self:EmitSound( "artiwepsv2/chainstartup.mp3", 100, math.random( 105, 115 ), 0.4, 6 )
 	end)
+
+	timer.Simple(2, function()
+		if not self.isEquipped then
+			return
+		end
+
+		self.proccySound = CreateSound(self, "artiwepsv2/chainsawbrr-longfix-loop.wav")
+		self.proccySound:PlayEx(0.3, 100)
+	end)
 end
+
+function SWEP:Holster()
+	if CLIENT then
+		return
+	end
+	self.isEquipped = false
+
+	if self.proccySound then
+		self.proccySound:Stop()
+		self.proccySound = nil
+	end
+
+	return true
+end
+
 
 function SWEP:CustomAmmoDisplay()
 	self.AmmoDisplay = self.AmmoDisplay or {}
@@ -163,12 +206,118 @@ function SWEP:ChargeUpThink()
 		return
 	end
 	self.NextAmmoGive = CurTime() + .05
+	self:EmitSound( "other/use.mp3", 75, 100 + self:Clip1(), 0.3, 1 )
 
+	self:GetOwner():LagCompensation(true)
 	self:SetClip1( math.min( self:Clip1() + 1, 100) )
+	self:GetOwner():LagCompensation(false)
 end
 
 function SWEP:Think()
 	if CLIENT then return end
 	self:TakeAmmoThink()
 	self:ChargeUpThink()
+	self:GetOwner():SetRunSpeed( 400 + ( self:Clip1() * 3 ))
+end
+
+--[artificialweaponry] addons/artificialweaponry/lua/weapons/meatgrinder.lua:189: attempt to index global 'surface' (a nil value)
+--1. unknown - addons/artificialweaponry/lua/weapons/meatgrinder.lua:189 (x5)
+
+if CLIENT then
+	surface.CreateFont( "CadaverYummy", {
+		font = "CreditsText", -- Use the font-name which is shown to you by your operating system Font Viewer.
+		extended = false,
+		size = 150,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	})
+
+	surface.CreateFont("CadaverYummy2", {
+		font = "CreditsText", -- Use the font-name which is shown to you by your operating system Font Viewer.
+		extended = false,
+		size = 40,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	})
+end
+
+local reticle = Material( "vgui/hud/hudbloodleft.png", "noclamp smooth" )
+local color = Color(186, 186, 186)
+
+
+local matGibblerSkull = Material("vgui/hud/gibblerskull.png")
+local skullW, skullH = matGibblerSkull:Width(), matGibblerSkull:Height()
+
+
+local saw1 = Material("vgui/hud/chainsaw1.png")
+local saw2 = Material("vgui/hud/chainsaw2.png")
+function SWEP:DrawHUD()
+	render.SetColorMaterialIgnoreZ()
+	surface.SetMaterial( reticle )
+	surface.SetDrawColor( color )
+	local w = ScrW() / 2
+	local h = ScrH() / 2
+
+	local realH = ScrH()
+
+	local scale = 256
+	local length = scale / 1.5
+
+	surface.DrawTexturedRect(w - length / 2 - 360 * 4, h - scale / 2 + 90,  length * 8, scale * 3)
+
+	local healthStr = tostring(self:GetOwner():Health())
+	local armourStr = tostring(self:GetOwner():Armor())
+
+	draw.SimpleText(healthStr, "CadaverYummy", 256 + 64 + 32, h * 1.75, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+	draw.SimpleText("|", "CadaverYummy", 256 + 64 + 32 + 64, h * 1.75, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+	draw.SimpleText(armourStr, "CadaverYummy", 256 + 64 + 32 + 64 + 16, h * 1.75, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+
+	for i = 1, 3 do
+		local deltaMove = (i - 1) / 2
+
+		--Rendering the Skull
+		surface.SetMaterial( matGibblerSkull )
+		surface.SetDrawColor( Color(255, 255, 255) )
+
+		local offX = deltaMove * (196 - 32)
+		surface.DrawTexturedRect(150 + offX, realH - 256 - 16,  skullW * .15, skullH * .15)
+
+		draw.SimpleText( "Kills: " .. self:GetOwner():Frags(), "CadaverYummy2", 150, realH - 160, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+	end
+
+--Rendering the Chainsaw
+	local waitPerChange = .025
+
+	local doDrawThing = math.floor((CurTime() * (1 / waitPerChange)) % 2) == 0
+	local sawTarget = saw1
+	if doDrawThing then
+		sawTarget = saw2
+	end
+
+	surface.SetMaterial( sawTarget )
+	surface.SetDrawColor( Color(255, 255, 255 ) )
+	surface.DrawTexturedRect(w - length / 2 - 360 * 3.7, h - scale / 2 + 90 * 5,  length * 2, scale * 2)
+
+--Rendering Fuel
+	draw.SimpleText( "Fuel: " .. self:Clip1(), "CadaverYummy", 256 * 9, h * 1.95, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM )
 end

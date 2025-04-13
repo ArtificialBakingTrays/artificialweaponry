@@ -1,20 +1,20 @@
 SWEP.PrintName = "BookWyrm's Tome of the Risen"
 SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
 SWEP.Contact 		= "ArtificialBakingTrays"
-SWEP.Instructions	= "A book that raises the Sunless,"
+SWEP.Instructions	= "A book that raises Sunless fools, and cursed on primary attacks."
 SWEP.Category 		= "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/tome_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.ViewModel = "models/weapons/c_medkit.mdl"
 SWEP.WorldModel	= "models/weapons/w_medkit.mdl"
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.Slot = 3
 
-SWEP.Primary.ClipSize = 12
-SWEP.Primary.DefaultClip = 12
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 
@@ -27,19 +27,24 @@ function SWEP:Initialize()
 	self:SetHoldType("slam")
 end
 
-function SWEP:PrimaryAttack()
-	--Seeking rounds
-	if self:Clip1() <= 0 then return end
-	self:TakePrimaryAmmo( 2 )
+function SWEP:PrimaryAttack() --Cursing Rounds
+	local time = 0.05
+	local Vol = 0.6
 
 	self:SetNextPrimaryFire( CurTime() + 0.5 )
-	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), 100, 1 )
-	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), 100, 6 )
+	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
+	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
 
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
 
 	self:DeployCurse()
+
+	timer.Simple( time, function()
+		self:DeployCurse()
+		self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
+		self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
+	end)
 
 	owner:LagCompensation( false )
 
@@ -84,39 +89,14 @@ function SWEP:SecondaryAttack()	--Will summon Sunless Fool
 	self:GetOwner():LagCompensation( false )
 end
 
-function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
-	if CurTime() < self:GetNextPrimaryFire() then return end
-	if self:Clip1() == self.Primary.ClipSize then return end
-
-	self:SetDTFloat( 0, CurTime() + 1 )
-	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:EmitSound( "artiwepsv2/tombfoley2.mp3", 100, math.random( 95, 105 ), 100, 6 )
-end
-
-function SWEP:ReloadMech()
-	local time = self:GetDTFloat( 0 )
-	if time == 0 then return end
-
-	if time > CurTime() then return end
-
-	self:SetClip1( 12 )
-	self:SetDTFloat( 0, 0 )
-end
-
-function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
-	self:ReloadMech()
+function SWEP:Think()
 	self:CheckIfAlive()
 end
 
 function SWEP:CustomAmmoDisplay()
 	self.AmmoDisplay = self.AmmoDisplay or {}
 
-	self.AmmoDisplay.Draw = true
-
-	if self.Primary.ClipSize > 0 then
-		self.AmmoDisplay.PrimaryClip = self:Clip1()
-	end
+	self.AmmoDisplay.Draw = false
 
 	return self.AmmoDisplay
 end
@@ -151,7 +131,7 @@ function SWEP:SpawnFool()
 	self.IsTraysProjectile = true
 	ent.IsCoolNPC = true
 
-	ent:Fire( "Kill", "", 20.5 )
+	ent:Fire( "Kill", "", 40.5 )
 end
 
 function SWEP:CheckIfAlive()
@@ -167,9 +147,31 @@ end
 hook.Add( "EntityTakeDamage", "EntityDamageExample", function( target, dmginfo )
 	local npcattack = dmginfo:GetAttacker()
 	if not npcattack.IsCoolNPC then return end
-	dmginfo:ScaleDamage(15)
-	dmginfo:SetAttacker(npcattack:GetOwner())
+
+	local ScaleDmg = 15
+	if target.IsCursed == true then
+		ScaleDmg = 30
+	elseif target.IsCursed == false then
+		ScaleDmg = 15
+	end
+
+	dmginfo:ScaleDamage( ScaleDmg )
+	dmginfo:SetAttacker( npcattack:GetOwner() )
 end )
+
+hook.Add("player_hurt", "player_hurt_example", function( victim )
+	if CLIENT then return end
+	if victim:IsNPC() then return end
+	attacker = victim:GetAttacker()
+
+	victim.IsCursed = true
+	local time2 = 1.5
+	timer.Simple(time2, function()
+		victim.IsCursed = false
+
+	end)
+end)
+
 
 --[[
 Transmission: From BookWyrm
