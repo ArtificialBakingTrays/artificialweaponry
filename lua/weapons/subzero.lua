@@ -32,8 +32,8 @@ function SWEP:PrimaryAttack()
     self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
     self:SetNextPrimaryFire( CurTime() + 0.06 )
 
-    self:EmitSound( "tray_sounds/subzero_standard.mp3", 100, math.random( 105, 115 ), 100, 6 )
-    self:EmitSound( "tray_sounds/tomefire.mp3", 100, math.random( 95, 105 ), 100, 6 )
+    self:EmitSound( "artiwepsv2/subzero_standard.mp3", 100, math.random( 105, 115 ), 100, 6 )
+    self:EmitSound( "artiwepsv2/tomefire.mp3", 100, math.random( 95, 105 ), 100, 6 )
 
     local owner = self:GetOwner()
 

@@ -44,9 +44,9 @@ local offsetLUT = {
 
 function SWEP:SecondaryAttack()
 	--Distraction/Projectile attack
-	self:SetNextSecondaryFire( CurTime() + 3.2 )
+	self:SetNextSecondaryFire( CurTime() + 1.2 )
 
-	self:EmitSound( "artiwepsv2/usesfx.wav", 75, math.random(85, 95), 1, 1 )
+	self:EmitSound( "artiwepsv2/usesfx.wav", 75, math.random(85, 95), 0.3, 1 )
 
 	self:GetOwner():LagCompensation( true )
 
@@ -96,7 +96,7 @@ function SWEP:SpawnGibblers(targetDir)
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	local Speed = 650
+	local Speed = 950
 	targetDir:Mul( Speed * entphys:GetMass() )
 	entphys:ApplyForceCenter( targetDir )
 end

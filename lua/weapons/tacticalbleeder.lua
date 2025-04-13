@@ -16,7 +16,7 @@ SWEP.Category = "Artificial Weaponry"
 
 SWEP.Primary.ClipSize = 24
 SWEP.Primary.DefaultClip = 24
-SWEP.Primary.Automatic	= true
+SWEP.Primary.Automatic	= false
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Force = 80
 

@@ -86,7 +86,7 @@ function ENT:TakeDamageOnHit(data)
 
 	self.NextTakeDamage = CurTime() + 0.05
 
-	local DMG = 8
+	local DMG = 6
 	enthit:TakeDamage(DMG, self:GetOwner())
 end
 

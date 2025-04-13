@@ -29,7 +29,7 @@ SWEP.Secondary.Ammo		= "none"
 
 --The code I understand the least :D -Trays
 
-local offsetSpread = 0.025
+local offsetSpread = 0.04
 local offsetLUT = {
 	-- Top row
 	[1] = Vector(-offsetSpread, offsetSpread ),

@@ -15,8 +15,8 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 SWEP.BobScale = 1.15
 
-SWEP.Primary.ClipSize = 2
-SWEP.Primary.DefaultClip = 2
+SWEP.Primary.ClipSize = 3
+SWEP.Primary.DefaultClip = 3
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "AR2"
 SWEP.Primary.Force = 160
@@ -157,7 +157,7 @@ function SWEP:DrawHUD()
 	if self:GetScoped() then
 		local colour = HSVToColor( CurTime() *  Speed, 0.7, 1 )
 		surface.SetDrawColor(colour)
-		surface.DrawRect(w * .555 - RectSizeHalf, h * .485 - RectSizeHalf, RectSize / 3, (RectSize * 1.5) * self:Clip1() / 2)
+		surface.DrawRect(w * .555 - RectSizeHalf, h * .485 - RectSizeHalf, RectSize / 6, (RectSize * 1) * self:Clip1() / 2)
 
 		surface.SetTexture(scope)
 		surface.SetDrawColor(r, g, b, 255)
