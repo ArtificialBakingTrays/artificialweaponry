@@ -36,3 +36,4 @@ Tome sounds from Terraria
 
 Subzero Standard firing sound from Merc Fleet
 
+Tome Summoning Link to credits: Slow Spell (Less Powerful) by SilverIllusionist -- https://freesound.org/s/732245/ -- License: Attribution 4.0
