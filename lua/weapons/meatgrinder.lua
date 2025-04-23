@@ -45,8 +45,48 @@ function SWEP:PrimaryAttack()
 	if self:GetOwner():WaterLevel() > 0 then return end
 
 	--Chainsaw attack, will not need ammo
-	self:SetNextPrimaryFire( CurTime() + 0.685 )
+	self:SetNextPrimaryFire( CurTime() + 1.685 )
 	self:EmitSound( "artiwepsv2/chainsawrev.mp3", 100, 100, 100, 6 )
+
+	self:GetOwner():LagCompensation( true )
+
+	local Num = 0.05
+	Num = 0.05
+	for i = 1, 6 do
+		Num = Num + 0.05
+		timer.Simple( Num, function()
+			self:DoTrace()
+		end)
+	end
+
+	self:GetOwner():LagCompensation( false )
+end
+
+local DEBUG_BOX_COLOUR = Color(255, 0, 0, 10) -- transparent!
+function SWEP:DoTrace()
+	if CLIENT then return end
+	local boxSize = 24
+	local boxMins = Vector(-boxSize, -boxSize, -boxSize)
+	local boxMaxs = Vector(boxSize , boxSize , boxSize )
+	local ownerthing = self:GetOwner()
+
+	local tr = util.TraceHull({
+	  start = ownerthing:GetShootPos() + ( ownerthing:GetAimVector() * 10 ),
+	  endpos = ownerthing:GetShootPos() + ( ownerthing:GetAimVector() * 70 ),
+	  mins = boxMins,
+	  maxs = boxMaxs,
+	  filter = self:GetOwner() -- assuming you're doing this in a swep hook, make sure the owner can't hit itself
+	})
+
+	if tr.Entity:IsValid() and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
+		DEBUG_BOX_COLOUR = Color(0, 255, 30, 10 )
+		tr.Entity:TakeDamage( 9, self:GetOwner(), self )
+	else
+		DEBUG_BOX_COLOUR = Color(255, 0, 0, 10 )
+	end
+
+	local lifetime = 8 -- debug boxes last 8s
+	debugoverlay.Box( tr.HitPos, boxMins, boxMaxs, lifetime, DEBUG_BOX_COLOUR )
 end
 
 local offsetSpread = 0.1
@@ -64,8 +104,7 @@ function SWEP:SecondaryAttack()
 
 	self:GetOwner():LagCompensation( true )
 
-	local owner = self:GetOwner()
-	local aimDir = owner:GetAimVector()
+	local aimDir = self:GetOwner():GetAimVector()
 	local aimDirAng = aimDir:Angle()
 	local aimRight = aimDirAng:Right()
 	local aimUp = aimDirAng:Up()
@@ -96,11 +135,10 @@ function SWEP:SpawnGibblers(targetDir)
 	if ( not ent:IsValid() ) then return end
 
 	--yknow its bad when we have the CUBE OF VARIABLES
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
+	local ownerpos = self:GetOwner():GetShootPos()
+	local ownereyes = self:GetOwner():EyeAngles()
 
-	ent:SetOwner( owner )
+	ent:SetOwner( self:GetOwner() )
 	ent:SetPos( ownerpos + Vector(0, 0, -5) )
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
 	ent:Spawn()
@@ -117,8 +155,8 @@ end
 
 function SWEP:Reload()
 	--charge up attack
+	if self:GetOwner():IsSprinting() then return end
 	self.DoChargeUp = true
-
 end
 
 function SWEP:Deploy() --Features Lokacode cus 3 line if statements
@@ -160,19 +198,6 @@ function SWEP:Holster()
 	return true
 end
 
-
-function SWEP:CustomAmmoDisplay()
-	self.AmmoDisplay = self.AmmoDisplay or {}
-
-	self.AmmoDisplay.Draw = true
-
-	if self.Primary.ClipSize > 0 then
-		self.AmmoDisplay.PrimaryClip = self:Clip1()
-	end
-
-	return self.AmmoDisplay
-end
-
 function SWEP:TakeAmmoThink()
 	if self.DoChargeUp then
 		self.AmmoLoseTime = CurTime()
@@ -209,7 +234,7 @@ function SWEP:ChargeUpThink()
 	self:EmitSound( "other/use.mp3", 75, 100 + self:Clip1(), 0.3, 1 )
 
 	self:GetOwner():LagCompensation(true)
-	self:SetClip1( math.min( self:Clip1() + 1, 100) )
+	self:SetClip1( math.min( self:Clip1() + 2, 100) )
 	self:GetOwner():LagCompensation(false)
 end
 
@@ -225,7 +250,7 @@ end
 
 if CLIENT then
 	surface.CreateFont( "CadaverYummy", {
-		font = "CreditsText", -- Use the font-name which is shown to you by your operating system Font Viewer.
+		font = "CloseCaption_Bold",
 		extended = false,
 		size = 150,
 		weight = 500,
@@ -243,7 +268,7 @@ if CLIENT then
 	})
 
 	surface.CreateFont("CadaverYummy2", {
-		font = "CreditsText", -- Use the font-name which is shown to you by your operating system Font Viewer.
+		font = "CloseCaption_Bold",
 		extended = false,
 		size = 40,
 		weight = 500,

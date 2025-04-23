@@ -119,8 +119,6 @@ function SWEP:SpawnFool()
 	ent:AddEntityRelationship( ent:GetOwner(), D_LI, 100 )
 	ent:Spawn()
 
-	print(ent:LookupBone( "ValveBiped.Bip01_chest" ))
-
 	util.SpriteTrail( ent, 2, PinkVoid, false, SSize, ESize, Duration, 1, "trails/laser" )
 	ent:SetHealth( ent:GetMaxHealth() + 250 )
 	ent:SetBodygroup( 1, 0 )
@@ -183,4 +181,3 @@ We both know he has found greater apprentices than us, it is only a matter of ti
 
 This message remains unread by its Recipient.
 ]]--
-
