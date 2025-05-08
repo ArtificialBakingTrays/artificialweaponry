@@ -52,7 +52,7 @@ function SWEP:PrimaryAttack()
 
 	local Num = 0.05
 	Num = 0.05
-	for i = 1, 6 do
+	for i = 1, 12 do
 		Num = Num + 0.05
 		timer.Simple( Num, function()
 			self:DoTrace()
@@ -79,8 +79,11 @@ function SWEP:DoTrace()
 	})
 
 	if tr.Entity:IsValid() and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
-		DEBUG_BOX_COLOUR = Color(0, 255, 30, 10 )
-		tr.Entity:TakeDamage( 9, self:GetOwner(), self )
+		local trEnt = tr.Entity
+		DEBUG_BOX_COLOUR = Color(0, 255, 30, 10)
+
+		trEnt:TakeDamage( 6, self:GetOwner(), self )
+		StatusBleed( 3, self:GetOwner(), trEnt )
 	else
 		DEBUG_BOX_COLOUR = Color(255, 0, 0, 10 )
 	end

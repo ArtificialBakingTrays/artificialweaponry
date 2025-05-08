@@ -5,8 +5,8 @@ SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
-SWEP.ViewModel = "models/weapons/c_smg.mdl"
-SWEP.WorldModel	= "models/weapons/w_smg.mdl"
+SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
+SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 SWEP.DrawCrosshair = true
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
