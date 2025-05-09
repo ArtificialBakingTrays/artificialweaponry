@@ -21,6 +21,7 @@ function StatusBleed( dmg, ply, ent )
 	if bool == false then return end
 	if CLIENT then return end
 	if ent.IsBleeding == true then return end
+	if not ent:IsValid() then return end
 
 	--Bleed ticks 3 times per instance of the effect.
 	local num = 1 --difference between each instance of bleed
@@ -116,6 +117,14 @@ function StatusNullify( ply, hp, armor )
 		end
 	end
 end
-
-
 --================NULLIFY STATUS CODE=================
+
+
+--[[================REVEAL STATUS CODE=================
+function StatusReveal( ent, ply, time, r, g ,b)
+	color = Color(r, g, b)
+
+
+
+end
+]]--================REVEAL STATUS CODE=================

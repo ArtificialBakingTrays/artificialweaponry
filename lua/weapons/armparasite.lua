@@ -49,15 +49,11 @@ function SWEP:PrimaryAttack()
 			if tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
 				if SERVER then
 					StatusNullify( owner, 10, 15 )
-
 					util.BlastDamage( dmg:GetInflictor(), owner, tr.HitPos, 95, dmg:GetDamage() / 4)
-
 					tr.Entity:EmitSound( "tray_sounds/parsite_multihit.mp3", 100, math.random(100, 115), 1, 6 )
 				end
-
 				local effectdata = EffectData()
 				effectdata:SetOrigin( tr.HitPos )
-
 				util.Effect("HelicopterMegaBomb", effectdata, true)
 			end
 		end,

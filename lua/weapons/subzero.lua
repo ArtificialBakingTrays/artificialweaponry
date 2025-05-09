@@ -85,14 +85,14 @@ function SWEP:CustomAmmoDisplay()
 end
 
 hook.Add( "OnNPCKilled", "subzero", function( npc, attacker, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "direchatred" and math.random( 1, 6 ) == 6 then
+	if inflictor:IsValid() and inflictor:GetClass() == "subzero" and math.random( 1, 6 ) == 6 then
 		StatusGlacialBonus( inflicter, 14)
 		inflicter:EmitSound("physics/glass/glass_bottle_break2.wav", 75, 110, 1, 6)
 	end
 end )
 
 hook.Add( "PlayerDeath", "subzero", function( victim, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "direchatred" and math.random( 1, 6 ) == 6 then
+	if inflictor:IsValid() and inflictor:GetClass() == "subzero" and math.random( 1, 6 ) == 6 then
 		StatusGlacialBonus( inflictor, 14)
 		inflictor:EmitSound("physics/glass/glass_bottle_break2.wav", 75, 110, 1, 6)
 	end
