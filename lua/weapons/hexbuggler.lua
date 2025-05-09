@@ -19,13 +19,13 @@ SWEP.Slot = 3
 SWEP.Primary.ClipSize = 27
 SWEP.Primary.DefaultClip = 27
 SWEP.Primary.Automatic	= true
-SWEP.Primary.Ammo = "SMG1"
+SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 75
 
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
-SWEP.Secondary.Ammo		= "none"
+SWEP.Secondary.Ammo		= "Battery"
 
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
@@ -91,12 +91,34 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if ( not self:HasAmmo() ) or ( CurTime() < self:GetNextPrimaryFire() ) then return end
+	if self:GetDTFloat(0) ~= 0 then return end
+	if CurTime() < self:GetNextPrimaryFire() then return end
+	if self:Clip1() == self.Primary.ClipSize then return end
 
-	if self:Clip1() < self.Primary.ClipSize and self:Ammo1() > 0 then
-		self:DefaultReload( ACT_VM_RELOAD )
-		self:EmitSound( "", 100, 100 )
+	self:SetDTFloat( 0, CurTime() + 1.2 )
+	self:SendWeaponAnim(ACT_VM_RELOAD)
+end
+
+function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
+	local time = self:GetDTFloat( 0 )
+	if time == 0 then return end
+
+	if time > CurTime() then return end
+
+	self:SetClip1( 27 )
+	self:SetDTFloat( 0, 0 )
+end
+
+function SWEP:CustomAmmoDisplay()
+	self.AmmoDisplay = self.AmmoDisplay or {}
+
+	self.AmmoDisplay.Draw = true
+
+	if self.Primary.ClipSize > 0 then
+		self.AmmoDisplay.PrimaryClip = self:Clip1()
 	end
+
+	return self.AmmoDisplay
 end
 
 function SWEP:DeployBugs()

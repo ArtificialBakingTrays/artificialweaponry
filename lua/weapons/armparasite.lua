@@ -48,14 +48,9 @@ function SWEP:PrimaryAttack()
 		Callback = function( attacker, tr, dmg )
 			if tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
 				if SERVER then
-					if owner:Armor() == 100 and owner:Health() < 100 then owner:SetHealth( owner:Health() + 10 ) end
-					if owner:Health() > 100 then owner:SetHealth( owner:GetMaxHealth() ) end
-					local newarmor = owner:Armor() + math.floor(dmg:GetDamage() / 3)
-					if newarmor > 100 then newarmor = 100 end
+					StatusNullify( owner, 10, 15 )
 
 					util.BlastDamage( dmg:GetInflictor(), owner, tr.HitPos, 95, dmg:GetDamage() / 4)
-
-					owner:SetArmor( newarmor )
 
 					tr.Entity:EmitSound( "tray_sounds/parsite_multihit.mp3", 100, math.random(100, 115), 1, 6 )
 				end

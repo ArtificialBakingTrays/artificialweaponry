@@ -30,7 +30,7 @@ function StatusBleed( dmg, ply, ent )
 		num = num + 1
 		timer.Simple( num, function()
 			ent:TakeDamage( dmg, ply )
-			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120), 1, 1)
+			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(80, 150), 1, 1)
 			local FxData = EffectData()
 			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
 			util.Effect("BloodImpact", FxData, true, true)
@@ -60,7 +60,7 @@ function StatusSlow( ent, time )
 end
 --=================SLOW STATUS CODE===================
 
-
+--[[
 --=================GLACIAL BONUS CODE=================
 function StatusGlacialBonus(ply, time)
 	if ply.HasBonus == true then return end
@@ -79,3 +79,43 @@ hook.Add( "EntityTakeDamage", "EntityDamageExample", function( target, dmginfo )
 	dmginfo:ScaleDamage( 0.4 )
 end )
 --=================GLACIAL BONUS CODE=================
+]]--
+
+--O ye bell done crossed me one to many ye times over, im about to lose my balls
+
+--===============SUGARRUSH BONUS CODE=================
+function StatusSugarRush( ply, time, bonus )
+	if bool == false then return end
+
+	ply:SetRunSpeed( ply:GetRunSpeed() + bonus )
+	ply:SetWalkSpeed( ply:GetWalkSpeed() + bonus )
+
+	timer.Simple( time, function()
+		ply:SetRunSpeed( ply:GetRunSpeed() - bonus )
+		ply:SetWalkSpeed( ply:GetWalkSpeed() - bonus )
+	end)
+end
+--===============SUGARRUSH BONUS CODE=================
+
+
+--================NULLIFY STATUS CODE=================
+function StatusNullify( ply, hp, armor )
+--Is unaffected by status disabling as it is not really a status effect. more so an effect on a gun.
+	if ply:Armor() < 100 then
+		ply:SetArmor( ply:Armor() + armor )
+		if ply:Armor() > 100 then
+			ply:SetArmor( 100 )
+		end
+	end
+
+
+	if ply:Armor() == 100 then
+		ply:SetHealth( ply:Health() + 10 )
+		if ply:Health() > 100 then
+			ply:SetHealth( ply:GetMaxHealth() )
+		end
+	end
+end
+
+
+--================NULLIFY STATUS CODE=================

@@ -75,7 +75,7 @@ function SWEP:DoTrace()
 	  endpos = ownerthing:GetShootPos() + ( ownerthing:GetAimVector() * 70 ),
 	  mins = boxMins,
 	  maxs = boxMaxs,
-	  filter = self:GetOwner() -- assuming you're doing this in a swep hook, make sure the owner can't hit itself
+	  filter = self:GetOwner(), IsTraysProjectile -- assuming you're doing this in a swep hook, make sure the owner can't hit itself
 	})
 
 	if tr.Entity:IsValid() and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
