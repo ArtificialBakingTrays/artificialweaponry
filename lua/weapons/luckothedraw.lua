@@ -15,8 +15,8 @@ SWEP.Slot = 3
 SWEP.BobScale = 1.15
 SWEP.Category = "Artificial Weaponry"
 
-SWEP.Primary.ClipSize = total
-SWEP.Primary.DefaultClip = total
+SWEP.Primary.ClipSize = 1
+SWEP.Primary.DefaultClip = 1
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 
@@ -25,10 +25,6 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
-function SWEP:Deploy() --Features Lokacode cus 3 line if statements
-	self:EmitSound( "artiwepsv2/letsgogambling.mp3", 100, math.random( 95, 105 ), 0.4, 1 )
-end
-
 local bronze1 = 0
 local bronze2 = 0
 local bronze3 = 0
@@ -36,30 +32,40 @@ local silver1 = 0
 local silver2 = 0
 local gold = 0
 
+local total = 0
+
+function SWEP:Deploy()
+	self:SetClip1( 1 )
+	self:EmitSound( "artiwepsv2/letsgogambling.mp3", 100, 100, 0.4, 1 )
+
+	return true
+end
+
 --========Reload Mechanics========
 function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
+	local ReloTime = 0.2
 
-	self:SetDTFloat( 0, CurTime() + 0.7 )
+	if self:Clip1() == total then ReloTime = 0.2 end
+	if self:Clip1() ~= total then ReloTime = 0.8 end
+
+	self:SetDTFloat( 0, CurTime() + ReloTime )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
-	DiceRollMechanic()
 end
 
-function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
+function SWEP:ReloadMechanic()
 	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end
 	if time > CurTime() then return end
-
-	self:SetClip1( total )
+	print(total)
+	if total ~= 29 then self:SetClip1( total ) end
 	self:SetDTFloat( 0, 0 )
+	self:DiceRollMechanic()
+end
 
-	if total > 23 then
-		self:EmitSound( "artiwepsv2/cha-ching.mp3", 75, 100, 1, 1)
-	end
-	if total < 23 then
-		self:EmitSound( "artiwepsv2/aw_dangit.mp3", 75, 100, 1, 1)
-	end
+function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
+	self:ReloadMechanic()
 end
 
 function SWEP:CustomAmmoDisplay()
@@ -75,18 +81,29 @@ function SWEP:CustomAmmoDisplay()
 end
 
 
-function DiceRollMechanic()
-	bronze1 = math.random(0, 3)
-	bronze2 = math.random(1, 4)
-	bronze3 = math.random(0, 4)
-	silver1 = math.random(3, 8)
-	silver2 = math.random(4, 7)
-	gold = math.random(7, 12)
+function SWEP:DiceRollMechanic()
+	bronze1 = math.floor(util.SharedRandom( "bronze1", 0, 3 ))
+	bronze2 = math.floor(util.SharedRandom( "bronze2", 1, 4 ))
+	bronze3 = math.floor(util.SharedRandom( "bronze2", 1, 4 ))
+	silver1 = math.floor(util.SharedRandom( "silver1", 3, 9 ))
+	silver2 = math.floor(util.SharedRandom( "silver1", 4, 8 ))
+	gold = math.floor(util.SharedRandom( "gold", 7, 12 ))
 
 	total = bronze1 + bronze2 + bronze3 + silver1 + silver2 + gold
+
+	if total <= 29 then
+		if total == 23 then return end
+		self:EmitSound( "artiwepsv2/cha-ching.mp3", 75, math.random(95, 105), 1, 6)
+	end
+	if total < 23 then
+		self:EmitSound( "artiwepsv2/aw_dangit.mp3", 75, 100, 1, 6)
+	end
+	if total >= 30 then
+		self:EmitSound( "artiwepsv2/bigwin.mp3", 75, 130, 1, 6)
+		self:SetClip1( total * 2 )
+	end
 end
 --========Reload Mechanics========
-
 
 
 
@@ -98,4 +115,18 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire( CurTime() + 0.062 )
 
 	self:EmitSound( "artiwepsv2/subzero_standard.mp3", 75, 170, 1, 1 )
+
+	local bullets = {
+		Src = self:GetOwner():GetShootPos(),
+		Dir = self:GetOwner():GetAimVector(),
+		Spread = 0 + ( total / 1000 ),
+		Attacker = self:GetOwner(),
+		Callback = function( att, tr, dmg ) dmg:SetInflictor( self ) end,
+		Damage = total / 2
+	}
+	self:GetOwner():LagCompensation( true )
+
+	self:GetOwner():FireBullets( bullets)
+
+	self:GetOwner():LagCompensation( false )
 end

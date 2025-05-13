@@ -55,8 +55,11 @@ function StatusSlow( ent, time )
 	ent.IsSlowed = true
 
 	timer.Simple( time, function()
+		if not ent:Alive() then return end
+		if ent:GetRunSpeed() >= 400 then return end
 		ent:SetRunSpeed( ent:GetRunSpeed() + 40 )
 		ent:SetWalkSpeed( ent:GetWalkSpeed() + 40 )
+
 	end)
 end
 --=================SLOW STATUS CODE===================
@@ -92,6 +95,7 @@ function StatusSugarRush( ply, time, bonus )
 	ply:SetWalkSpeed( ply:GetWalkSpeed() + bonus )
 
 	timer.Simple( time, function()
+		if not ent:Alive() then return end
 		ply:SetRunSpeed( ply:GetRunSpeed() - bonus )
 		ply:SetWalkSpeed( ply:GetWalkSpeed() - bonus )
 	end)
@@ -121,7 +125,7 @@ end
 
 
 --[[================REVEAL STATUS CODE=================
-function StatusReveal( ent, ply, time, r, g ,b)
+function StatusReveal( ent, ply, time, r, g, b )
 	color = Color(r, g, b)
 
 
