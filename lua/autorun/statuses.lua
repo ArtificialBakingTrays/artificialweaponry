@@ -132,3 +132,38 @@ function StatusReveal( ent, ply, time, r, g, b )
 
 end
 ]]--================REVEAL STATUS CODE=================
+
+
+
+--================LOSTMASK STATUS CODE=================
+function StatusScorch( ply, duration )
+	if not ply:IsValid() then return end
+	if ply:IsOnFire() then return end
+
+	ply:Ignite( duration )
+end
+
+
+
+function StatusShock( ply, ticks, dmg, stunt )
+	if ply.isCurrentlyShocked == true then return end
+
+	local num = 0.5 --difference between each instance of Shock
+	ent.isCurrentlyShocked = true
+
+	for i = 1, ticks do
+		num = num + 1
+		timer.Simple( num, function()
+			ent:TakeDamage( dmg, ply )
+			ent:EmitSound("items/suitchargeno1.wav", 75, math.random(140, 150), 1, 1)
+			local FxData = EffectData()
+			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
+			util.Effect("ManhackSparks", FxData, true, true)
+		end)
+	end
+
+	timer.Simple( ticks + 0.1, function()
+		ent.IsBleeding = false
+	end)
+end
+--================LOSTMASK STATUS CODE=================

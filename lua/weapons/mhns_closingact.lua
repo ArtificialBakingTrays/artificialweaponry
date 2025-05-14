@@ -1,7 +1,7 @@
 SWEP.PrintName = "Madware's Closing Act"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Random bullshit go!"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/closingact_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
