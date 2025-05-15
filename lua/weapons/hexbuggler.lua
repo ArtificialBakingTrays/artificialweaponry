@@ -62,7 +62,7 @@ function SWEP:SecondaryAttack()
 	local ownertr = ownerply:GetEyeTrace()
 	local targetpos = ownertr.HitPos
 
-	for k, v in ents.Iterator() do
+	for _, v in ents.Iterator() do
 		local ent = v
 		if ent:GetClass() ~= "hexbug" then continue end
 		if ent:GetOwner() ~= ownerply then continue end
