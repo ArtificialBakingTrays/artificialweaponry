@@ -21,20 +21,20 @@ function StatusBleed( dmg, ply, ent )
 	if bool == false then return end
 	if CLIENT then return end
 	if ent.IsBleeding == true then return end
-	if not ent:IsValid() then return end
-
 	--Bleed ticks 3 times per instance of the effect.
+
 	local num = 1 --difference between each instance of bleed
 	ent.IsBleeding = true
-
 	for i = 1, 7 do
 		num = num + 1
 		timer.Simple( num, function()
+			if ent.isBleeding == true then
 			ent:TakeDamage( dmg, ply )
-			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(80, 150), 1, 1)
+			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120), 1, 1)
 			local FxData = EffectData()
 			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
 			util.Effect("BloodImpact", FxData, true, true)
+			end
 		end)
 	end
 
@@ -43,6 +43,7 @@ function StatusBleed( dmg, ply, ent )
 	end)
 end
 --=================BLEED STATUS CODE===================
+
 
 
 --=================SLOW STATUS CODE===================
@@ -63,6 +64,8 @@ function StatusSlow( ent, time )
 	end)
 end
 --=================SLOW STATUS CODE===================
+
+
 
 --[[
 --=================GLACIAL BONUS CODE=================
@@ -139,31 +142,38 @@ end
 function StatusScorch( ply, duration )
 	if not ply:IsValid() then return end
 	if ply:IsOnFire() then return end
+	if bool == false then return end
+	if not ply:IsAlive() then ply:Extinguish() end
 
 	ply:Ignite( duration )
 end
 
 
 
-function StatusShock( ply, ticks, dmg, stunt )
+function StatusShock( ply, ticks, dmg )
 	if ply.isCurrentlyShocked == true then return end
+	if bool == false then return end
+	if not ply:IsValid() then return end
 
 	local num = 0.5 --difference between each instance of Shock
-	ent.isCurrentlyShocked = true
+	ply.isCurrentlyShocked = true
 
 	for i = 1, ticks do
-		num = num + 1
+		num = num + 0.5
 		timer.Simple( num, function()
-			ent:TakeDamage( dmg, ply )
-			ent:EmitSound("items/suitchargeno1.wav", 75, math.random(140, 150), 1, 1)
+			if ply.isCurrentlyShocked == true then
+			ply:TakeDamage( dmg, ply )
+			ply:EmitSound("npc/dog/dog_servo8.wav", 75, math.random(140, 150), 0.3, 1)
 			local FxData = EffectData()
-			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
+			FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
 			util.Effect("ManhackSparks", FxData, true, true)
+			end
 		end)
 	end
+	if not ply:IsAlive() then ply.isCurrentlyShocked = false end
 
 	timer.Simple( ticks + 0.1, function()
-		ent.IsBleeding = false
+		ply.isCurrentlyShocked = false
 	end)
 end
 --================LOSTMASK STATUS CODE=================
