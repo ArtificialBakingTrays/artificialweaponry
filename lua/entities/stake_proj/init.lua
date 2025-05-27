@@ -54,11 +54,11 @@ function ENT:PhysicsCollide(data)
 
 	if not IsValid(enthit) then
 		util.BlastDamage( self:GetOwner(), self:GetOwner(), self:GetPos(), Radius, ExplDMG )
-		self:Remove()
 
 		local effectdata = EffectData() --I love copy pasting
 		effectdata:SetOrigin( self:GetPos() )
 		util.Effect("WaterSurfaceExplosion", effectdata, true, true)
+		self:Remove()
 		return
 	end
 

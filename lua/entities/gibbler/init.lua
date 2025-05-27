@@ -38,7 +38,7 @@ function ENT:BounceDir() --Thank you lokachop :pray: <3
 
 	local closestDist = math.huge
 	local closestPlayer = nil
-	for i = 1, player.Iterator() do
+	for i = 1, #plys do
 		local ply = plys[i]
 		if ply == self:GetOwner() then continue end
 		if ply:Health() <= 0 then continue end
