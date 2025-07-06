@@ -140,7 +140,7 @@ function StatusScorch( ply, duration )
 	if not ply:IsValid() then return end
 	if ply:IsOnFire() then return end
 	if bool == false then return end
-	if not ply:IsAlive() then ply:Extinguish() end
+	if not ply:Alive() then ply:Extinguish() end
 
 	ply:Ignite( duration )
 end
@@ -167,7 +167,7 @@ function StatusShock( ply, ticks, dmg )
 			end
 		end)
 	end
-	if not ply:IsAlive() then ply.isCurrentlyShocked = false end
+	if not ply:Alive() then ply.isCurrentlyShocked = false end
 
 	timer.Simple( ticks + 0.1, function()
 		ply.isCurrentlyShocked = false

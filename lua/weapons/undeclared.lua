@@ -42,7 +42,7 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire( CurTime() + 1 )
 
 	local ExplDMG = self:Clip2() * 1.25
-	local ExplRad = 60 + (self:Clip2() * 2)
+	local ExplRad = 60 + (self:Clip2() * 1.25)
 
 	local ExplPos = owner:GetShootPos() + ( owner:GetAimVector() * 10 ),
 

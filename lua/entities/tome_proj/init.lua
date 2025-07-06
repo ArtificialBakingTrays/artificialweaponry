@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-local MdlColor = Color(255, 0, 75)
+local MdlColor = Color(255, 231, 125)
 
 --me when i gotta fire curses at my homies
 

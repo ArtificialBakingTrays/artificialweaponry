@@ -1,7 +1,7 @@
 include("shared.lua")
 
 local spritemat = Material("sprites/light_glow02_add")
-local MdlColor = Color(255, 0, 75)
+local MdlColor = Color(255, 218, 125)
 local size = 64
 
 function ENT:Draw()

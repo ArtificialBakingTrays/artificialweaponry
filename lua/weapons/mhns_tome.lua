@@ -31,7 +31,7 @@ function SWEP:PrimaryAttack() --Cursing Rounds
 	local time = 0.05
 	local Vol = 0.6
 
-	self:SetNextPrimaryFire( CurTime() + 0.5 )
+	self:SetNextPrimaryFire( CurTime() + 0.425 )
 	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
 	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
 
