@@ -4,7 +4,7 @@ SWEP.Instructions = "I gamble with my life. Reload to roll the dices, Dices dete
 SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 SWEP.DrawCrosshair = true

@@ -47,7 +47,7 @@ owner:LagCompensation( true )
 	Callback = function( attacker, tr )
 		if SERVER and tr.Entity:IsValid() and tr.Entity:IsPlayer() then
 			if not IsValid( tr.Entity ) then return end
-			StatusShock( tr.Entity, 9, 1 )
+			StatusSlow( tr.Entity, 0.1 )
 		end
 	end,}
 owner:LagCompensation( false )

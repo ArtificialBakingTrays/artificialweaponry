@@ -4,7 +4,7 @@ SWEP.Instructions = "Right click to charge up a bomb attack. Primary Fire to unl
 SWEP.IconOverride = "vgui/weaponvgui/unique_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 SWEP.DrawCrosshair = true
@@ -65,7 +65,7 @@ function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 0.7 )
 	if self:Clip1() == 0 then self:SetClip1( 1 ) end
 
-	self:SetClip2( self:Clip2() + 50 )
+	self:SetClip2( self:Clip2() + 5 )
 
 	local MaxPit = math.random(100 + self:Clip2(), 105 + self:Clip2())
 

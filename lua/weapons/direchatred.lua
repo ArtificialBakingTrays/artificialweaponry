@@ -41,6 +41,7 @@ function SWEP:Think() --This like fuckass prediction for timers is so like cooke
 
 	self:SetClip1( 45 )
 	self:SetDTFloat( 0, 0 )
+	self:SetClip2( 0 )
 end
 
 function SWEP:CustomAmmoDisplay()
@@ -137,3 +138,4 @@ function SWEP:DrawHUD()
 
 	draw.SimpleText("iDELTA; " .. tostring(invDelta), "BudgetLabel", 0, 0, c_White)
 end
+

@@ -5,7 +5,7 @@ SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/meatgrind_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = false
+SWEP.AdminOnly = true
 SWEP.DrawCrosshair = false
 SWEP.ViewModel	= "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel	= "models/weapons/w_crowbar.mdl"
@@ -246,6 +246,10 @@ function SWEP:Think()
 	self:TakeAmmoThink()
 	self:ChargeUpThink()
 	self:GetOwner():SetRunSpeed( 400 + ( self:Clip1() * 3 ))
+end
+
+function SWEP:Holster()
+	self:GetOwner():SetRunSpeed( 400 )
 end
 
 --[artificialweaponry] addons/artificialweaponry/lua/weapons/meatgrinder.lua:189: attempt to index global 'surface' (a nil value)

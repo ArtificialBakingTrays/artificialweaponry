@@ -5,7 +5,7 @@ SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/springload_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.DrawCrosshair = true
 SWEP.ViewModel	= "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel	= "models/weapons/w_shotgun.mdl"
@@ -18,7 +18,7 @@ SWEP.BobScale = 1.15
 
 SWEP.Primary.ClipSize = 8
 SWEP.Primary.DefaultClip = 8
-SWEP.Primary.Automatic	= false
+SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = -1
 
@@ -51,6 +51,7 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 	self:SetNextPrimaryFire( CurTime() + 0.75 )
+	if self.isReloading == true then return end
 	local owner = self:GetOwner()
 
 	self:EmitSound( "tray_sounds/basicfire.mp3", 75, math.random(130, 140), 1, 1 )
@@ -81,7 +82,7 @@ function SWEP:PrimaryAttack()
 		owner:FireBullets({
 			Src = owner:GetShootPos(),
 			Dir = realShootDir,
-			Damage = 15,
+			Damage = 12,
 			Num = 1,
 			Spread = Vector(0.0, 0.0),
 			Attacker = owner,
@@ -109,6 +110,7 @@ function SWEP:Reload()
 	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
+	self.isReloading = true
 
 	self:SetDTFloat(0, CurTime() + .7 )
 	self:SendWeaponAnim( ACT_VM_RELOAD )
@@ -122,4 +124,5 @@ function SWEP:Think()
 
 	self:SetClip1( 8 )
 	self:SetDTFloat( 0, 0 )
+	self.isReloading = false
 end

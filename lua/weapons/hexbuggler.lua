@@ -15,9 +15,8 @@ SWEP.UseHands = false
 SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 
---Probably has the weirdest ammo economy ever-
-SWEP.Primary.ClipSize = 27
-SWEP.Primary.DefaultClip = 27
+SWEP.Primary.ClipSize = 26
+SWEP.Primary.DefaultClip = 26
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 75
@@ -36,11 +35,11 @@ function SWEP:PrimaryAttack()
 	-- guesstimating
 	local round = self.Primary.ClipSize - self:Clip1()
 	local pitch = 100 + round
-	local delay = 0.125 - round * 0.0025
+	local delay = 0.205 - round * 0.0025
 
 	self:SetNextPrimaryFire( CurTime() + delay )
 
-	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, pitch, 1, 1 )
+	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, pitch - 10, 1, 1 )
 	self:EmitSound( "physics/cardboard/cardboard_box_impact_bullet4.wav", 100, pitch + 10, 1, 6 )
 
 	local owner = self:GetOwner()
@@ -52,13 +51,11 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	self:SetNextSecondaryFire( CurTime() + 0.7 )
-
+	self:SetNextSecondaryFire( CurTime() + 3 )
 	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
 	if CLIENT then return end
 
 	local ownerply = self:GetOwner()
-
 	local ownertr = ownerply:GetEyeTrace()
 	local targetpos = ownertr.HitPos
 
@@ -137,6 +134,7 @@ function SWEP:DeployBugs()
 	ent:SetPos( ownerpos + Vector(0, 0, -5) )
 	ent:SetAngles( ownereyes + Angle(90,0,0) )
 	ent:SetOwner( owner )
+	ent:SetHealth(20)
 	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()

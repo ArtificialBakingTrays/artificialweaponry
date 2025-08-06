@@ -15,9 +15,9 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 1
 SWEP.BobScale = 1.15
 
-SWEP.Primary.ClipSize = 6
-SWEP.Primary.DefaultClip = 6
-SWEP.Primary.Automatic	= false
+SWEP.Primary.ClipSize = 8
+SWEP.Primary.DefaultClip = 8
+SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 SWEP.Primary.Force = 100
 
@@ -46,7 +46,7 @@ function SWEP:Reload()
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
 
-	self:SetDTFloat( 0, CurTime() + 1.2 )
+	self:SetDTFloat( 0, CurTime() + 1.3 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
 
 	self:EmitSound( "tray_sounds/sling_reload.mp3", 75, 110, .7, 1 )
@@ -58,7 +58,7 @@ function SWEP:Think() --Help from zynx
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 6 )
+	self:SetClip1( 8 )
 	self:SetDTFloat( 0, 0 )
 end
 
@@ -68,8 +68,7 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
-	local delay = 0.45
-	self:SetNextPrimaryFire( CurTime() + delay )
+	self:SetNextPrimaryFire( CurTime() + 0.45 )
 
 	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
 	--self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 105, 110 ), 1, 6 )

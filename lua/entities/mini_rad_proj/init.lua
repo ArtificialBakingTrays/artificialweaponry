@@ -36,7 +36,7 @@ function ENT:PhysicsCollide(data)
 	if (self.NextHit or 0) > CurTime() then return end
 
 	local DMG = 8
-	local ExplDMG = 25
+	local ExplDMG = 23
 
 	if not IsValid(enthit) then
 		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
