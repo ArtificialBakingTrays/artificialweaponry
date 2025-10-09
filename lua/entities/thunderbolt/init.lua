@@ -37,7 +37,7 @@ function ENT:PhysicsCollide(data)
 	if ( not self:IsValid() ) then return end
 	if enthit == self:GetOwner() then return end
 	if enthit.IsTraysProjectile then return end
-	self:EmitSound( "legendary/spark.mp3", 75, math.random(95, 100), 1, 6 )
+	self:EmitSound( "sparkbound/spark.mp3", 75, math.random(95, 100), 1, 6 )
 
 	if not IsValid(enthit) then
 			local effectdata = EffectData() --I love copy pasting

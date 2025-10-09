@@ -34,7 +34,7 @@ function ENT:Initialize()
 		if not IsValid( self ) then return end
 			util.BlastDamage( self, self:GetOwner(), self:GetPos(), 95, 35 )
 			self:EmitSound( "tray_sounds/slingfirework2.mp3", 75, math.random( 90, 110 ), 1.2, 1 )
-				self:EmitSound("legendary/elec_impact.mp3", 75, math.random( 90, 110 ), 1.2, 6)
+				self:EmitSound("sparkbound/elec_impact.mp3", 75, math.random( 90, 110 ), 1.2, 6)
 		self:Remove()
 	end)
 end
@@ -44,7 +44,7 @@ function ENT:PhysicsCollide(data)
 	if ( not self:IsValid() ) then return end
 	if enthit == self:GetOwner() then return end
 	if enthit.IsTraysProjectile then return end
-	self:EmitSound( "legendary/spark.mp3", 75, math.random(95, 100), 1, 6 )
+	self:EmitSound( "sparkbound/spark.mp3", 75, math.random(95, 100), 1, 6 )
 
 	if data.HitSpeed:Length() > 60 then
 		if not IsValid(self) then return end
