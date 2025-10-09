@@ -42,6 +42,19 @@ function SWEP:Deploy()
 end
 
 --========Reload Mechanics========
+function SWEP:ReloadMechanic()
+	local time = self:GetDTFloat( 0 )
+	if time == 0 then return end
+	if time > CurTime() then return end
+	print(total)
+	if total ~= 29 then self:SetClip1( total ) end
+	self:SetDTFloat( 0, 0 )
+end
+
+function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
+	self:ReloadMechanic()
+end
+
 function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
@@ -52,20 +65,6 @@ function SWEP:Reload()
 
 	self:SetDTFloat( 0, CurTime() + ReloTime )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
-end
-
-function SWEP:ReloadMechanic()
-	local time = self:GetDTFloat( 0 )
-	if time == 0 then return end
-	if time > CurTime() then return end
-	print(total)
-	if total ~= 29 then self:SetClip1( total ) end
-	self:SetDTFloat( 0, 0 )
-	self:DiceRollMechanic()
-end
-
-function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
-	self:ReloadMechanic()
 end
 
 function SWEP:CustomAmmoDisplay()
@@ -95,9 +94,11 @@ function SWEP:DiceRollMechanic()
 		if total == 23 then return end
 		self:EmitSound( "artiwepsv2/cha-ching.mp3", 75, math.random(95, 105), 1, 6)
 	end
+
 	if total < 23 then
 		self:EmitSound( "artiwepsv2/aw_dangit.mp3", 75, 100, 1, 6)
 	end
+
 	if total >= 30 then
 		self:EmitSound( "artiwepsv2/bigwin.mp3", 75, 130, 1, 6)
 		self:SetClip1( total * 2 )

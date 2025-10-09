@@ -35,7 +35,7 @@ function SWEP:PrimaryAttack()
 	-- guesstimating
 	local round = self.Primary.ClipSize - self:Clip1()
 	local pitch = 100 + round
-	local delay = 0.205 - round * 0.0025
+	local delay = 0.120 - round * 0.0025
 
 	self:SetNextPrimaryFire( CurTime() + delay )
 
@@ -51,7 +51,8 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	self:SetNextSecondaryFire( CurTime() + 3 )
+	if self:Clip1() > 0 then return end
+	self:SetNextSecondaryFire( CurTime() + 1.5 )
 	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
 	if CLIENT then return end
 

@@ -198,6 +198,8 @@ function SWEP:Holster()
 		self.proccySound = nil
 	end
 
+	self:GetOwner():SetRunSpeed( 400 )
+
 	return true
 end
 
@@ -246,10 +248,6 @@ function SWEP:Think()
 	self:TakeAmmoThink()
 	self:ChargeUpThink()
 	self:GetOwner():SetRunSpeed( 400 + ( self:Clip1() * 3 ))
-end
-
-function SWEP:Holster()
-	self:GetOwner():SetRunSpeed( 400 )
 end
 
 --[artificialweaponry] addons/artificialweaponry/lua/weapons/meatgrinder.lua:189: attempt to index global 'surface' (a nil value)
