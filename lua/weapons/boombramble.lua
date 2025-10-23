@@ -15,8 +15,8 @@ SWEP.UseHands = false
 SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 
-SWEP.Primary.ClipSize = 5
-SWEP.Primary.DefaultClip = 5
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 75
@@ -43,15 +43,49 @@ function SWEP:HUDShouldDraw(element)
 end
 
 function SWEP:PrimaryAttack()
-	if self:Clip1() <= 0 then return end
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:TakePrimaryAmmo( 1 )
-
-	self:SetNextPrimaryFire( CurTime() + 0.65 )
-
-	self:EmitSound( "tray_sounds/parasite_energy.mp3", 55, math.random(130, 140), 1, 1 )
-	self:EmitSound( "weapons/ar2/ar2_altfire.wav", 90, math.random(130, 135), 1, 6 )
 
 	local owner = self:GetOwner()
+	--local ownerpos = owner:GetShootPos()
+	--local forward = owner:GetAimVector()
+
+	self:SetNextPrimaryFire( CurTime() + 0.45 )
+
+	self:EmitSound( "boombramble/terrariapult.mp3", 100, math.random(90, 110), 0.7, 1 )
+	--Weapon Sounds
+	self:EmitSound( "boombramble/aureusshootcrystal.mp3", 100, math.random(90, 110) - 30, 0.7, 6 )
+
+	owner:LagCompensation( true )
+
+		self:EntLaunch()
+
+	owner:LagCompensation( false )
+end
+
+function SWEP:EntLaunch()
+	if CLIENT then return end
+
+	local ent = ents.Create( "berry_proj" )
+
+	if ( not ent:IsValid() ) then return end
+
+	--yknow its bad when we have the CUBE OF VARIABLES
+	local owner = self:GetOwner()
+	local ownerpos = owner:GetShootPos()
+	local ownereyes = owner:EyeAngles()
+	local aimvec = owner:GetAimVector()
+
+	ent:SetPos( ownerpos + Vector(0, 0, -5) )
+	ent:SetAngles( ownereyes + Angle(90,0,0) + Angle(math.random(0, 1), math.random(0, 1), math.random(0, 1)))
+	ent:SetOwner( owner )
+	ent:SetGravity( 1 )
+	ent:Spawn()
+
+	local entphys = ent:GetPhysicsObject()
+
+	if ( not entphys:IsValid() ) then ent:Remove() return end
+
+	aimvec:Mul( 1500 * entphys:GetMass() )
+	entphys:ApplyForceCenter( aimvec )
 
 end

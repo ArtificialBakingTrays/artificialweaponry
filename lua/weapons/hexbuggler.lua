@@ -51,7 +51,6 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	if self:Clip1() > 0 then return end
 	self:SetNextSecondaryFire( CurTime() + 1.5 )
 	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
 	if CLIENT then return end

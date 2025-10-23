@@ -124,53 +124,35 @@ end
 --================NULLIFY STATUS CODE=================
 
 
---[[================REVEAL STATUS CODE=================
-function StatusReveal( ent, ply, time, r, g, b )
-	color = Color(r, g, b)
-
-
-
-end
-]]--================REVEAL STATUS CODE=================
-
-
-
---================LOSTMASK STATUS CODE=================
-function StatusScorch( ply, duration )
-	if not ply:IsValid() then return end
-	if ply:IsOnFire() then return end
-	if bool == false then return end
-	if not ply:Alive() then ply:Extinguish() end
-
-	ply:Ignite( duration )
-end
-
-
-
-function StatusShock( ply, ticks, dmg )
-	if ply.isCurrentlyShocked == true then return end
+function StatusPoison( ply, ticks, dmg, owner )
+	if ply.isCurrentlyPoisoned == true then return end
 	if bool == false then return end
 	if not ply:IsValid() then return end
 
-	local num = 0.5 --difference between each instance of Shock
-	ply.isCurrentlyShocked = true
+	ply:SetColor(Color(136, 0, 255))
+
+	local num = 0.45 --difference between each instance of Shock
+	ply.isCurrentlyPoisoned = true
 
 	for i = 1, ticks do
 		num = num + 0.5
 		timer.Simple( num, function()
-			if ply.isCurrentlyShocked == true then
-			ply:TakeDamage( dmg, ply )
-			ply:EmitSound("npc/dog/dog_servo8.wav", 75, math.random(140, 150), 0.3, 1)
+			if ply.isCurrentlyPoisoned == true then
+			ply:TakeDamage( dmg, owner )
+			ply:EmitSound("boombramble/bushcut.mp3", 75, math.random(140, 150), 0.3, 1)
 			local FxData = EffectData()
 			FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
-			util.Effect("ManhackSparks", FxData, true, true)
+			util.Effect("watersplash", FxData, true, true)
 			end
 		end)
 	end
-	if not ply:Alive() then ply.isCurrentlyShocked = false end
+	if not ply:Alive() then
+		ply.isCurrentlyPoisoned = false
+		ply:SetColor(Color(255, 255, 255))
+	end
 
 	timer.Simple( ticks + 0.1, function()
-		ply.isCurrentlyShocked = false
+		ply.isCurrentlyPoisoned = false
+		ply:SetColor(Color(255, 255, 255))
 	end)
 end
---================LOSTMASK STATUS CODE=================
