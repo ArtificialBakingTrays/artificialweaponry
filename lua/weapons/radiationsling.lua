@@ -68,14 +68,16 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
-	self:SetNextPrimaryFire( CurTime() + 0.45 )
+	self:SetNextPrimaryFire( CurTime() + 0.2 )
 
-	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
-	--self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 105, 110 ), 1, 6 )
+	--self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
+
+	self:EmitSound( "other/blast1concept.mp3", 100, math.random( 100, 110 ), 1, 1 )
+	self:EmitSound( "other/exobladeslash.mp3", 100, math.random( 90, 110 ), 1, 6 )
 
 	owner:LagCompensation( true )
 
-	self:SpawnProj()
+	--self:SpawnProj()
 
 	owner:LagCompensation( false )
 end

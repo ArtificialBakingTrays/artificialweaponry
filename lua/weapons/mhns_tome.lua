@@ -120,7 +120,7 @@ function SWEP:SpawnFool()
 	ent:Spawn()
 
 	util.SpriteTrail( ent, 2, PinkVoid, false, SSize, ESize, Duration, 1, "trails/laser" )
-	ent:SetHealth( ent:GetMaxHealth() + 250 )
+	ent:SetHealth( 350 )
 	ent:SetBodygroup( 1, 0 )
 	ent:SetColor(Color(25, 25, 25))
 	ent:SetMaterial("models/ihvtest/arm")
