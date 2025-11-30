@@ -151,21 +151,21 @@ end
 SWEP.UseHands = false
 
 function SWEP:DrawWorldModel( flags )
-    render.SetColorModulation( 2, 0, 20 )
-        render.SuppressEngineLighting( true )
-            self:DrawModel( flags )
-        render.SuppressEngineLighting( false )
-    render.SetColorModulation( 1, 1, 1 )
+	render.SetColorModulation( 2, 0, 20 )
+		render.SuppressEngineLighting( true )
+			self:DrawModel( flags )
+		render.SuppressEngineLighting( false )
+	render.SetColorModulation( 1, 1, 1 )
 end
 
 function SWEP:PreDrawViewModel( vm )
-    render.SetColorModulation( 7, 10, 1 ) -- the glow
-    render.SuppressEngineLighting( true ) -- disable lighting
+	render.SetColorModulation( 7, 10, 1 ) -- the glow
+	render.SuppressEngineLighting( true ) -- disable lighting
 end
 
 function SWEP:PostDrawViewModel( _, _, ply )
-    render.SuppressEngineLighting( false ) -- re enable lighting
-    render.SetColorModulation( 1, 1, 1 ) -- reset the glow
+	render.SuppressEngineLighting( false ) -- re enable lighting
+	render.SetColorModulation( 1, 1, 1 ) -- reset the glow
 
-    if IsValid( ply ) then ply:GetHands():DrawModel() end
+	if IsValid( ply ) then ply:GetHands():DrawModel() end
 end
