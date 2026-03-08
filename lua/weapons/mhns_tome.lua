@@ -538,7 +538,7 @@ hook.Add("Think", "trays_RemoveSummonCircles", function()
 	end
 end)
 
-local mat = Material("addons/artificialweaponry/materials/materials/tome/summoningcircle.png", "mips smooth ignorez nocull")
+local mat = Material("materials/tome/summoningcircle.png", "mips smooth ignorez nocull")
 local matrixCircleRender = Matrix()
 local rotAngle = Angle(0, 0, 0)
 
