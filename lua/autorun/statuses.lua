@@ -156,3 +156,20 @@ function StatusPoison( ply, ticks, dmg, owner )
 		ply:SetColor(Color(255, 255, 255))
 	end)
 end
+
+
+function StatusMagmatic( ply, lvl, dmginst, dmgown )
+	if bool == false then return end
+	if not ply:IsValid() or not ply:IsPlayer() then return end
+
+	timer.Simple( 1, function()
+		if ply.isMagmafied == true then
+		ply:TakeDamage( dmginst, dmgown )
+		ply:EmitSound("boombramble/bushcut.mp3", 75, math.random(140, 150), 0.3, 1)
+		local FxData = EffectData()
+		FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
+		util.Effect("watersplash", FxData, true, true)
+		end
+	end)
+
+end

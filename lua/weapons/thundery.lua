@@ -2,7 +2,7 @@ SWEP.PrintName = "SparkBound Compass"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "They say it will lead you in the direction of a raging storm"
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/legendari_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

@@ -1,7 +1,7 @@
 SWEP.PrintName = "Undeclared Reanimation"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Right click to charge up a bomb attack. Primary Fire to unleash the blast."
-SWEP.IconOverride = "vgui/weaponvgui/unique_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
