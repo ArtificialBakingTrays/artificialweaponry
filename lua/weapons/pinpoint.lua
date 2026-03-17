@@ -15,8 +15,8 @@ SWEP.Slot = 3
 SWEP.BobScale = 1.15
 SWEP.Category = "Artificial Weaponry"
 
-SWEP.Primary.ClipSize = 1
-SWEP.Primary.DefaultClip = 1
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic	= false
 SWEP.Primary.Ammo = "Battery"
 
@@ -25,29 +25,7 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "Battery"
 
-function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
-	if CurTime() < self:GetNextPrimaryFire() then return end
-	if self:Clip1() == self.Primary.ClipSize then return end
-
-	self:SetDTFloat( 0, CurTime() + 0.7 )
-	self:SendWeaponAnim(ACT_VM_RELOAD)
-end
-
-function SWEP:TimedReload()
-	local time = self:GetDTFloat( 0 )
-	if time == 0 then return end
-
-	if time > CurTime() then return end
-
-	self:SetClip1( 1 )
-	self:SetDTFloat( 0, 0 )
-end
-
-function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
-	self:TimedReload()
-end
-
+function SWEP:Reload() return end
 
 function SWEP:DrawWorldModel( flags )
 	render.SetColorModulation( 1, 0.267, 0)
@@ -71,10 +49,8 @@ end
 
 
 function SWEP:PrimaryAttack()
-	if self:Clip1() <= 0 then return end
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:TakePrimaryAmmo( 1 )
-	self:SetNextPrimaryFire( CurTime() + 0.062 )
+	self:SetNextPrimaryFire( CurTime() + 0.325 )
 
 	self:EmitSound( "weapons/mortar/mortar_fire1.wav", 75, math.random( 160, 170 ), 1, 1 )
 	self:EmitSound( "artiwepsv2/rockblast.mp3", 75, math.random( 100, 110 ), 1, 6 )
@@ -90,7 +66,7 @@ end
 
 function SWEP:SpawnProj()
 	if CLIENT then return end
-	local ent = ents.Create( "sparkler" )
+	local ent = ents.Create( "lavarock_proj" )
 	if ( not ent:IsValid() ) then return end
 
 	local owner = self:GetOwner()
@@ -99,7 +75,7 @@ function SWEP:SpawnProj()
 	local aimvec = owner:GetAimVector()
 
 	ent:SetOwner( owner )
-	ent:SetPos( ownerpos + Vector( 0, 0, -5 ) )
+	ent:SetPos( ownerpos )
 	ent:SetAngles( ownereyes + Angle( 90, 0, 0 ) )
 	ent:Spawn()
 
@@ -107,7 +83,7 @@ function SWEP:SpawnProj()
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	local Speed = 850
+	local Speed = 2000
 
 	aimvec:Mul( Speed * entphys:GetMass() )
 	entphys:ApplyForceCenter( aimvec )
