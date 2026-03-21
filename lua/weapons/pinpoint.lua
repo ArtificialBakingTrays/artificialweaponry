@@ -1,7 +1,7 @@
 SWEP.PrintName = "PinPoint Detonator"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "A Heldheld Mortar, one far past its prime."
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/pinpoint_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
@@ -17,7 +17,7 @@ SWEP.Category = "Artificial Weaponry"
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
-SWEP.Primary.Automatic	= false
+SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 
 SWEP.Secondary.ClipSize		= -1

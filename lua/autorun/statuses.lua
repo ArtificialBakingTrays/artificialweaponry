@@ -60,48 +60,6 @@ function StatusSlow( ent, time )
 
 	end)
 end
---=================SLOW STATUS CODE===================
-
-
-
---[[
---=================GLACIAL BONUS CODE=================
-function StatusGlacialBonus(ply, time)
-	if ply.HasBonus == true then return end
-
-	timer.Simple( time, function()
-		ply.HasBonus = false
-	end)
-end
-
-hook.Add( "EntityTakeDamage", "EntityDamageExample", function( target, dmginfo )
-	--reducing damage taken when a player has the bonus
-	if target.HasBonus == false then return end
-	if not target:IsValid() then return end
-	if not target:IsPlayer() then return end
-
-	dmginfo:ScaleDamage( 0.4 )
-end )
---=================GLACIAL BONUS CODE=================
-]]--
-
---O ye bell done crossed me one to many ye times over, im about to lose my balls
-
---===============SUGARRUSH BONUS CODE=================
-function StatusSugarRush( ply, time, bonus )
-	if bool == false then return end
-
-	ply:SetRunSpeed( ply:GetRunSpeed() + bonus )
-	ply:SetWalkSpeed( ply:GetWalkSpeed() + bonus )
-
-	timer.Simple( time, function()
-		if not ent:Alive() then return end
-		ply:SetRunSpeed( ply:GetRunSpeed() - bonus )
-		ply:SetWalkSpeed( ply:GetWalkSpeed() - bonus )
-	end)
-end
---===============SUGARRUSH BONUS CODE=================
-
 
 --================NULLIFY STATUS CODE=================
 function StatusNullify( ply, hp, armor )
@@ -124,53 +82,20 @@ end
 --================NULLIFY STATUS CODE=================
 
 
-function StatusPoison( ply, ticks, dmg, owner )
-	if ply.isCurrentlyPoisoned == true then return end
-	if bool == false then return end
-	if not ply:IsValid() then return end
-
-	ply:SetColor(Color(136, 0, 255))
-
-	local num = 0.45 --difference between each instance of Shock
-	ply.isCurrentlyPoisoned = true
-
-	for i = 1, ticks do
-		num = num + 0.5
-		timer.Simple( num, function()
-			if ply.isCurrentlyPoisoned == true then
-			ply:TakeDamage( dmg, owner )
-			ply:EmitSound("boombramble/bushcut.mp3", 75, math.random(140, 150), 0.3, 1)
-			local FxData = EffectData()
-			FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
-			util.Effect("watersplash", FxData, true, true)
-			end
-		end)
-	end
-	if not ply:Alive() then
-		ply.isCurrentlyPoisoned = false
-		ply:SetColor(Color(255, 255, 255))
-	end
-
-	timer.Simple( ticks + 0.1, function()
-		ply.isCurrentlyPoisoned = false
-		ply:SetColor(Color(255, 255, 255))
-	end)
-end
-
-
 function StatusMagmatic( ply, lvl, dmginst, dmgown )
 	if bool == false then return end
 	if not ply:IsValid() or not ply:IsPlayer() then return end
+	if not ply:isAlive() then return end
 	ply.isMagmafied = true
 
 	timer.Simple( 1, function()
-		if ply.isMagmafied == true then
-		ply:TakeDamage( dmginst * lvl, dmgown )
-		ply:EmitSound("physics/concrete/concrete_break3.wav", 75, math.random(140, 150), 0.3, 1)
-		local FxData = EffectData()
-		FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
-		util.Effect("cball_explode", FxData, true, true)
-		ply.isMagmafied = false
+		if ply.isMagmafied == true && ply:isAlive() then
+			ply:TakeDamage( dmginst * lvl, dmgown )
+			ply:EmitSound("physics/concrete/concrete_break3.wav", 75, math.random(140, 150), 0.3, 1)
+			local FxData = EffectData()
+			FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
+			util.Effect("cball_explode", FxData, true, true)
+			ply.isMagmafied = false
 		end
 	end)
 

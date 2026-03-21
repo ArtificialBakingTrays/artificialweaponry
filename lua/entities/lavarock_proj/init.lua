@@ -22,12 +22,13 @@ function ENT:Initialize()
 end
 
 function ENT:PhysicsCollide(data)
+	if CLIENT then return end
 	local enthit = data.HitEntity
 	if ( not self:IsValid() ) then return end
 	if (self.NextHit or 0) > CurTime() then return end
 
-	local ExplDMG = math.random( 6, 10 )
-	local DMG = math.random( 20, 30 )
+	local ExplDMG = math.random( 3, 7 )
+	local DMG = math.random( 10, 20 )
 
 	if not IsValid(enthit) then
 		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
