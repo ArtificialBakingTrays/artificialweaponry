@@ -85,11 +85,11 @@ end
 function StatusMagmatic( ply, lvl, dmginst, dmgown )
 	if bool == false then return end
 	if not ply:IsValid() or not ply:IsPlayer() then return end
-	if not ply:isAlive() then return end
+	--if not ply:isAlive() then return end
 	ply.isMagmafied = true
 
 	timer.Simple( 1, function()
-		if ply.isMagmafied == true && ply:isAlive() then
+		if ply.isMagmafied == true then
 			ply:TakeDamage( dmginst * lvl, dmgown )
 			ply:EmitSound("physics/concrete/concrete_break3.wav", 75, math.random(140, 150), 0.3, 1)
 			local FxData = EffectData()

@@ -22,8 +22,20 @@ SWEP.Primary.Ammo = "Battery"
 
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
-SWEP.Secondary.Automatic	= false
+SWEP.Secondary.Automatic	= true
 SWEP.Secondary.Ammo		= "Battery"
+
+local bannedLUT = {
+	["CHudAmmo"]      = true,
+	["CHudBattery"]	  = true,
+}
+
+function SWEP:HUDShouldDraw(element)
+	if bannedLUT[element] then
+		return false
+	end
+	return true
+end
 
 function SWEP:Reload() return end
 
@@ -58,13 +70,13 @@ function SWEP:PrimaryAttack()
 	self:GetOwner():LagCompensation( true )
 
 --striderbuster_explode_core
-	self:SpawnProj()
+	self:SpawnPrimaryRock()
 
 	self:GetOwner():LagCompensation( false )
 
 end
 
-function SWEP:SpawnProj()
+function SWEP:SpawnPrimaryRock()
 	if CLIENT then return end
 	local ent = ents.Create( "lavarock_proj" )
 	if ( not ent:IsValid() ) then return end
@@ -87,4 +99,38 @@ function SWEP:SpawnProj()
 
 	aimvec:Mul( Speed * entphys:GetMass() )
 	entphys:ApplyForceCenter( aimvec )
+end
+
+function SWEP:SpawnMortar()
+	if CLIENT then return end
+	local ent = ents.Create( "lavamortar_proj" )
+	if ( not ent:IsValid() ) then return end
+
+	local owner = self:GetOwner()
+	local ownertr = owner:GetEyeTrace()
+	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
+
+	ent:SetOwner( owner )
+	ent:SetPos( targetpos )
+	ent:Spawn()
+
+	local entphys = ent:GetPhysicsObject()
+
+	if ( not entphys:IsValid() ) then ent:Remove() return end
+end
+
+function SWEP:SecondaryAttack()
+	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	self:SetNextSecondaryFire( CurTime() + 0.325 )
+
+	self:EmitSound( "artiwepsv2/splathit1.mp3", 75, math.random( 160, 170 ), 1, 1 )
+	self:EmitSound( "weapons/mortar/mortar_fire1.wav", 75, math.random( 100, 110 ), 0.4, 6 )
+
+	self:GetOwner():LagCompensation( true )
+
+--striderbuster_explode_core
+	self:SpawnMortar()
+
+	self:GetOwner():LagCompensation( false )
+
 end
