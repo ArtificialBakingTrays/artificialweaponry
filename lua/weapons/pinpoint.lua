@@ -121,7 +121,7 @@ end
 
 function SWEP:SecondaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:SetNextSecondaryFire( CurTime() + 0.325 )
+	self:SetNextSecondaryFire( CurTime() + 2.5 )
 
 	self:EmitSound( "artiwepsv2/splathit1.mp3", 75, math.random( 160, 170 ), 1, 1 )
 	self:EmitSound( "weapons/mortar/mortar_fire1.wav", 75, math.random( 100, 110 ), 0.4, 6 )
