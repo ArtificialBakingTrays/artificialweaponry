@@ -115,10 +115,9 @@ function SWEP:SecondaryAttack()
 	self:EmitSound("weapons/sniper/sniper_zoomin.wav", 75, math.random(95, 105), 100, 6 )
 end
 
-
 local slingreticle = Material( "vgui/hud/sling_reticle.png", "noclamp smooth" )
 local color = Color(226, 255, 121, 255)
---Note to self. wait for fucking loka next time before trying rendering bullshit
+--Note to self. wait for loka next time before trying rendering bullshit
 function SWEP:DrawHUD()
 	if self:GetScoped() then
 	render.SetColorMaterialIgnoreZ()

@@ -28,8 +28,9 @@ SWEP.Secondary.Ammo		= "Battery"
 local bannedLUT = {
 	["CHudAmmo"]      = true,
 	["CHudBattery"]	  = true,
+	["CHudCrosshair"]	= true,
 }
-
+--Removing certain Hud Elements
 function SWEP:HUDShouldDraw(element)
 	if bannedLUT[element] then
 		return false
@@ -39,6 +40,7 @@ end
 
 function SWEP:Reload() return end
 
+--zynx color modulation code
 function SWEP:DrawWorldModel( flags )
 	render.SetColorModulation( 1, 0.267, 0)
 		render.SuppressEngineLighting( true )
@@ -60,6 +62,9 @@ function SWEP:PostDrawViewModel( _, _, ply )
 end
 
 
+--==============Divider==============--
+
+
 function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:SetNextPrimaryFire( CurTime() + 0.325 )
@@ -69,68 +74,82 @@ function SWEP:PrimaryAttack()
 
 	self:GetOwner():LagCompensation( true )
 
---striderbuster_explode_core
-	self:SpawnPrimaryRock()
+	local ownerpos = self:GetOwner():GetShootPos()
+	local ownereyes = self:GetOwner():EyeAngles()
+	local ownaimvec = self:GetOwner():GetAimVector()
+	self:SpawnProjectile( "lavarock_proj", self:GetOwner(), ownerpos, ownereyes + Angle( 90, 0, 0 ), ownaimvec, 1 )
 
 	self:GetOwner():LagCompensation( false )
 
 end
 
-function SWEP:SpawnPrimaryRock()
+--Custom Projectile Spawning Func
+--Now updated to work for MANY projectiles at once.
+function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
 	if CLIENT then return end
-	local ent = ents.Create( "lavarock_proj" )
+	local ent = ents.Create( Entstring )
 	if ( not ent:IsValid() ) then return end
 
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
-	local aimvec = owner:GetAimVector()
-
-	ent:SetOwner( owner )
-	ent:SetPos( ownerpos )
-	ent:SetAngles( ownereyes + Angle( 90, 0, 0 ) )
+	ent:SetOwner( Owner )
+	ent:SetPos( Position )
+	ent:SetAngles( Angles )
 	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	local Speed = 2000
+	if VelBool == 1 then
+		local Speed = 2000
 
-	aimvec:Mul( Speed * entphys:GetMass() )
-	entphys:ApplyForceCenter( aimvec )
+		AimVec:Mul( Speed * entphys:GetMass() )
+		entphys:ApplyForceCenter( AimVec )
+	end
 end
 
-function SWEP:SpawnMortar()
-	if CLIENT then return end
-	local ent = ents.Create( "lavamortar_proj" )
-	if ( not ent:IsValid() ) then return end
-
-	local owner = self:GetOwner()
-	local ownertr = owner:GetEyeTrace()
-	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
-
-	ent:SetOwner( owner )
-	ent:SetPos( targetpos )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-end
 
 function SWEP:SecondaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:SetNextSecondaryFire( CurTime() + 2.5 )
+
+	Alpha = 0
+
+	timer.Simple( self:GetNextSecondaryFire(), function()
+		Alpha = 255
+	end)
 
 	self:EmitSound( "artiwepsv2/splathit1.mp3", 75, math.random( 160, 170 ), 1, 1 )
 	self:EmitSound( "weapons/mortar/mortar_fire1.wav", 75, math.random( 100, 110 ), 0.4, 6 )
 
 	self:GetOwner():LagCompensation( true )
 
---striderbuster_explode_core
-	self:SpawnMortar()
+	local ownertr = self:GetOwner():GetEyeTrace()
+	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
+	self:SpawnProjectile( "lavamortar_proj", self:GetOwner(), targetpos, Angle(0,0,0), _, 0 )
 
 	self:GetOwner():LagCompensation( false )
 
 end
+
+
+--==============Divider==============--
+
+
+function SWEP:DrawHUD()
+	if CLIENT then
+		render.SetColorMaterialIgnoreZ()
+		surface.SetMaterial( Material( "vgui/hud/lavamortar.png", "noclamp smooth" ) )
+		surface.SetDrawColor( Color( 255, 143, 109) )
+		local w = ScrW() / 2
+		local h = ScrH() / 2
+		local scale = 256
+		local length = scale / 1.5
+		surface.DrawTexturedRect( w - length / 2, h - scale / 2 + 50, length, scale * .5 )
+
+		surface.SetMaterial( Material( "vgui/hud/lavamortar2.png", "noclamp smooth" ) )
+		surface.SetDrawColor( Color( 255, 192, 90 ) )
+		surface.DrawTexturedRect( w - length / 2, h - scale / 2 + 50, length, scale * .5 )
+	end
+end
+
+function SWEP:DoDrawCrosshair() return false end
