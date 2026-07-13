@@ -27,7 +27,7 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
---The code I understand the least :D -Trays
+--The code I understand the least :D -Rayne
 
 local offsetSpread = 0.04
 local offsetLUT = {

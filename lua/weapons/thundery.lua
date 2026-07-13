@@ -29,7 +29,7 @@ SWEP.Secondary.Ammo	= "none"
 
 function SWEP:Deploy()
 	self:EmitSound( "sparkbound/surge.mp3", 75, math.random(105, 125), 1, 1 )
-	self.UsingSurge = false
+	self.UsingSurge = false --Blurple Mode
 	self.ThunderActive = false
 	self.ComboTrue = false
 	self:SetClip1( 0 )
