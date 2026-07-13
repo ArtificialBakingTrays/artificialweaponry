@@ -68,8 +68,8 @@ function SWEP:PrimaryAttack()
 				owner:FireBullets({ 
 					Src = owner:GetShootPos(),
 					Dir = realShootDir,
-					Damage = 4,
-					Num = 1,
+					Damage = 6,
+	--				Num = 1,
 					Spread = Vector(0.0, 0.0),
 					Attacker = owner,
 					Inflictor = self,
@@ -80,7 +80,7 @@ function SWEP:PrimaryAttack()
 		
 		if self:Clip2() == 4 then
 			self:SetClip2( 0 )
-			self:EmitSound( "sparkbound/firegun.mp3", 100, math.random( 105, 115 ), 100, 6 ) --PLEASE CHANGE THESE SOUNDS
+			self:EmitSound( "artiwepsv2/secondaryfire01.mp3", 100, math.random( 105, 115 ), 100, 6 ) --PLEASE CHANGE THESE SOUNDS
 			self:EmitSound( "sparkbound/crystal_proc.mp3", 100, math.random( 95, 105 ), 100, 6 )
 
 			--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
