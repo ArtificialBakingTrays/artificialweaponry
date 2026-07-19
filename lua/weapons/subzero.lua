@@ -90,8 +90,16 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( false )
 end
 
+function SWEP:SecondaryAttack()
+	if self:Clip2() < 3 then return end
+	self:SetClip2( 0 )
+	self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
+
+	
+end
+
 function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
+	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
 
