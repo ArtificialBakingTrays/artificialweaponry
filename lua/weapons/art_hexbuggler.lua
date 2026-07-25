@@ -61,7 +61,7 @@ function SWEP:SecondaryAttack()
 
 	for _, v in ents.Iterator() do
 		local ent = v
-		if ent:GetClass() ~= "hexbug" then continue end
+		if ent:GetClass() ~= "hexbug_proj" then continue end
 		if ent:GetOwner() ~= ownerply then continue end
 		if ent.HadApplied then continue end
 
@@ -121,7 +121,7 @@ end
 function SWEP:DeployBugs()
 	if CLIENT then return end
 
-	local ent = ents.Create( "Hexbug" )
+	local ent = ents.Create( "hexbug_proj" )
 
 	if ( not ent:IsValid() ) then return end
 

@@ -1,10 +1,10 @@
-SWEP.PrintName = "ITHINKTHEREFOREIAM"
+SWEP.PrintName = "Atomiprimed Glassbreaker"
 SWEP.Author	= "ArtificialBakingTrays"
-SWEP.Instructions = "COGITOERGOSUM."
+SWEP.Instructions = "Incase you need to Pack-A-Punch."
 SWEP.Category = "Artificial Weaponry"
 SWEP.IconOverride = "vgui/weaponvgui/primed_generi.png"
 
-SWEP.Spawnable = false
+SWEP.Spawnable = true
 SWEP.AdminOnly = false
 SWEP.DrawCrosshair = true
 SWEP.ViewModel	= "models/weapons/c_crossbow.mdl"
@@ -16,8 +16,8 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 SWEP.BobScale = 1.15
 
-SWEP.Primary.ClipSize = 50
-SWEP.Primary.DefaultClip = 50
+SWEP.Primary.ClipSize = 35
+SWEP.Primary.DefaultClip = 35
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 160
@@ -81,59 +81,64 @@ end
 function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
+	if IsReloading == true then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
     self:EmitSound( "artiwepsv2/cooling.mp3", 100, math.random(105, 115), 0.7, 1 )
+	local IsReloading = true
+
+	timer.Simple( CurTime() + 1.2, function() IsReloading = false end)
 
 	self:SetDTFloat( 0, CurTime() + 1.2 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
 end
 
-function SWEP:Think() --This like fuckass prediction for timers is so like cooked- how the fuck did zynx figure this out?
+function SWEP:Think()
 	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 50 )
+	self:SetClip1( 35 )
 	self:SetDTFloat( 0, 0 )
 end
 
 --================================Primary Fire Section================================--
 function SWEP:PrimaryAttack()
     if self:Clip1() == 0 then return end
+	if IsReloading == true then return end
     self:TakePrimaryAmmo( 1 )
     self:SetNextPrimaryFire( CurTime() + 0.055)
     self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 
     --SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
-	self:SpawnProjectile( "primepellete", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1, false )
+	self:SpawnProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1, false )
 
     self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.7, 6 )
 end
 
 
-hook.Add( "PlayerDeath", "prime", function( victim, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "prime" then
+hook.Add( "PlayerDeath", "art_prime", function( victim, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
 		if inflictor:Clip2() >= 2 then
 			victim:EmitSound( "artiwepsv2/AstralSlash3.mp3", 100, 100, 1, 6 )
 			inflictor:SetClip2(0)
-		inflictor:SpawnProjectile( "primeturret", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+		inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
 	end
 end)
 
 
-hook.Add( "OnNPCKilled", "prime", function( npc, attacker, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "prime" then
+hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
 		if inflictor:Clip2() >= 2 then
 			npc:EmitSound( "artiwepsv2/AstralSlash3.mp3", 100, 100, 1, 6 )
 			inflictor:SetClip2(0)
-		inflictor:SpawnProjectile( "primeturret", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+		inflictor:SpawnProjectile( "primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
 	end
 end )

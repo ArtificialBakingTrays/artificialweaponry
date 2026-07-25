@@ -14,18 +14,6 @@ if SERVER then
 			print( "Status Effects have been set to false")
 		end
 	end )
-
-	concommand.Add( "COGITOERGOSUM", function( ply )
-		if ply:HasWeapon("prime") then
-			print("You already know the answer.")
-		else
-			if ply:IsValid() then
-				ply:Give( "prime" )
-				ply:EmitSound("artiwepsv2/quantum.mp3", 100, 100, 1, 1 )
-				print( "I THINK THEREFORE I AM." )
-			end
-		end
-	end)
 end
 
 

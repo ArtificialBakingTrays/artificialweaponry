@@ -93,10 +93,10 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( true )
 
 	if self:Clip1() <= 4 then
-		self:SpawnProj( "thunderbolt", 5000 * 1000 )
+		self:SpawnProj( "thunderbolt_proj", 5000 * 1000 )
 		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 1, 1 )
 	else
-		self:SpawnProj( "sharpshot", 7500 * 2000 )
+		self:SpawnProj( "sharpshot_proj", 7500 * 2000 )
 		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 1, 1 )
 	end
 
@@ -124,7 +124,7 @@ end
 
 function SWEP:SpawnSparks()
 	if CLIENT then return end
-	local ent = ents.Create( "sparkler" )
+	local ent = ents.Create( "sparkler_proj" )
 	if ( not ent:IsValid() ) then return end
 
 	local owner = self:GetOwner()

@@ -133,7 +133,7 @@ end
 function SWEP:SpawnGibblers(targetDir)
 	if CLIENT then return end
 
-	local ent = ents.Create( "gibbler" )
+	local ent = ents.Create( "gibbler_proj" )
 
 	if ( not ent:IsValid() ) then return end
 
@@ -250,8 +250,6 @@ function SWEP:Think()
 	self:GetOwner():SetRunSpeed( 400 + ( self:Clip1() * 3 ))
 end
 
---[artificialweaponry] addons/artificialweaponry/lua/weapons/meatgrinder.lua:189: attempt to index global 'surface' (a nil value)
---1. unknown - addons/artificialweaponry/lua/weapons/meatgrinder.lua:189 (x5)
 
 if CLIENT then
 	surface.CreateFont( "CadaverYummy", {
