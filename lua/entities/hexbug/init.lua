@@ -14,6 +14,7 @@ function ENT:Initialize()
 	self.IsTraysProjectile = true
 	self.IsAvailable = true
 
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
 	self:PhysicsInitSphere(3.5, SOLID_VPHYSICS ) -- Initializes physics for the Entity, making it solid and interactable.
 	self:SetMoveType( MOVETYPE_VPHYSICS ) -- Sets how the Entity moves, using physics.
 	self:SetSolid( SOLID_VPHYSICS ) -- Makes the Entity solid, allowing for collisions.

@@ -18,7 +18,7 @@ SWEP.BobScale = 1.15
 
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.DefaultClip = 1
-SWEP.Primary.Automatic	= false
+SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 160
 

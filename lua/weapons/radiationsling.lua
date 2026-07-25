@@ -51,7 +51,7 @@ function SWEP:Reload()
 
 	self:EmitSound( "tray_sounds/sling_reload.mp3", 75, 110, .7, 1 )
 end
-
+ 
 function SWEP:Think() --Help from zynx
 	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end

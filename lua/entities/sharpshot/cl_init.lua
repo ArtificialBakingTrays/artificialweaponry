@@ -3,7 +3,7 @@ include("shared.lua")
 local spritemat = Material("particle/Particle_Ring_Wave_Additive")
 local electric = Material("effects/ar2_altfire1")
 local glowmat = Material("sprites/light_glow02_add")
-local BaseColor = Color( 240, 255, 140)
+local BaseColor = Color( 236, 255, 31)
 
 function ENT:Draw()
 	self:DrawModel()

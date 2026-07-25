@@ -71,7 +71,6 @@ function StatusSlow( ent, time )
 		if ent:GetRunSpeed() >= 400 then return end
 		ent:SetRunSpeed( ent:GetRunSpeed() + 40 )
 		ent:SetWalkSpeed( ent:GetWalkSpeed() + 40 )
-
 	end)
 end
 
@@ -85,7 +84,6 @@ function StatusNullify( ply, hp, armor )
 		end
 	end
 
-
 	if ply:Armor() == 100 then
 		ply:SetHealth( ply:Health() + 10 )
 		if ply:Health() > 100 then
@@ -93,7 +91,7 @@ function StatusNullify( ply, hp, armor )
 		end
 	end
 end
---================NULLIFY STATUS CODE=================
+
 
 
 function StatusMagmatic( ply, lvl, dmginst, dmgown )

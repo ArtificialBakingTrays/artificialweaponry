@@ -5,8 +5,8 @@ include("shared.lua")
 local BaseColor = Color( 255, 113, 172)
 
 function ENT:Initialize()
-	self:SetModel("models/props_junk/PopCan01a.mdl")
-	self:SetModelScale( 0.75 )
+	self:SetModel("models/hunter/misc/sphere025x025.mdl")
+	self:SetModelScale( 0.25 )
 	self:SetMaterial("model_color")
 	self:SetColor( Color(255, 228, 228) )
 
@@ -54,7 +54,7 @@ function ENT:PhysicsCollide(data)
 		effectdata:SetOrigin( self:GetPos() )
 		effectdata:SetScale( 0.1 )
 		util.Effect("cball_explode", effectdata, true, true)
-		enthit:TakeDamage( 13, self:GetOwner() )
+		enthit:TakeDamage( 13, self:GetOwner(), self:GetOwner():GetActiveWeapon() )
 		self:Remove()
 	end
 end
