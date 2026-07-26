@@ -123,7 +123,7 @@ hook.Add( "PlayerDeath", "art_prime", function( victim, inflictor )
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
 		if inflictor:Clip2() >= 2 then
-			victim:EmitSound( "artiwepsv2/AstralSlash3.mp3", 100, 100, 1, 6 )
+			victim:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
 		inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
@@ -136,7 +136,7 @@ hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
 		if inflictor:Clip2() >= 2 then
-			npc:EmitSound( "artiwepsv2/AstralSlash3.mp3", 100, 100, 1, 6 )
+			npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
 		inflictor:SpawnProjectile( "primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
@@ -256,7 +256,7 @@ function SWEP:DrawHUD()
 		surface.DrawTexturedRectRotated( w / 2, (h / 2) - 20, (w / 2) / 6, (w / 2) / 6, 0 )
 
 		draw.SimpleText("Ammo: " .. self:Clip1(), "HudDefault", w * .53, h * .45, Color(255, 255, 255) )
-		draw.SimpleText("Ammo2: " .. self:Clip2(), "HudDefault", w * .53, h * .43, Color(255, 255, 255) )
+		draw.SimpleText("Seeker: " .. self:Clip2(), "HudDefault", w * .53, h * .43, Color(255, 255, 255) )
 
 		if ActiveTether == 1 then
 			draw.SimpleText("Tether: No", "HudDefault", w * .53, h * .47, Color(255, 255, 255) )

@@ -3,7 +3,7 @@ include("shared.lua")
 local spritemat = Material("particle/Particle_Ring_Wave_Additive")
 local electric = Material("effects/ar2_altfire1")
 local glowmat = Material("sprites/light_glow02_add")
-local BaseColor = Color( 236, 255, 31)
+local BaseColor = Color( 172, 173, 255)
 
 function ENT:Draw()
 	self:DrawModel()
@@ -22,7 +22,7 @@ function ENT:Draw()
 	for i = 1, 1 do
 		local part = emitter:Add( "sprites/glow04_noz", self:GetPos() + Vector( math.random(-10, 10), math.random(-10, 10), math.random(-10, 10 ) ))
 		if ( part ) then
-			part:SetColor( 240, 255, 140 )
+			part:SetColor( 88, 91, 255 )
 			part:SetDieTime( 0.1 )
 
 			part:SetStartAlpha( 255 )

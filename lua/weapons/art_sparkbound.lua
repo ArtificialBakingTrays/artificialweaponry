@@ -46,6 +46,7 @@ function SWEP:HUDShouldDraw(element)
 	return true
 end
 
+
 function SWEP:SpawnProj( EntName, Speed )
 	if CLIENT then return end
 	local ent = ents.Create( EntName )
@@ -115,43 +116,69 @@ end
 --Sparklers / Scatter Rounds, throw out 3 bolts that detonate after a moment, have no gravity. do not track either
 	--Meant for extra dps or distraction rounds
 
+local offsetSpread = 0.09
+local offsetLUT = {
+	[1] = Vector(-offsetSpread, 0			 ),
+	[2] = Vector( 0			  , 0			 ),
+	[3] = Vector( offsetSpread, 0			 )
+}
+
 function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 1 )
 	self:EmitSound("sparkbound/cast.mp3", 75, math.random( 90, 110 ), 1.2, 6)
 
-	for I = 1, 3 do self:SpawnSparks() continue end
+	local aimDir = self:GetOwner():GetAimVector()
+	local aimDirAng = aimDir:Angle()
+	local aimRight = aimDirAng:Right()
+	local aimUp = aimDirAng:Up()
+
+	local realShootDir = Vector()
+	for i = 1, #offsetLUT do
+		local shootDir = offsetLUT[i]
+		realShootDir:Set(aimDir)
+
+		local offX = shootDir[1]
+		local offY = shootDir[2]
+
+		realShootDir = realShootDir + (aimRight * offX) + (aimUp * offY)
+		realShootDir:Normalize()
+
+		--Hehe idk what im doing
+		self:SpawnSparks(realShootDir)
+	end
 end
 
-function SWEP:SpawnSparks()
+function SWEP:SpawnSparks( targetDir )
 	if CLIENT then return end
+
 	local ent = ents.Create( "sparkler_proj" )
+
 	if ( not ent:IsValid() ) then return end
 
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
-	local aimvec = owner:GetAimVector()
+	--yknow its bad when we have the CUBE OF VARIABLES
+	local ownerpos = self:GetOwner():GetShootPos()
+	local ownereyes = self:GetOwner():EyeAngles()
 
-	ent:SetOwner( owner )
-	ent:SetPos( ownerpos + Vector( 0, 0, -5 ) )
-	ent:SetAngles( ownereyes + Angle( 90, 0, 0 ) )
+	ent:SetOwner( self:GetOwner() )
+	ent:SetPos( ownerpos + Vector(0, 0, -5) )
+	ent:SetAngles( ownereyes + Angle(90,0,0) )
 	ent:Spawn()
+
 
 	local entphys = ent:GetPhysicsObject()
 
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-	local Speed = 850
-
-	aimvec:Mul( Speed * entphys:GetMass() )
-	entphys:ApplyForceCenter( aimvec )
+	local Speed = 950
+	targetDir:Mul( Speed * entphys:GetMass() )
+	entphys:ApplyForceCenter( targetDir )
 end
 
 -- this is neccessary so that the hands dont glow aswell
 SWEP.UseHands = false
 
 function SWEP:DrawWorldModel( flags )
-	render.SetColorModulation( 2, 0, 20 )
+	render.SetColorModulation( 0.404, 0.267, 1 )
 		render.SuppressEngineLighting( true )
 			self:DrawModel( flags )
 		render.SuppressEngineLighting( false )
@@ -159,7 +186,7 @@ function SWEP:DrawWorldModel( flags )
 end
 
 function SWEP:PreDrawViewModel( vm )
-	render.SetColorModulation( 7, 10, 1 ) -- the glow
+	render.SetColorModulation( 0.404, 0.267, 1 ) -- the glow
 	render.SuppressEngineLighting( true ) -- disable lighting
 end
 

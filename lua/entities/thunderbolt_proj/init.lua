@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-local BaseColor = Color( 251, 255, 167)
+local BaseColor = Color( 168, 167, 255)
 
 
 function ENT:Initialize()

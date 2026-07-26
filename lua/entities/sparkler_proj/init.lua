@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-local BaseColor = Color( 248, 255, 167)
+local BaseColor = Color( 180, 167, 255)
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/PopCan01a.mdl")
@@ -30,9 +30,12 @@ function ENT:Initialize()
 
 	self:Fire( "Kill", "", 4.5 )
 
+	local EXPRadius = 120
+	local EXPDmg = 50
+
 	timer.Simple( 1.3, function()
 		if not IsValid( self ) then return end
-			util.BlastDamage( self, self:GetOwner(), self:GetPos(), 95, 35 )
+			util.BlastDamage( self, self:GetOwner(), self:GetPos(), EXPRadius, EXPDmg )
 			self:EmitSound( "tray_sounds/slingfirework2.mp3", 75, math.random( 90, 110 ), 1.2, 1 )
 				self:EmitSound("sparkbound/elec_impact.mp3", 75, math.random( 90, 110 ), 1.2, 6)
 		self:Remove()

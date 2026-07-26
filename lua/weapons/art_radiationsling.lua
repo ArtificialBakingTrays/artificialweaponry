@@ -85,7 +85,7 @@ end
 function SWEP:SpawnProj()
 	if CLIENT then return end
 
-	local ent = ents.Create( "rad_proj" )
+	local ent = ents.Create( "radrock_proj" )
 
 	if ( not ent:IsValid() ) then return end
 

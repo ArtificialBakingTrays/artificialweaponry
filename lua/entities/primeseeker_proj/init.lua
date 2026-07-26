@@ -17,7 +17,7 @@ function ENT:Initialize()
 
 	self.IsTraysProjectile = true
 
-	local SSize = 12
+	local SSize = 24
 	local ESize = 0
 	local Duration = 0.15
 

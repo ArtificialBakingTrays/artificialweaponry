@@ -6,14 +6,14 @@ function ENT:Draw()
 	self:DrawModel()
 
 	render.SetMaterial(spritemat)
-	render.DrawSprite(self:GetPos(), 5, 5, Color(255, 255, 243))
+	render.DrawSprite(self:GetPos(), 5, 5, Color(246, 245, 255))
 
 	local emitter = ParticleEmitter( self:GetPos() ) -- Particle emitter in this position
 
 	for i = 1, 1 do
 		local part = emitter:Add( "sprites/glow04_noz", self:GetPos() + Vector( math.random(-2, 2), math.random(-2, 2), math.random(-2, 2)) ) -- Create a new particle at pos
 		if ( part ) then
-			part:SetColor( 255, 255, 148 )
+			part:SetColor( 200, 195, 255 )
 			part:SetDieTime( 0.1 ) -- How long the particle should "live"
 
 			part:SetStartAlpha( 255 ) -- Starting alpha of the particle
@@ -34,7 +34,7 @@ function ENT:Draw()
 			for i = 1, 25 do
 				local part = emit:Add( "sprites/glow04_noz", self:GetPos() + Vector( math.random(-2, 2), math.random(-2, 2), math.random(-2, 2)) ) -- Create a new particle at pos
 				if ( part ) then
-					part:SetColor( 255, 255, 148 )
+					part:SetColor( 230, 228, 255 )
 					part:SetDieTime( 0.25 ) -- How long the particle should "live"
 
 					part:SetStartAlpha( 255 ) -- Starting alpha of the particle

@@ -71,8 +71,8 @@ function ENT:PhysicsCollide(data)
 		self.HasSpawned = true
 	end
 
-	local DMG = 12
-	local ExplDMG = 32
+	local DMG = 16
+	local ExplDMG = 36
 
 	if not IsValid(enthit) then
 		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 125, ExplDMG )
