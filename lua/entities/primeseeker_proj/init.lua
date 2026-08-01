@@ -49,7 +49,7 @@ function ENT:PhysicsCollide(data)
 		util.Effect("cball_explode", effectdata, true, true)
 
 		local dmg 
-		if enthit:IsPlayer() then dmg = 50 else dmg = 90 end
+		if enthit:IsPlayer() then dmg = 42 else dmg = 90 end
 
 		enthit:TakeDamage( dmg, self:GetOwner(), self:GetOwner():GetActiveWeapon() )
 

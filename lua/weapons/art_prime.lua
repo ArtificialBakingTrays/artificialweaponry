@@ -122,10 +122,10 @@ hook.Add( "PlayerDeath", "art_prime", function( victim, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
-		if inflictor:Clip2() >= 2 then
+		if inflictor:Clip2() >= 1 then
 			victim:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
-		inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+			inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
 	end
 end)
@@ -135,10 +135,10 @@ hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
 		inflictor:SetClip2( inflictor:Clip2() + 1 )
 
-		if inflictor:Clip2() >= 2 then
+		if inflictor:Clip2() >= 1 then
 			npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
-		inflictor:SpawnProjectile( "primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+			inflictor:SpawnProjectile( "primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
 	end
 end )
@@ -155,9 +155,14 @@ function SWEP:SecondaryAttack()
 	local timedelay = 0.5
 
 	self:DeployTether( timedelay )
-	timer.Simple( timedelay + 0.3, function() ActiveTether = 0 end)
+	local HP = self:GetOwner():Health()
 
-	local SFXRAN = math.floor(math.random(1, 3))
+	--Higher HP -> Fast CD
+	--Lower HP -> Slow CD
+	timer.Simple( timedelay + ((100 - HP) / 100), function() ActiveTether = 0 end)
+	print(timedelay + ((100 - HP) / 100))
+
+	local SFXRAN = math.floor(math.random( 1, 3 ))
 	if SFXRAN == 1 then self:EmitSound( "artiwepsv2/AstralSlash1.mp3", 100, 100, 1, 6 ) end
 	if SFXRAN == 2 then self:EmitSound( "artiwepsv2/AstralSlash2.mp3", 100, 100, 1, 6 ) end
 	if SFXRAN == 3 then self:EmitSound( "artiwepsv2/AstralSlash3.mp3", 100, 100, 1, 6 ) end
@@ -236,7 +241,7 @@ function SWEP:CheckNearby()
 		local dist = entPos:Distance( selfPos )
 		if dist > rad then continue end
 
-		v:TakeDamage( 35, self:GetOwner(), self )
+		v:TakeDamage( 22, self:GetOwner(), self )
 	end
 end
 
@@ -256,7 +261,7 @@ function SWEP:DrawHUD()
 		surface.DrawTexturedRectRotated( w / 2, (h / 2) - 20, (w / 2) / 6, (w / 2) / 6, 0 )
 
 		draw.SimpleText("Ammo: " .. self:Clip1(), "HudDefault", w * .53, h * .45, Color(255, 255, 255) )
-		draw.SimpleText("Seeker: " .. self:Clip2(), "HudDefault", w * .53, h * .43, Color(255, 255, 255) )
+		--draw.SimpleText("Seeker: " .. self:Clip2(), "HudDefault", w * .53, h * .43, Color(255, 255, 255) )
 
 		if ActiveTether == 1 then
 			draw.SimpleText("Tether: No", "HudDefault", w * .53, h * .47, Color(255, 255, 255) )

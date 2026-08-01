@@ -87,5 +87,6 @@ function ENT:CheckNearby()
 		if dist > rad then continue end
 
 		v:TakeDamage( 35, self:GetOwner(), self )
+		StatusTrickle( v, self:GetOwner(), 35/5, 4 )
 	end
 end

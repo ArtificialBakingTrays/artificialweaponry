@@ -4,7 +4,6 @@ include("shared.lua")
 
 local BaseColor = Color( 168, 167, 255)
 
-
 function ENT:Initialize()
 	self:SetModel("models/props_junk/PopCan01a.mdl")
 	self:SetMaterial("model_color")
@@ -44,7 +43,6 @@ function ENT:PhysicsCollide(data)
 			effectdata:SetOrigin( self:GetPos() )
 			effectdata:SetScale(0.1)
 			util.Effect("cball_explode", effectdata, true, true)
-			self:CheckNearby()
 			self:Remove()
 		return
 	end
@@ -54,39 +52,11 @@ function ENT:PhysicsCollide(data)
 		self:Remove()
 
 		enthit:TakeDamage( 45, self:GetOwner() )
+		StatusTrickle( enthit, self:GetOwner(), 45/5, 4 )
 
 		local effectdata = EffectData()
 		effectdata:SetOrigin( self:GetPos() )
 		effectdata:SetScale( 0.1 )
 		util.Effect("cball_explode", effectdata, true, true)
-	end
-end
-
-function ENT:CheckNearby()
-	local rad = 40
-	local selfPos = self:GetPos()
-
-	for k, v in ents.Iterator() do
-		if not v then continue end
-		if not IsValid(v) then continue end
-		if v == self:GetOwner() then continue end
-
-		local classGet = v:GetClass()
-
-		local doPass = false
-		if classGet == "player" then doPass = true end
-
-		if string.sub(classGet, 1, 4) == "npc_" then doPass = true end
-
-		if not doPass then continue end
-
-		if v:Health() <= 0 then continue end
-
-		local entPos = v:GetPos()
-
-		local dist = entPos:Distance( selfPos )
-		if dist > rad then continue end
-
-		v:TakeDamage( 10, self:GetOwner(), self )
 	end
 end

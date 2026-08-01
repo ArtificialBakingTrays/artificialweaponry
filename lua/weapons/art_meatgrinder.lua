@@ -88,7 +88,7 @@ function SWEP:DoTrace()
 		DEBUG_BOX_COLOUR = Color(255, 0, 0, 10 )
 	end
 
-	local lifetime = 8 -- debug boxes last 8s
+	local lifetime = 3 -- debug boxes last 8s
 	debugoverlay.Box( tr.HitPos, boxMins, boxMaxs, lifetime, DEBUG_BOX_COLOUR )
 end
 

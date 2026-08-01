@@ -40,6 +40,7 @@ function SWEP:PrimaryAttack()
 	self:SetChargeStart( CurTime() )
 end
 
+
 function SWEP:ChargeAttack( charge )
 	if self:Clip1() <= 0 then return end
 	if charge > 1 then charge = 1 end
@@ -60,6 +61,17 @@ function SWEP:ChargeAttack( charge )
 		Dir = owner:GetAimVector(),
 		Attacker = owner,
 		Damage = 30 + charge * 110,
+		Callback = function( attacker, tr, dmg )
+			if tr.Entity:IsValid() and ( tr.Entity:IsPlayer() or tr.Entity:IsNPC() ) then
+				if SERVER then
+					util.BlastDamage( dmg:GetInflictor(), owner, tr.HitPos, 200, ( dmg:GetDamage() * 0.5 ) + (( charge * 10 ) * 2) )
+					tr.Entity:EmitSound( "tray_sounds/parsite_multihit.mp3", 100, math.random(100, 115), 1, 6 )
+				end
+				local effectdata = EffectData()
+				effectdata:SetOrigin( tr.HitPos )
+				util.Effect("HelicopterMegaBomb", effectdata, true)
+			end
+		end,
 	}
 
 	owner:LagCompensation( false )

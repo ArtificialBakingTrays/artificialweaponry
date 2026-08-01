@@ -16,10 +16,9 @@ if SERVER then
 	end )
 end
 
-
-
---=================BLEED STATUS CODE===================
+--=================BLEED STATUS CODE===================--
 function StatusBleed( dmg, ply, ent )
+	if CLIENT then return end
 	if bool == false then return end
 	if ent.IsBleeding == true then return end
 	--Bleed ticks 3 times per instance of the effect.
@@ -41,12 +40,48 @@ function StatusBleed( dmg, ply, ent )
 		ent.IsBleeding = false
 	end)
 end
---=================BLEED STATUS CODE===================
+--=================BLEED STATUS CODE===================--
+
+function StatusTrickle( ent, dmgown, dmgtick, ticks )
+	if CLIENT then return end
+	if bool == false then return end
+	if not IsValid(ent) then return end
+
+	if ent.IsCurrentlyTrickled == true then return end
+
+	ent.IsCurrentlyTrickled = true
+
+	local num = 0
+	for i = 1, ticks do
+		num = num + 1
+		timer.Simple( num, function()
+			if !IsValid(ent) or ent:Health() <= 0 then return end
+			if ent:IsOnFire() then 
+				dmgtick = dmgtick * 2 
+				ent:EmitSound("sparkbound/elec_impact.mp3", 75, math.random(110, 120), 1, 1)
+			else
+				ent:EmitSound("sparkbound/spark.mp3", 75, math.random(110, 120), 1, 1)	
+			end
+
+			ent:TakeDamage(dmgtick, dmgown, dmgown)
+
+			local FxData = EffectData()
+			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
+			util.Effect("cball_explode", FxData, true, true)
+		end)
+	end
+
+	timer.Simple( 7.2, function()
+		ent.IsCurrentlyTrickled = false
+		num = 0
+	end)
+end
 
 
 
---=================SLOW STATUS CODE===================
+--=================SLOW STATUS CODE===================--
 function StatusSlow( ent, time )
+	if CLIENT then return end
 	if bool == false then return end
 	if ent.IsSlowed == true then return end
 
@@ -64,6 +99,7 @@ end
 
 --================NULLIFY STATUS CODE=================
 function StatusNullify( ply, hp, armor )
+	if CLIENT then return end
 --Is unaffected by status disabling as it is not really a status effect. more so an effect on a gun.
 	if ply:Armor() < 100 then
 		ply:SetArmor( ply:Armor() + armor )
@@ -83,6 +119,7 @@ end
 
 
 function StatusMagmatic( ply, lvl, dmginst, dmgown )
+	if CLIENT then return end
 	if bool == false then return end
 	if not ply:IsValid() or not ply:IsPlayer() then return end
 	--if not ply:isAlive() then return end

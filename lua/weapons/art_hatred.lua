@@ -92,14 +92,14 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( false )
 end
 
-hook.Add( "OnNPCKilled", "direchatred", function( npc, attacker, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "direchatred" then
+hook.Add( "OnNPCKilled", "art_hatred", function( npc, attacker, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
 		inflictor:SetClip1( math.min( inflictor:Clip1() + 20, inflictor:GetMaxClip1() ) )
 	end
 end )
 
-hook.Add( "PlayerDeath", "direchatred", function( victim, inflictor )
-	if inflictor:IsValid() and inflictor:GetClass() == "direchatred" then
+hook.Add( "PlayerDeath", "art_hatred", function( victim, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
 		inflictor:SetClip1( math.min( inflictor:Clip1() + 20, inflictor:GetMaxClip1() ) )
 	end
 end )

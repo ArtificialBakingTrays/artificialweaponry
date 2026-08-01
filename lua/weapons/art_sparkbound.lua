@@ -2,7 +2,7 @@ SWEP.PrintName = "SparkBound Compass"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "They say it will lead you in the direction of a raging storm"
 SWEP.Category = "Artificial Weaponry"
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/sparkbound_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
@@ -18,7 +18,7 @@ SWEP.BobScale = 1.15
 
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.DefaultClip = 1
-SWEP.Primary.Automatic	= true
+SWEP.Primary.Automatic	= false
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 160
 
@@ -80,12 +80,12 @@ function SWEP:PrimaryAttack()
 
 	local Delay = 0.65
 
-	self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, 6 )
+	--self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, nil, CHAN_STATIC)
 
-	if self.HasFired then
+if self.HasFired then
 		timer.Simple( Delay - ( self:Clip1() * 0.1 ), function()
 			if not self:IsValid() then return end
-			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 1.2, 6 )
+			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 1.2, nil, CHAN_STATIC )
 			self.HasFired = false
 		end)
 	end
@@ -95,21 +95,16 @@ function SWEP:PrimaryAttack()
 
 	if self:Clip1() <= 4 then
 		self:SpawnProj( "thunderbolt_proj", 5000 * 1000 )
-		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 1, 1 )
+		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), nil, CHAN_STATIC )
 	else
 		self:SpawnProj( "sharpshot_proj", 7500 * 2000 )
-		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 1, 1 )
+		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), nil, CHAN_STATIC )
+		if self:Clip1() == 5 then self:SetClip1( 0 ) end
 	end
 
 	owner:LagCompensation( false )
 end
 
-function SWEP:Think()
-	if self:Clip1() == 5 then self:SetClip1( 0 ) end
-end
-
---====================On-Kill Functionality====================--
---Will cause a radius based explosion, dealing an okay amount of damage
 
 
 --====================Secondary Attack Functionality====================--
@@ -125,7 +120,7 @@ local offsetLUT = {
 
 function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 1 )
-	self:EmitSound("sparkbound/cast.mp3", 75, math.random( 90, 110 ), 1.2, 6)
+	self:EmitSound("sparkbound/cast.mp3", 75, math.random( 120, 130 ), 1.2, 6 )
 
 	local aimDir = self:GetOwner():GetAimVector()
 	local aimDirAng = aimDir:Angle()

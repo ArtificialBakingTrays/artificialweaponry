@@ -54,7 +54,7 @@ function ENT:PhysicsCollide(data)
 		effectdata:SetOrigin( self:GetPos() )
 		effectdata:SetScale( 0.1 )
 		util.Effect("cball_explode", effectdata, true, true)
-		enthit:TakeDamage( 13, self:GetOwner(), self:GetOwner():GetActiveWeapon() )
+		enthit:TakeDamage( 11, self:GetOwner(), self:GetOwner():GetActiveWeapon() )
 		self:Remove()
 	end
 end
