@@ -82,10 +82,10 @@ function SWEP:PrimaryAttack()
 
 	--self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, nil, CHAN_STATIC)
 
-if self.HasFired then
+	if self.HasFired then
 		timer.Simple( Delay - ( self:Clip1() * 0.1 ), function()
 			if not self:IsValid() then return end
-			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 1.2, nil, CHAN_STATIC )
+			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 1.2, 1, 6 )
 			self.HasFired = false
 		end)
 	end

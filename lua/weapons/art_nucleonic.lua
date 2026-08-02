@@ -47,46 +47,62 @@ function SWEP:PrimaryAttack()
 
         local startPos = owner:GetShootPos()
         local endPos = startPos + owner:GetAimVector() * 32768
+    	local boxSize = 12
+        local boxMins = Vector(-boxSize, -boxSize, -boxSize)
+        local boxMaxs = Vector(boxSize , boxSize , boxSize )
 
-        local tr = util.TraceLine({
+        local tr = util.TraceHull({
             start = startPos,
             endpos = endPos,
+            mins = boxMins,
+            maxs = boxMaxs,
             filter = owner
         })
 
-        self:HandleProjectileHit(startPos, endPos)
+        --debugoverlay.Box(tr.HitPos, boxMins, boxMaxs, 3, Color(0, 0, 255, 128))
 
-        if IsValid(tr.Entity) then tr.Entity:TakeDamage(23, owner, self) end
+        self:ProjectileHit(startPos, endPos)
+
+        if IsValid(tr.Entity) and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then 
+            tr.Entity:TakeDamage(23, owner, self)
+
+            local FxData = EffectData()
+			FxData:SetOrigin( tr.Entity:GetPos() + Vector(0, 0, 40) )
+			util.Effect("BloodImpact", FxData, true, true)
+            
+        	DEBUG_BOX_COLOUR = Color(0, 255, 30, 10)
+        else
+            DEBUG_BOX_COLOUR = Color(255, 0, 0, 10 )
+        end
 
     self:GetOwner():LagCompensation( false )
 end
 
-function SWEP:HandleProjectileHit(startPos, endPos)
-
+function SWEP:ProjectileHit(startPos, endPos)
     local closest
-    local bestDist = math.huge
+    local bestDist = 12
 
-    for _, ent in ipairs(ents.FindByClass("bulkball_projectile")) do
-
+    for _, ent in ipairs(ents.FindByClass("sh_bulkball")) do
         local pos = ent:GetPos()
-
         local nearest = util.DistanceToLine(startPos, endPos, pos)
 
-        if nearest < 12 and nearest < bestDist then
+        --debugoverlay.Box(pos, -Vector(6, 6, 6), Vector(6, 6, 6), 5, Color(0, 255, 0, 128))
+
+        if nearest < bestDist then
             closest = ent
             bestDist = nearest
         end
     end
-
-    if IsValid(closest) then
-        closest:Explode(self:GetOwner())
-    end
+    if IsValid( closest ) then closest:TakeDamage( 1, self:GetOwner(), self ) end
 end
 
 function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
+	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
+
+    self:SetNextPrimaryFire( 1.2 )
+    self:SetNextSecondaryFire( 1.4 )
 
 	self:SetDTFloat( 0, CurTime() + 1.2 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)

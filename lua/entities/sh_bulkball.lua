@@ -38,11 +38,30 @@ if SERVER then
         self:Fire( "Kill", "", 12.5 )
     end
 
+    --Custom Projectile Spawning Func
+    --Now updated to work for MANY projectiles at once.
+    function ENT:SpawnProjectile( Entstring, Owner, Position, Angles )
+        if CLIENT then return end
+        local ent = ents.Create( Entstring )
+        if ( not ent:IsValid() ) then return end
+
+        ent:SetOwner( Owner )
+        ent:SetPos( Position )
+        ent:SetAngles( Angles )
+        ent:Spawn()
+
+        local entphys = ent:GetPhysicsObject()
+
+        if ( not entphys:IsValid() ) then ent:Remove() return end
+
+        entphys:EnableMotion(false)
+    end
+
+
     function ENT:OnTakeDamage(dmginfo)
-        self:CheckNearby( 350, 40 )
+        self:CheckNearby( 350, 65 )
         self:EmitSound("sparkbound/elec_impact.mp3", 100, math.random(90, 110), 1, 1 )
         util.ScreenShake( self:GetPos(), 400, 40, 0.5, 400, true )
-
 
         local tr = util.TraceLine({
             start = self:GetPos(),
@@ -51,16 +70,8 @@ if SERVER then
         })
 
         if tr.Hit then
-            local ent = ents.Create("")
-
-            if IsValid(ent) then
-                ent:SetOwner(self:GetOwner())
-                ent:SetPos(tr.HitPos)
-                ent:SetAngles(tr.HitNormal:Angle())
-                ent:Spawn()
-            end
+            self:SpawnProjectile( "sh_pool", self:GetOwner(), tr.HitPos, tr.HitNormal:Angle() + Angle(90, 0, 0) ) 
         end
-
         self:Remove()
     end
 
@@ -161,5 +172,25 @@ if CLIENT then
             end
         end
         emitter:Finish()
+    end
+
+    function ENT:OnRemove()
+        local emit = ParticleEmitter(self:GetPos())
+
+        for i = 1, 250 do
+            local part = emit:Add("sprites/glow04_noz", self:GetPos())
+
+            if part then
+                part:SetColor(132, 255, 0)
+                part:SetDieTime(0.7)
+                part:SetStartAlpha(255)
+                part:SetEndAlpha(0)
+                part:SetStartSize(15)
+                part:SetEndSize(0)
+                part:SetGravity(Vector(0,0,-250))
+                part:SetVelocity(VectorRand() * 1750)
+            end
+        end
+        emit:Finish()
     end
 end
