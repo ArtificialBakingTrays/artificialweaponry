@@ -46,8 +46,8 @@ function SWEP:PrimaryAttack()
 
 	owner:LagCompensation( true )
 		if self:Clip2() <= 3 then
-			self:EmitSound( "sparkbound/shoot.mp3", 100, math.random( 105, 115 ), 10.4, 1 ) --PLEASE CHANGE THESE SOUNDS
-			self:EmitSound( "artiwepsv2/blast1concept.mp3", 100, math.random( 95, 105 ), 1, 6 )
+			self:EmitSound( "sparkbound/shoot.mp3", 100, math.random( 105, 115 ), 0.4, 1 ) --PLEASE CHANGE THESE SOUNDS
+			self:EmitSound( "artiwepsv2/secondaryfire01.mp3", 100, math.random( 95, 105 ), 0.4, 6 )
 
 			local aimDir = self:GetOwner():GetAimVector()
 			local aimDirAng = aimDir:Angle()
@@ -80,8 +80,8 @@ function SWEP:PrimaryAttack()
 		
 		if self:Clip2() == 4 then
 			self:SetClip2( 0 )
-			self:EmitSound( "artiwepsv2/secondaryfire01.mp3", 100, math.random( 105, 115 ), 100, 6 ) --PLEASE CHANGE THESE SOUNDS
-			self:EmitSound( "sparkbound/crystal_proc.mp3", 100, math.random( 95, 105 ), 100, 6 )
+			self:EmitSound( "artiwepsv2/secondaryfire01.mp3", 100, math.random( 105, 115 ), 0.4, 6 ) --PLEASE CHANGE THESE SOUNDS
+			self:EmitSound( "sparkbound/crystal_proc.mp3", 100, math.random( 95, 105 ), 0.4, 6 )
 
 			--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
 			self:SpawnProjectile( "icerock_proj", self:GetOwner(), owner:GetShootPos(), owner:EyeAngles() + Angle( 90, 0, 0 ), owner:GetAimVector(), 1, False )

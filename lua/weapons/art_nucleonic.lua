@@ -13,7 +13,7 @@ SWEP.DrawAmmo = true
 SWEP.AccurateCrosshair = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
-SWEP.Slot = 3
+SWEP.Slot = 2
 SWEP.BobScale = 1.15
 
 SWEP.Primary.ClipSize = 17

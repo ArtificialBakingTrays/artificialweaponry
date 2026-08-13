@@ -11,7 +11,7 @@ SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
-SWEP.Slot = 2
+SWEP.Slot = 1
 SWEP.Category = "Artificial Weaponry"
 
 SWEP.Primary.ClipSize = 24

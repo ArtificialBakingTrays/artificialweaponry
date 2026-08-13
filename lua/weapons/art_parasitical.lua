@@ -34,8 +34,8 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire( CurTime() + 0.35 )
 
-	self:EmitSound( "tray_sounds/parasite_energy.mp3", 55, math.random(130, 140) - (self:Clip1() * 5), 1, 1 )
-	self:EmitSound( "weapons/ar2/ar2_altfire.wav", 90, math.random(130, 135), 1, 6 )
+	self:EmitSound( "tray_sounds/parasite_energy.mp3", 55, math.random(130, 140) - (self:Clip1() * 5), 0.5, 1 )
+	self:EmitSound( "weapons/ar2/ar2_altfire.wav", 90, math.random(130, 135), 0.5, 6 )
 
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )

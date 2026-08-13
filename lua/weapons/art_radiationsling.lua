@@ -71,9 +71,8 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire( CurTime() + 0.316 )
 
 	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
+	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, math.random( 110, 120 ), 0.2, 6 )
 
-	--self:EmitSound( "other/blast1concept.mp3", 100, math.random( 100, 110 ), 1, 1 )
-	--self:EmitSound( "other/exobladeslash.mp3", 100, math.random( 90, 110 ), 1, 6 )
 
 	owner:LagCompensation( true )
 

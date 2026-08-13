@@ -13,7 +13,7 @@ SWEP.DrawAmmo = true
 SWEP.AccurateCrosshair = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
-SWEP.Slot = 3
+SWEP.Slot = 2
 SWEP.BobScale = 1.15
 
 SWEP.Primary.ClipSize = 1
@@ -80,12 +80,12 @@ function SWEP:PrimaryAttack()
 
 	local Delay = 0.65
 
-	self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, 1 )
+	self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 0.4, CHAN_STATIC)
 
 	if self.HasFired then
 		timer.Simple( Delay - ( self:Clip1() * 0.1 ), function()
 			if not self:IsValid() then return end
-			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 1.2, 1, 6 )
+			self:EmitSound( "sparkbound/gun_unsheathe.mp3", 75, math.random( 90, 100 ), 0.7, 1, 6 )
 			self.HasFired = false
 		end)
 	end
@@ -95,10 +95,10 @@ function SWEP:PrimaryAttack()
 
 	if self:Clip1() <= 4 then
 		self:SpawnProj( "thunderbolt_proj", 5000 * 1000 )
-		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), nil, CHAN_STATIC )
+		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 1 )
 	else
 		self:SpawnProj( "sharpshot_proj", 7500 * 2000 )
-		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), nil, CHAN_STATIC )
+		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 6 )
 		if self:Clip1() == 5 then self:SetClip1( 0 ) end
 	end
 
@@ -120,7 +120,9 @@ local offsetLUT = {
 
 function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 1 )
-	self:EmitSound("sparkbound/cast.mp3", 75, math.random( 120, 130 ), 1.2, 6 )
+	self:EmitSound("sparkbound/cast.mp3", 75, math.random( 120, 130 ), 0.5, 1 )
+	self:EmitSound("artiwepsv2/chemfire1.mp3", 75, math.random( 120, 130 ), 0.7, 6 )
+	--artiwepsv2/chemfire1.mp3
 
 	local aimDir = self:GetOwner():GetAimVector()
 	local aimDirAng = aimDir:Angle()

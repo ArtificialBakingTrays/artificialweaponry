@@ -13,7 +13,7 @@ SWEP.DrawHUD = false
 SWEP.DrawAmmo = true
 SWEP.UseHands = false
 SWEP.HoldType = "ar2"
-SWEP.Slot = 3
+SWEP.Slot = 1
 
 SWEP.Primary.ClipSize = 26
 SWEP.Primary.DefaultClip = 26
@@ -28,6 +28,7 @@ SWEP.Secondary.Ammo		= "Battery"
 
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
+	if self.IsReloading then return end
 
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
@@ -39,8 +40,8 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire( CurTime() + delay )
 
-	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, pitch - 10, 1, 1 )
-	self:EmitSound( "physics/cardboard/cardboard_box_impact_bullet4.wav", 100, pitch + 10, 1, 6 )
+	self:EmitSound( "tray_sounds/hexbugfire.mp3", 100, pitch - 10, 0.4, 1 )
+	self:EmitSound( "physics/cardboard/cardboard_box_impact_bullet4.wav", 100, pitch + 10, 0.4, 6 )
 
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
@@ -52,7 +53,9 @@ end
 
 function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 1.5 )
-	self:EmitSound("tray_sounds/nroom.mp3", 100, 100, 1, 1 )
+	self:EmitSound("tray_sounds/nroom.mp3", 100, 120, 1, 1 )
+	self:EmitSound("artiwepsv2/tomefire.mp3", 100, 130, 1, 6 )
+	--artiwepsv2/tomefire.mp3
 	if CLIENT then return end
 
 	local ownerply = self:GetOwner()
@@ -91,6 +94,13 @@ function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
+	self.IsReloading = true
+
+	self:EmitSound("tray_sounds/reload_1.mp3", 100, 100, 1, CHAN_AUTO )
+	
+	timer.Simple(0.7, function()
+		self:EmitSound("artiwepsv2/potregenreload.mp3", 100, 180, 0.2, CHAN_AUTO )
+	end)
 
 	self:SetDTFloat( 0, CurTime() + 1.2 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
@@ -102,8 +112,9 @@ function SWEP:Think() --This like fuckass prediction for timers is so like cooke
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 27 )
+	self:SetClip1( self:GetMaxClip1() )
 	self:SetDTFloat( 0, 0 )
+	self.IsReloading = false
 end
 
 function SWEP:CustomAmmoDisplay()

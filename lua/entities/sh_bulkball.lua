@@ -59,7 +59,7 @@ if SERVER then
 
 
     function ENT:OnTakeDamage(dmginfo)
-        self:CheckNearby( 350, 65 )
+        self:CheckNearby( 250, math.random(45, 60) )
         self:EmitSound("sparkbound/cloudstrikefire.mp3", 100, math.floor(math.random(90, 110)), 1, 6, CHAN_STATIC) 
         util.ScreenShake( self:GetPos(), 400, 40, 0.5, 400, true )
 

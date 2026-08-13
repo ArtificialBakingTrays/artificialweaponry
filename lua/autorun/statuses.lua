@@ -1,6 +1,5 @@
 local bool = true --base value = true
 --Used for enabling or disabling status effects
-
 if SERVER then
 	concommand.Add( "artiweps_status", function( ply )
 			if not ply:IsListenServerHost() then return end
@@ -16,7 +15,12 @@ if SERVER then
 	end )
 end
 
+
+
 --=================BLEED STATUS CODE===================--
+--For weapons of the GOREY Class
+--This includes: Meatgrinder, Parasitical Arm-Implant, and Tactical-Bleeder
+--( TacBleeder and Parasitical dont have this yet due to balancing concerns. )
 function StatusBleed( dmg, ply, ent )
 	if CLIENT then return end
 	if bool == false then return end
@@ -28,6 +32,8 @@ function StatusBleed( dmg, ply, ent )
 	for i = 1, 7 do
 		num = num + 0.15
 		timer.Simple( num, function()
+			if !IsValid(ent) or ent:Health() <= 0 then ent.IsBleeding = false return end
+			if ent.IsBleeding == false then return end
 			ent:TakeDamage( dmg, ply )
 			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120) + (num*10), 1, 1)
 			ent:EmitSound("artiwepsv2/primebop.mp3", 75, math.random(110, 120) + (num*10), 1, 6)
@@ -41,8 +47,12 @@ function StatusBleed( dmg, ply, ent )
 		ent.IsBleeding = false
 	end)
 end
---=================BLEED STATUS CODE===================--
 
+
+
+--=================TRICKLED STATUS CODE===================--
+--For weapons of the Thundery Class
+--This includes: LostMasks, Nucleonic, and SparkBound Compass
 function StatusTrickle( ent, dmgown, dmgtick, ticks )
 	if CLIENT then return end
 	if bool == false then return end
@@ -56,7 +66,8 @@ function StatusTrickle( ent, dmgown, dmgtick, ticks )
 	for i = 1, ticks do
 		num = num + 1
 		timer.Simple( num, function()
-			if !IsValid(ent) or ent:Health() <= 0 then return end
+			if !IsValid(ent) or ent:Health() <= 0 then ent.IsCurrentlyTrickled = false return end
+			if ent.IsCurrentlyTrickled == false then return end
 			if ent:IsOnFire() then 
 				dmgtick = dmgtick * 2 
 				ent:EmitSound("sparkbound/elec_impact.mp3", 75, math.random(110, 120), 1, 1)
@@ -80,11 +91,17 @@ end
 
 
 
+
+
 --=================SLOW STATUS CODE===================--
+--For weapons of the Glacial Class
+--This is currently exclusively found on the Subzero Standard SMG.
+--Again, this may change in future updates.
 function StatusSlow( ent, time )
 	if CLIENT then return end
 	if bool == false then return end
 	if ent.IsSlowed == true then return end
+	if not IsValid(ent) or ent:Health() == 0 then return end
 
 	ent:SetRunSpeed( ent:GetRunSpeed() - 40 )
 	ent:SetWalkSpeed( ent:GetWalkSpeed() - 40 )
@@ -98,7 +115,12 @@ function StatusSlow( ent, time )
 	end)
 end
 
+
+
+
+
 --================NULLIFY STATUS CODE=================
+--EXCLUSIVELY FOR THE PARASITICAL ARM-IMPLANT
 function StatusNullify( ply, hp, armor )
 	if CLIENT then return end
 --Is unaffected by status disabling as it is not really a status effect. more so an effect on a gun.
@@ -119,6 +141,8 @@ end
 
 
 
+--For weapons of the Fireforged Class
+--This is currently exclusively found on the PinPoint Detonator, however this may change with future updates.
 function StatusMagmatic( ply, lvl, dmginst, dmgown )
 	if CLIENT then return end
 	if bool == false then return end
@@ -128,8 +152,9 @@ function StatusMagmatic( ply, lvl, dmginst, dmgown )
 
 	timer.Simple( 1, function()
 		if ply.isMagmafied == true then
-			ply:TakeDamage( dmginst * lvl, dmgown )
+			ply:TakeDamage( dmginst * lvl, dmgown, dmgown )
 			ply:EmitSound("physics/concrete/concrete_break3.wav", 75, math.random(140, 150), 0.3, 1)
+			ply:Ignite(8, 100)
 			local FxData = EffectData()
 			FxData:SetOrigin( ply:GetPos() + Vector(0, 0, 40) )
 			util.Effect("cball_explode", FxData, true, true)

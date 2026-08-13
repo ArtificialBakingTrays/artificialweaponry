@@ -11,13 +11,13 @@ SWEP.WorldModel	= "models/weapons/w_irifle.mdl"
 SWEP.DrawAmmo = true
 SWEP.UseHands = true
 SWEP.HoldType = "ar2"
-SWEP.Slot = 2
+SWEP.Slot = 4
 
 SWEP.Primary.ClipSize = 45
 SWEP.Primary.DefaultClip = 45
 SWEP.Primary.Automatic	= true
-SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Force = 80
+SWEP.Primary.Ammo = "Battery"
+SWEP.Primary.Force = nil
 
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
@@ -39,7 +39,7 @@ function SWEP:Think() --This like fuckass prediction for timers is so like cooke
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 45 )
+	self:SetClip1( self:GetMaxClip1() )
 	self:SetDTFloat( 0, 0 )
 	self:SetClip2( 0 )
 end
@@ -55,14 +55,15 @@ function SWEP:CustomAmmoDisplay()
 
 	return self.AmmoDisplay
 end
-function SWEP:SecondaryAttack() end
+
+function SWEP:SecondaryAttack() return end
 
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
-	if self:Clip1() <= 20 then self.Dmg = 16 end
 
-	local round = self:Clip2() + 1
+	local round = math.Clamp(self:Clip2() + 1.35, 0, 300)
 	self:SetClip2( round )
+
 
 	local pitch = 60 + round
 	local delay = math.max( 0.085 - round * .0004, .001 )
@@ -72,16 +73,19 @@ function SWEP:PrimaryAttack()
 	self:TakePrimaryAmmo( 1 )
 
 	self:SetNextPrimaryFire( CurTime() + delay )
-	self:EmitSound( "weapons/ar2/npc_ar2_altfire.wav", 100, pitch - math.random() * 10, 0.7, 1 )
+	self:EmitSound( "weapons/ar2/npc_ar2_altfire.wav", 100, pitch - math.random() * 10, 0.3, 1 )
 
 	local owner = self:GetOwner()
+
+	--print(round)
+
 	owner:LagCompensation( true )
 
 	owner:FireBullets {
 		Src = owner:GetShootPos(),
 		Dir = owner:GetAimVector(),
 		Spread = Vector( spred, spred ),
-		Damage = ( self:Clip1() <= 20 ) and 16 or 12,
+		Damage = ( self:Clip1() <= 20 ) and 12 + ((round/10)/2) or 8 + ((round/10)/2),
 		Attacker = owner,
 
 		Callback = function( att, tr, dmg )

@@ -36,7 +36,7 @@ if SERVER then
 
         self:EmitSound( sfx, 100, 80 + (num*10), nil, CHAN_STATIC )
 
-        local radius = 200
+        local radius = 160
 
         for i = 1, 7 do
             num = num + 1
@@ -92,9 +92,7 @@ if CLIENT then
 
         local m = Matrix()
         m:Scale(Vector(1.5, 1.5, 0.25))
-
         self:EnableMatrix("RenderMultiply", m)
-
         self:DrawModel()
 
         render.SetMaterial(TARGET)
