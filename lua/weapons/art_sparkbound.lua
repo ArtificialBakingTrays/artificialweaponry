@@ -80,7 +80,7 @@ function SWEP:PrimaryAttack()
 
 	local Delay = 0.65
 
-	--self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, nil, CHAN_STATIC)
+	self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 1.2, 1 )
 
 	if self.HasFired then
 		timer.Simple( Delay - ( self:Clip1() * 0.1 ), function()

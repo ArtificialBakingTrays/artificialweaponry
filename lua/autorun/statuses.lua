@@ -23,20 +23,21 @@ function StatusBleed( dmg, ply, ent )
 	if ent.IsBleeding == true then return end
 	--Bleed ticks 3 times per instance of the effect.
 
-	local num = 1 --difference between each instance of bleed
+	local num = 0.15 --difference between each instance of bleed
 	ent.IsBleeding = true
 	for i = 1, 7 do
-		num = num + 1
+		num = num + 0.15
 		timer.Simple( num, function()
 			ent:TakeDamage( dmg, ply )
-			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120), 1, 1)
+			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120) + (num*10), 1, 1)
+			ent:EmitSound("artiwepsv2/primebop.mp3", 75, math.random(110, 120) + (num*10), 1, 6)
 			local FxData = EffectData()
 			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
 			util.Effect("BloodImpact", FxData, true, true)
 		end)
 	end
 
-	timer.Simple( 7.2, function()
+	timer.Simple( 2, function()
 		ent.IsBleeding = false
 	end)
 end

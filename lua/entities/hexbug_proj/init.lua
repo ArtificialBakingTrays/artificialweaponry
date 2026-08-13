@@ -100,3 +100,14 @@ function ENT:BugTrailSize(startSize, endSize)
 	self.trailObj:SetKeyValue("startwidth", startSize)
 	self.trailObj:SetKeyValue("endwidth", endSize)
 end
+
+
+function ENT:OnTakeDamage(dmginfo)
+    self:Remove()
+	local effectdata = EffectData()
+	effectdata:SetOrigin( self:GetPos() )
+	effectdata:SetScale(0.1)
+
+	util.Effect("cball_explode", effectdata, true, true)
+	self:EmitSound( "npc/vort/vort_explode1.wav", 100, 120 + math.random(0, 15), 1, 1 )
+end

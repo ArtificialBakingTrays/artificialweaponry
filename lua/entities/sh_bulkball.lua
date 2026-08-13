@@ -60,7 +60,7 @@ if SERVER then
 
     function ENT:OnTakeDamage(dmginfo)
         self:CheckNearby( 350, 65 )
-        self:EmitSound("sparkbound/elec_impact.mp3", 100, math.random(90, 110), 1, 1 )
+        self:EmitSound("sparkbound/cloudstrikefire.mp3", 100, math.floor(math.random(90, 110)), 1, 6, CHAN_STATIC) 
         util.ScreenShake( self:GetPos(), 400, 40, 0.5, 400, true )
 
         local tr = util.TraceLine({
@@ -70,7 +70,13 @@ if SERVER then
         })
 
         if tr.Hit then
-            self:SpawnProjectile( "sh_pool", self:GetOwner(), tr.HitPos, tr.HitNormal:Angle() + Angle(90, 0, 0) ) 
+            self:SpawnProjectile( "sh_pool", self:GetOwner(), tr.HitPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+
+            local effectdata = EffectData()
+            effectdata:SetOrigin( self:GetPos() )
+            effectdata:SetNormal( Vector(1,1) )
+            effectdata:SetRadius( 250 )
+            util.Effect("HelicopterMegaBomb", effectdata, true, true)
         end
         self:Remove()
     end
@@ -115,6 +121,7 @@ if SERVER then
                 effectdata:SetScale(0.1)
                 self:EmitSound("artiwepsv2/nuclearbomba.mp3", 100, math.random(90, 110), 1, 1 )
                 self:CheckNearby( 125, 35 )
+                util.Decal( "Scorch", data.HitPos + data.HitNormal, data.HitPos - data.HitNormal )
                 self:Remove()
             return
         end
@@ -175,20 +182,59 @@ if CLIENT then
     end
 
     function ENT:OnRemove()
+
         local emit = ParticleEmitter(self:GetPos())
 
         for i = 1, 250 do
-            local part = emit:Add("sprites/glow04_noz", self:GetPos())
+            local part = emit:Add("particle/Particle_Glow_04_Additive", self:GetPos())
 
             if part then
-                part:SetColor(132, 255, 0)
-                part:SetDieTime(0.7)
-                part:SetStartAlpha(255)
-                part:SetEndAlpha(0)
-                part:SetStartSize(15)
-                part:SetEndSize(0)
-                part:SetGravity(Vector(0,0,-250))
-                part:SetVelocity(VectorRand() * 1750)
+                part:SetColor( 132, 255, 0 )
+                part:SetDieTime( 0.3 )
+                part:SetStartAlpha( 255 )
+                part:SetEndAlpha( 0 )
+                part:SetStartSize( 3.5 )
+                part:SetEndSize( 20 )
+                part:SetGravity(Vector( 0, 0, 250 ))
+                part:SetVelocity( VectorRand() * 150 )
+            end
+        end
+        emit:Finish()
+
+        local emit = ParticleEmitter(self:GetPos())
+
+        for i = 1, 750 do
+            local part = emit:Add("particle/fire", self:GetPos())
+
+            --Color(235, 255, 82)
+
+            if part then
+                part:SetColor( 196, 255, 133 )
+                part:SetDieTime( 0.2 )
+                part:SetStartAlpha( 255 )
+                part:SetEndAlpha( 0 )
+                part:SetStartSize( 10 )
+                part:SetEndSize( 0 )
+                part:SetGravity( Vector( 0,0,-250 ) )
+                part:SetVelocity( VectorRand() * 1200 )
+            end
+        end
+        emit:Finish()
+        
+        local emit = ParticleEmitter(self:GetPos())
+        for i = 1, 750 do
+            local part = emit:Add("particle/fire", self:GetPos())
+
+            --Color(235, 255, 82)
+            if part then
+                part:SetColor( 196, 255, 133 )
+                part:SetDieTime( 2.6 )
+                part:SetStartAlpha( 255 )
+                part:SetEndAlpha( 0 )
+                part:SetStartSize( 10 )
+                part:SetEndSize( 0 )
+                part:SetGravity( Vector( 0,0,-2000 + math.random(1000, 2000) ) )
+                part:SetVelocity( VectorRand() )
             end
         end
         emit:Finish()

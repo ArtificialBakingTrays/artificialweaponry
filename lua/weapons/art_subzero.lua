@@ -46,8 +46,8 @@ function SWEP:PrimaryAttack()
 
 	owner:LagCompensation( true )
 		if self:Clip2() <= 3 then
-			self:EmitSound( "sparkbound/shoot.mp3", 100, math.random( 105, 115 ), 100, 6 ) --PLEASE CHANGE THESE SOUNDS
-			self:EmitSound( "artiwepsv2/blast1concept.mp3", 100, math.random( 95, 105 ), 100, 6 )
+			self:EmitSound( "sparkbound/shoot.mp3", 100, math.random( 105, 115 ), 10.4, 1 ) --PLEASE CHANGE THESE SOUNDS
+			self:EmitSound( "artiwepsv2/blast1concept.mp3", 100, math.random( 95, 105 ), 1, 6 )
 
 			local aimDir = self:GetOwner():GetAimVector()
 			local aimDirAng = aimDir:Angle()

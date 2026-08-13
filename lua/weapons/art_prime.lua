@@ -114,7 +114,7 @@ function SWEP:PrimaryAttack()
 	self:SpawnProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1, false )
 
     self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
-	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.7, 6 )
+	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.3, 6 )
 end
 
 
