@@ -6,12 +6,11 @@ ENT.Author = "ArtificialBakingTrays"
 ENT.Category = "Artificial Ents"
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for Nucleonic"
-ENT.Spawnable = true
+ENT.Spawnable = false
 
 if SERVER then
     function ENT:Initialize()
         self:SetModel("models/hunter/tubes/tube4x4x025.mdl")
-        --self:SetModelScale( 1.3 )
         self:SetMaterial("model_color")
         self:SetColor(Color(187, 255, 118, 125 ))
         self:SetRenderMode(RENDERMODE_TRANSCOLOR)
@@ -79,6 +78,7 @@ if SERVER then
             if dist > radius then continue end
 
             v:TakeDamage( dmg, self:GetOwner(), self )
+            StatusTrickle( v, self:GetOwner():GetOwner(), 4, 8 )
          end
     end
 end

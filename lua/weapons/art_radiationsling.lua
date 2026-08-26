@@ -15,8 +15,8 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 1
 SWEP.BobScale = 1.15
 
-SWEP.Primary.ClipSize = 8
-SWEP.Primary.DefaultClip = 8
+SWEP.Primary.ClipSize = 12
+SWEP.Primary.DefaultClip = 12
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "none"
 SWEP.Primary.Force = 100
@@ -45,6 +45,7 @@ function SWEP:Reload()
 	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
+	self.IsReloading = true
 
 	self:SetDTFloat( 0, CurTime() + 1.3 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
@@ -58,17 +59,19 @@ function SWEP:Think() --Help from zynx
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 8 )
+	self:SetClip1( 12 )
 	self:SetDTFloat( 0, 0 )
+	self.IsReloading = false
 end
 
 function SWEP:PrimaryAttack()
+	if self.IsReloading then return end
 	local owner = self:GetOwner()
 	if self:Clip1() <= 0 then return end -- No Shoot
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
-	self:SetNextPrimaryFire( CurTime() + 0.316 )
+	self:SetNextPrimaryFire( CurTime() + 0.295 )
 
 	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, math.random( 110, 120 ), 0.2, 6 )
@@ -116,7 +119,7 @@ end
 
 local slingreticle = Material( "vgui/hud/sling_reticle.png", "noclamp smooth" )
 local color = Color(226, 255, 121, 255)
---Note to self. wait for loka next time before trying rendering bullshit
+
 function SWEP:DrawHUD()
 	if self:GetScoped() then
 	render.SetColorMaterialIgnoreZ()
@@ -131,8 +134,68 @@ function SWEP:DrawHUD()
 	surface.DrawTexturedRect(w - length / 2 + 5, h - scale / 2 + 30, length, scale)
 	end
 end
---Small crashout on my part- it wasnt even that hard in the end-
+
 
 function SWEP:DoDrawCrosshair()
-	return self:GetScoped() --Im so marvelous at coding
+	return self:GetScoped()
+end
+
+
+hook.Add("OnNPCKilled", "art_radiationsling", function(npc, attacker, inflictor)
+    if not IsValid(inflictor) then return end
+    if inflictor:GetClass() ~= "art_radiationsling" then return end
+
+    if math.random(0, 5) >= 3 then
+        local tr = util.TraceLine({
+            start = npc:GetPos() + Vector(0, 0, 10),
+            endpos = npc:GetPos() - Vector(0, 0, 10000),
+            filter = npc,
+        })
+
+        if tr.Hit then
+            local spawnPos = tr.HitPos + tr.HitNormal * 2
+            local owner = inflictor:GetOwner()
+            if IsValid(owner) then
+                inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+            end
+        end
+    end
+end)
+
+hook.Add("PlayerDeath", "art_radiationsling", function(victim, inflictor)
+    if not IsValid(inflictor) then return end
+    if inflictor:GetClass() ~= "art_radiationsling" then return end
+
+    if math.random(0, 1) == 1 then
+        local tr = util.TraceLine({
+            start = victim:GetPos() + Vector(0, 0, 10),
+            endpos = victim:GetPos() - Vector(0, 0, 10000),
+            filter = victim,
+        })
+
+        if tr.Hit then
+            local spawnPos = tr.HitPos + tr.HitNormal * 2
+            local owner = inflictor:GetOwner()
+			if IsValid(owner) then
+				inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+			end
+        end
+    end
+end)
+
+function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
+    if CLIENT then return end
+	local ent = ents.Create( Entstring )
+    if ( not ent:IsValid() ) then return end
+
+    ent:SetOwner( Owner )
+    ent:SetPos( Position )
+    ent:SetAngles( Angles )
+    ent:Spawn()
+
+	local entphys = ent:GetPhysicsObject()
+
+    if ( not entphys:IsValid() ) then ent:Remove() return end
+
+    entphys:EnableMotion(false)
 end

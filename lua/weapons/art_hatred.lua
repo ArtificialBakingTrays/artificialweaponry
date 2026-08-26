@@ -28,6 +28,7 @@ function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
+	self.IsReloading = true
 
 	self:SetDTFloat( 0, CurTime() + 1.2 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
@@ -39,6 +40,7 @@ function SWEP:Think() --This like fuckass prediction for timers is so like cooke
 
 	if time > CurTime() then return end
 
+	self.IsReloading = false
 	self:SetClip1( self:GetMaxClip1() )
 	self:SetDTFloat( 0, 0 )
 	self:SetClip2( 0 )
@@ -60,10 +62,10 @@ function SWEP:SecondaryAttack() return end
 
 function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
+	if self.IsReloading then return end
 
 	local round = math.Clamp(self:Clip2() + 1.35, 0, 300)
 	self:SetClip2( round )
-
 
 	local pitch = 60 + round
 	local delay = math.max( 0.085 - round * .0004, .001 )
@@ -98,15 +100,31 @@ end
 
 hook.Add( "OnNPCKilled", "art_hatred", function( npc, attacker, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
-		inflictor:SetClip1( math.min( inflictor:Clip1() + 20, inflictor:GetMaxClip1() ) )
+		inflictor:SpawnProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0 )
 	end
 end )
 
 hook.Add( "PlayerDeath", "art_hatred", function( victim, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
-		inflictor:SetClip1( math.min( inflictor:Clip1() + 20, inflictor:GetMaxClip1() ) )
+		local inflown = inflictor:GetOwner()
+		inflictor:SpawnProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0 )
 	end
 end )
+
+function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
+	if CLIENT then return end
+	local ent = ents.Create( Entstring )
+	if ( not ent:IsValid() ) then return end
+
+	ent:SetOwner( Owner )
+	ent:SetPos( Position )
+	ent:SetAngles( Angles )
+	ent:Spawn()
+
+	local entphys = ent:GetPhysicsObject()
+
+	if ( not entphys:IsValid() ) then ent:Remove() return end
+end
 
 local function drawCircleLine(x, y, sx, sy, itr)
 	for i = 0, (itr - 1) do

@@ -79,7 +79,6 @@ function ENT:NearbyCheck()
             closestEnt = v
         end
     end
-
     return closestEnt
 end
 
@@ -90,14 +89,10 @@ function ENT:Think()
     if IsValid(target) and IsValid(phys) then
         local pos = self:GetPos()
         local targetPos = target:GetPos() + Vector(0,0,30)
-
         local Dir = (targetPos - pos):GetNormalized()
-
         local currentVel = phys:GetVelocity()
         local currentDir = currentVel:GetNormalized()
-
         local turnRate = 0.08
-
         local newDir = LerpVector(turnRate, currentDir, Dir):GetNormalized()
         phys:SetVelocity(newDir * 500)
     end

@@ -6,7 +6,7 @@ ENT.Author = "ArtificialBakingTrays"
 ENT.Category = "Artificial Ents"
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for Nucleonic"
-ENT.Spawnable = true
+ENT.Spawnable = false
 
 local BaseColor = Color( 196, 255, 113)
 local scale = 3
@@ -182,12 +182,10 @@ if CLIENT then
     end
 
     function ENT:OnRemove()
-
         local emit = ParticleEmitter(self:GetPos())
 
         for i = 1, 250 do
             local part = emit:Add("particle/Particle_Glow_04_Additive", self:GetPos())
-
             if part then
                 part:SetColor( 132, 255, 0 )
                 part:SetDieTime( 0.3 )
@@ -202,12 +200,8 @@ if CLIENT then
         emit:Finish()
 
         local emit = ParticleEmitter(self:GetPos())
-
         for i = 1, 750 do
             local part = emit:Add("particle/fire", self:GetPos())
-
-            --Color(235, 255, 82)
-
             if part then
                 part:SetColor( 196, 255, 133 )
                 part:SetDieTime( 0.2 )
@@ -224,8 +218,6 @@ if CLIENT then
         local emit = ParticleEmitter(self:GetPos())
         for i = 1, 750 do
             local part = emit:Add("particle/fire", self:GetPos())
-
-            --Color(235, 255, 82)
             if part then
                 part:SetColor( 196, 255, 133 )
                 part:SetDieTime( 2.6 )

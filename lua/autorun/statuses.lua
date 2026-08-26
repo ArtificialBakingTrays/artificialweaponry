@@ -51,8 +51,8 @@ end
 
 
 --=================TRICKLED STATUS CODE===================--
---For weapons of the Thundery Class
---This includes: LostMasks, Nucleonic, and SparkBound Compass
+--For weapons of the Thundery Class (is also used for Nuclear weapons)
+--This includes: LostMasks, Nucleonic, and SparkBound Compass, And Lethal Dose of Radiation
 function StatusTrickle( ent, dmgown, dmgtick, ticks )
 	if CLIENT then return end
 	if bool == false then return end
@@ -101,6 +101,7 @@ function StatusSlow( ent, time )
 	if CLIENT then return end
 	if bool == false then return end
 	if ent.IsSlowed == true then return end
+	if ent:IsNPC then return end
 	if not IsValid(ent) or ent:Health() == 0 then return end
 
 	ent:SetRunSpeed( ent:GetRunSpeed() - 40 )

@@ -27,7 +27,61 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
---The code I understand the least :D -Rayne
+local DEBUG_BOX_COLOUR = Color(255, 0, 0, 10)
+function SWEP:SecondaryAttack()
+	self:EmitSound( "physics/body/body_medium_impact_hard1.wav", 75, math.random(95, 110), 1, 1 )
+	if CLIENT then return end
+	if self.IsReloading then return end
+	self:SetNextSecondaryFire( CurTime() + 0.5 )
+	self:SetNextPrimaryFire( CurTime() + 0.4 )
+
+	timer.Simple(0.1, function()
+		self:EmitSound( "physics/body/body_medium_impact_soft1.wav", 75, math.random(95, 110), 1, 6 )
+		local startPos = self:GetOwner():GetShootPos()
+		local endPos = startPos + self:GetOwner():GetAimVector() * 40
+
+		local boxSize = 24
+		local boxMins = Vector(-boxSize, -boxSize, -boxSize)
+		local boxMaxs = Vector(boxSize , boxSize , boxSize )
+
+		local tr = util.TraceHull({
+			start = startPos,
+			endpos = endPos,
+
+			mins = boxMins,
+			maxs = boxMaxs,
+
+			filter = self:GetOwner(), IsTraysProjectile
+		})
+
+		if tr.Entity:IsValid() and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
+			local trEnt = tr.Entity
+			DEBUG_BOX_COLOUR = Color(0, 255, 30, 10)
+
+			trEnt:TakeDamage( 24, self:GetOwner(), self )
+			self:SetNextSecondaryFire( CurTime() + 1)
+			StatusSlow( trEnt, 1.25 )
+			trEnt:SetVelocity(self:GetOwner():GetAimVector() * 300)
+		else
+			DEBUG_BOX_COLOUR = Color(255, 0, 0, 10 )
+		end
+
+		local lifetime = 3 -- debug boxes last 8s
+		debugoverlay.Box( tr.HitPos, boxMins, boxMaxs, lifetime, DEBUG_BOX_COLOUR )
+	end)
+end
+
+
+
+
+
+
+
+
+
+
+
+
 
 local offsetSpread = 0.035
 local offsetLUT = {
@@ -50,7 +104,8 @@ function SWEP:PrimaryAttack()
 	if self:Clip1() <= 0 then return end
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
-	self:SetNextPrimaryFire( CurTime() + 0.256 )
+	if self:Clip1() > 8 then self:SetNextPrimaryFire( CurTime() + 0.195 )
+	else self:SetNextPrimaryFire( CurTime() + 0.256 ) end
 	if self.isReloading == true then return end
 	local owner = self:GetOwner()
 
@@ -94,6 +149,36 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( false )
 end
 
+hook.Add( "OnNPCKilled", "art_springloaded", function( npc, attacker, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_springloaded" then
+		inflictor:SpawnProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0 )
+	end
+end )
+
+hook.Add( "PlayerDeath", "art_springloaded", function( victim, inflictor )
+	if inflictor:IsValid() and inflictor:GetClass() == "art_springloaded" then
+		local inflown = inflictor:GetOwner()
+		inflictor:SpawnProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0 )
+	end
+end )
+
+--Custom Projectile Spawning Func
+--Now updated to work for MANY projectiles at once.
+function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
+	if CLIENT then return end
+	local ent = ents.Create( Entstring )
+	if ( not ent:IsValid() ) then return end
+
+	ent:SetOwner( Owner )
+	ent:SetPos( Position )
+	ent:SetAngles( Angles )
+	ent:Spawn()
+
+	local entphys = ent:GetPhysicsObject()
+
+	if ( not entphys:IsValid() ) then ent:Remove() return end
+end
+
 function SWEP:CustomAmmoDisplay()
 	self.AmmoDisplay = self.AmmoDisplay or {}
 
@@ -109,7 +194,7 @@ end
 function SWEP:Reload()
 	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
-	if self:Clip1() == self.Primary.ClipSize then return end
+	if self:Clip1() >= 8 then return end
 	self.isReloading = true
 	self:SetNextPrimaryFire( CurTime() + 1.56 )
 

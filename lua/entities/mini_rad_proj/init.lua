@@ -39,7 +39,7 @@ function ENT:PhysicsCollide(data)
 	local ExplDMG = 23
 
 	if not IsValid(enthit) then
-		util.BlastDamage( self, self:GetOwner(), self:GetPos(), 85, ExplDMG )
+		self:CheckNearby( 40 )
 		self:EmitSound( "tray_sounds/slingfirework.mp3", 100, math.random(95, 105), 1, 6 )
 		self:Remove()
 
@@ -52,6 +52,31 @@ function ENT:PhysicsCollide(data)
 	if enthit.IsTraysProjectile then return end
 
 	self.NextHit = CurTime() + 0.1
-	data.HitEntity:TakeDamage(DMG, self:GetOwner())
+	data.HitEntity:TakeDamage(DMG, self:GetOwner(), self:GetOwner())
 	self:EmitSound( "tray_sounds/slingfirework.mp3", 100, math.random(105, 115), 1, 6 )
+end
+
+function ENT:CheckNearby( Radius )
+	local rad = Radius
+	local selfPos = self:GetPos()
+
+	for k, v in ents.Iterator() do
+		if not v then continue end
+		if not IsValid(v) then continue end
+		if v == self:GetOwner() then continue end
+
+		local classGet = v:GetClass()
+
+		local doPass = false
+		if classGet == "player" then doPass = true end
+		if string.sub(classGet, 1, 4) == "npc_" then doPass = true end
+		if not doPass then continue end
+		if v:Health() <= 0 then continue end
+
+		local entPos = v:GetPos()
+		local dist = entPos:Distance( selfPos )
+		if dist > rad then continue end
+
+		v:TakeDamage( math.random(8,12), self:GetOwner(), self:GetOwner())
+	end
 end
