@@ -2,20 +2,16 @@ local bool = true --base value = true
 --Used for enabling or disabling status effects
 if SERVER then
 	concommand.Add( "artiweps_status", function( ply )
-			if not ply:IsListenServerHost() then return end
-			bool = not bool
+		if not ply:IsListenServerHost() then return end
+		bool = not bool
 
-		if bool == true then
-			print( "Status Effects have been set to true")
-		end
+		if bool == true then print( "Status Effects have been set to true") end
 
-		if bool == false then
-			print( "Status Effects have been set to false")
-		end
+		if bool == false then print( "Status Effects have been set to false") end
 	end )
 end
 
-
+print("status working")
 
 --=================BLEED STATUS CODE===================--
 --For weapons of the GOREY Class
@@ -32,7 +28,7 @@ function StatusBleed( dmg, ply, ent )
 	for i = 1, 7 do
 		num = num + 0.15
 		timer.Simple( num, function()
-			if !IsValid(ent) or ent:Health() <= 0 then ent.IsBleeding = false return end
+			if not IsValid(ent) or ent:Health() <= 0 then ent.IsBleeding = false return end
 			if ent.IsBleeding == false then return end
 			ent:TakeDamage( dmg, ply )
 			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120) + (num*10), 1, 1)
@@ -66,7 +62,7 @@ function StatusTrickle( ent, dmgown, dmgtick, ticks )
 	for i = 1, ticks do
 		num = num + 1
 		timer.Simple( num, function()
-			if !IsValid(ent) or ent:Health() <= 0 then ent.IsCurrentlyTrickled = false return end
+			if not IsValid(ent) or ent:Health() <= 0 then ent.IsCurrentlyTrickled = false return end
 			if ent.IsCurrentlyTrickled == false then return end
 			if ent:IsOnFire() then 
 				dmgtick = dmgtick * 2 
@@ -101,7 +97,7 @@ function StatusSlow( ent, time )
 	if CLIENT then return end
 	if bool == false then return end
 	if ent.IsSlowed == true then return end
-	if ent:IsNPC then return end
+	if ent:IsNPC() then return end
 	if not IsValid(ent) or ent:Health() == 0 then return end
 
 	ent:SetRunSpeed( ent:GetRunSpeed() - 40 )
@@ -124,6 +120,7 @@ end
 --EXCLUSIVELY FOR THE PARASITICAL ARM-IMPLANT
 function StatusNullify( ply, hp, armor )
 	if CLIENT then return end
+	if not IsValid(ply) then return end
 --Is unaffected by status disabling as it is not really a status effect. more so an effect on a gun.
 	if ply:Armor() < 100 then
 		ply:SetArmor( ply:Armor() + armor )
@@ -139,6 +136,7 @@ function StatusNullify( ply, hp, armor )
 		end
 	end
 end
+
 
 
 
@@ -162,5 +160,4 @@ function StatusMagmatic( ply, lvl, dmginst, dmgown )
 			ply.isMagmafied = false
 		end
 	end)
-
 end
