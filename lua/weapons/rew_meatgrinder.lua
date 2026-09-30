@@ -105,7 +105,7 @@ local offsetLUT = {
 
 function SWEP:SecondaryAttack()
 	--Distraction/Projectile attack
-	self:SetNextSecondaryFire( CurTime() + 1.7 )
+	self:SetNextSecondaryFire( CurTime() + 1.1 )
 
 	self:EmitSound( "artiwepsv2/usesfx.wav", 100, math.random(85, 95), 1, 1 )
 	self:EmitSound( "artiwepsv2/splathit1.mp3", 100, math.random(85, 95), 1, 6 )
@@ -139,7 +139,7 @@ end
 function SWEP:SpawnGibblers(targetDir)
 	if CLIENT then return end
 
-	local ent = ents.Create( "gibbler_proj" )
+	local ent = ents.Create( "sh_gibbler" )
 
 	if ( not ent:IsValid() ) then return end
 

@@ -97,7 +97,7 @@ function SWEP:Reload()
 	self.IsReloading = true
 
 	self:EmitSound("tray_sounds/reload_1.mp3", 100, 100, 1, CHAN_AUTO )
-	
+
 	timer.Simple(0.7, function()
 		self:EmitSound("artiwepsv2/potregenreload.mp3", 100, 180, 0.2, CHAN_AUTO )
 	end)
@@ -160,24 +160,26 @@ end
 -- this is neccessary so that the hands dont glow aswell
 SWEP.UseHands = false
 
-function SWEP:DrawWorldModel( flags )
-	render.SetColorModulation( 3, 30, 1 )
-		render.SuppressEngineLighting( true )
-			self:DrawModel( flags )
-		render.SuppressEngineLighting( false )
-	render.SetColorModulation( 1, 1, 1 )
-end
+if CLIENT then
+	function SWEP:DrawWorldModel( flags )
+		render.SetColorModulation( 3, 30, 1 )
+			render.SuppressEngineLighting( true )
+				self:DrawModel( flags )
+			render.SuppressEngineLighting( false )
+		render.SetColorModulation( 1, 1, 1 )
+	end
 
-function SWEP:PreDrawViewModel( vm )
-	render.SetColorModulation( 3, 10, 1 ) -- the glow
-	render.SuppressEngineLighting( true ) -- disable lighting
-end
+	function SWEP:PreDrawViewModel( vm )
+		render.SetColorModulation( 3, 10, 1 ) -- the glow
+		render.SuppressEngineLighting( true ) -- disable lighting
+	end
 
-function SWEP:PostDrawViewModel( _, _, ply )
-	render.SuppressEngineLighting( false ) -- re enable lighting
-	render.SetColorModulation( 1, 1, 1 ) -- reset the glow
+	function SWEP:PostDrawViewModel( _, _, ply )
+		render.SuppressEngineLighting( false ) -- re enable lighting
+		render.SetColorModulation( 1, 1, 1 ) -- reset the glow
 
-	if IsValid( ply ) then ply:GetHands():DrawModel() end
+		if IsValid( ply ) then ply:GetHands():DrawModel() end
+	end
 end
 --Hexbug my beloved
 --                                                     *****,.                    

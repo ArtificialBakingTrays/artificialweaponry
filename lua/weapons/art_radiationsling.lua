@@ -45,14 +45,14 @@ function SWEP:Reload()
 	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
-	self.IsReloading = true
+	self:SetNextPrimaryFire( CurTime() + 1.2 )
 
-	self:SetDTFloat( 0, CurTime() + 1.3 )
+	self:SetDTFloat( 0, CurTime() + 1.2 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
 
 	self:EmitSound( "tray_sounds/sling_reload.mp3", 75, 110, .7, 1 )
 end
- 
+
 function SWEP:Think() --Help from zynx
 	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end
@@ -61,11 +61,9 @@ function SWEP:Think() --Help from zynx
 
 	self:SetClip1( 12 )
 	self:SetDTFloat( 0, 0 )
-	self.IsReloading = false
 end
 
 function SWEP:PrimaryAttack()
-	if self.IsReloading then return end
 	local owner = self:GetOwner()
 	if self:Clip1() <= 0 then return end -- No Shoot
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
@@ -142,60 +140,60 @@ end
 
 
 hook.Add("OnNPCKilled", "art_radiationsling", function(npc, attacker, inflictor)
-    if not IsValid(inflictor) then return end
-    if inflictor:GetClass() ~= "art_radiationsling" then return end
+	if not IsValid(inflictor) then return end
+	if inflictor:GetClass() ~= "art_radiationsling" then return end
 
-    if math.random(0, 5) >= 3 then
-        local tr = util.TraceLine({
-            start = npc:GetPos() + Vector(0, 0, 10),
-            endpos = npc:GetPos() - Vector(0, 0, 10000),
-            filter = npc,
-        })
+	if math.random(0, 5) >= 3 then
+		local tr = util.TraceLine({
+			start = npc:GetPos() + Vector(0, 0, 10),
+			endpos = npc:GetPos() - Vector(0, 0, 10000),
+			filter = npc,
+		})
 
-        if tr.Hit then
-            local spawnPos = tr.HitPos + tr.HitNormal * 2
-            local owner = inflictor:GetOwner()
-            if IsValid(owner) then
-                inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
-            end
-        end
-    end
-end)
-
-hook.Add("PlayerDeath", "art_radiationsling", function(victim, inflictor)
-    if not IsValid(inflictor) then return end
-    if inflictor:GetClass() ~= "art_radiationsling" then return end
-
-    if math.random(0, 1) == 1 then
-        local tr = util.TraceLine({
-            start = victim:GetPos() + Vector(0, 0, 10),
-            endpos = victim:GetPos() - Vector(0, 0, 10000),
-            filter = victim,
-        })
-
-        if tr.Hit then
-            local spawnPos = tr.HitPos + tr.HitNormal * 2
-            local owner = inflictor:GetOwner()
+		if tr.Hit then
+			local spawnPos = tr.HitPos + tr.HitNormal * 2
+			local owner = inflictor:GetOwner()
 			if IsValid(owner) then
 				inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
 			end
-        end
-    end
+		end
+	end
+end)
+
+hook.Add("PlayerDeath", "art_radiationsling", function(victim, inflictor)
+	if not IsValid(inflictor) then return end
+	if inflictor:GetClass() ~= "art_radiationsling" then return end
+
+	if math.random(0, 1) == 1 then
+		local tr = util.TraceLine({
+			start = victim:GetPos() + Vector(0, 0, 10),
+			endpos = victim:GetPos() - Vector(0, 0, 10000),
+			filter = victim,
+		})
+
+		if tr.Hit then
+			local spawnPos = tr.HitPos + tr.HitNormal * 2
+			local owner = inflictor:GetOwner()
+			if IsValid(owner) then
+				inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+			end
+		end
+	end
 end)
 
 function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
-    if CLIENT then return end
+	if CLIENT then return end
 	local ent = ents.Create( Entstring )
-    if ( not ent:IsValid() ) then return end
+	if ( not ent:IsValid() ) then return end
 
-    ent:SetOwner( Owner )
-    ent:SetPos( Position )
-    ent:SetAngles( Angles )
-    ent:Spawn()
+	ent:SetOwner( Owner )
+	ent:SetPos( Position )
+	ent:SetAngles( Angles )
+	ent:Spawn()
 
 	local entphys = ent:GetPhysicsObject()
 
-    if ( not entphys:IsValid() ) then ent:Remove() return end
+	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-    entphys:EnableMotion(false)
+	entphys:EnableMotion(false)
 end

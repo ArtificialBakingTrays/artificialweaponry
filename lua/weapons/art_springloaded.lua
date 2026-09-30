@@ -72,17 +72,6 @@ function SWEP:SecondaryAttack()
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
 local offsetSpread = 0.035
 local offsetLUT = {
 	-- Top row
@@ -234,27 +223,27 @@ function SWEP:Holster()
 end
 
 if SERVER then
-    hook.Add("KeyPress", "DoubJump", function(ply, key)
-        if not IsValid(ply) then return end
-        local wep = ply:GetActiveWeapon()
-        if not IsValid(wep) or wep:GetClass() ~= "art_springloaded" then return end
-        if key ~= IN_JUMP then return end
+	hook.Add("KeyPress", "DoubJump", function(ply, key)
+		if not IsValid(ply) then return end
+		local wep = ply:GetActiveWeapon()
+		if not IsValid(wep) or wep:GetClass() ~= "art_springloaded" then return end
+		if key ~= IN_JUMP then return end
 
-        if ply:OnGround() then ply.DoubJumped = false return end
-        if ply.DoubJumped then return end
-        ply.DoubJumped = true
+		if ply:OnGround() then ply.DoubJumped = false return end
+		if ply.DoubJumped then return end
+		ply.DoubJumped = true
 
-        -- Give them an upward boost
-        local vel = ply:GetVelocity()
+		-- Give them an upward boost
+		local vel = ply:GetVelocity()
 		ply:EmitSound( "footsteps/gw_snow3.wav", 100, math.random(95, 105), 1, nil )
 		ply:EmitSound( "artiwepsv2/chemfire2.mp3", 100, math.random(95, 105), 1, 6 )
 
-        ply:SetVelocity(Vector( 0, 0, 300 - math.max( vel.z, 0 ) ))
-    end)
+		ply:SetVelocity(Vector( 0, 0, 300 - math.max( vel.z, 0 ) ))
+	end)
 
-    hook.Add("Think", "DoubJumpReset", function()
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:OnGround() then ply.DoubJumped = false end
-        end
-    end)
+	hook.Add("Think", "DoubJumpReset", function()
+		for _, ply in ipairs(player.GetAll()) do
+			if ply:OnGround() then ply.DoubJumped = false end
+		end
+	end)
 end

@@ -33,19 +33,21 @@ if SERVER then
         local num = 0
         local sfx = "sparkbound/ice_thud.mp3"
 
-        self:EmitSound( sfx, 100, 80 + (num*10), nil, CHAN_STATIC )
+        self:EmitSound( sfx, 100, 80 + (num * 10), nil, CHAN_STATIC )
 
         local radius = 160
 
         for i = 1, 7 do
             num = num + 1
             timer.Simple( num, function()
-                self:CheckNearby( radius, (2.5*num)/2 )
-                self:EmitSound( sfx, 100, 80 + (num*10), nil, CHAN_STATIC )
+                if not IsValid(self) then return end
+                self:CheckNearby( radius, (2.5 * num) / 2 )
+                self:EmitSound( sfx, 100, 80 + (num * 10), nil, CHAN_STATIC )
             end)
         end
 
         timer.Simple( 8, function()
+            if not IsValid(self) then return end
             self:CheckNearby( radius, 25 )
             self:EmitSound( sfx, 100, 100, nil, CHAN_STATIC )
             self:Remove()

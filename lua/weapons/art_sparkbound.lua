@@ -46,6 +46,7 @@ function SWEP:HUDShouldDraw(element)
 	return true
 end
 
+function SWEP:Reload() return end
 
 function SWEP:SpawnProj( EntName, Speed )
 	if CLIENT then return end

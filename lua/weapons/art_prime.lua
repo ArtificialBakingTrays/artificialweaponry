@@ -62,58 +62,56 @@ function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBo
 
 	local entphys = ent:GetPhysicsObject()
 
-    entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
+	entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	entphys:EnableGravity( Gravity )
 	if ( not entphys:IsValid() ) then ent:Remove() return end
 
 	if VelBool == 1 then
 		if AimVec == nil then return end
 
-		if AimVec != nil then
+		if AimVec ~= nil then
 			local Speed = 2000
 			AimVec:Mul( Speed * entphys:GetMass() )
 			entphys:ApplyForceCenter( AimVec )
 		end
-	end 
+	end
 end
 
 --================================Reload Section================================--
 function SWEP:Reload()
-	if self:GetDTFloat(0) ~= 0 then return end
+	if self:GetDTFloat( 0 ) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end
-	if IsReloading == true then return end
 	if self:Clip1() == self.Primary.ClipSize then return end
-    self:EmitSound( "artiwepsv2/cooling.mp3", 100, math.random(105, 115), 0.7, 1 )
-	local IsReloading = true
+	self:SetNextPrimaryFire( CurTime() + 1.3 )
 
-	timer.Simple( CurTime() + 1.2, function() IsReloading = false end)
 
-	self:SetDTFloat( 0, CurTime() + 1.2 )
+	self:SetDTFloat( 0, CurTime() + 1.3 )
 	self:SendWeaponAnim(ACT_VM_RELOAD)
+
+	self:EmitSound( "tray_sounds/sling_reload.mp3", 75, 110, .7, 1 )
 end
 
-function SWEP:Think()
+function SWEP:Think() --Help from zynx
 	local time = self:GetDTFloat( 0 )
 	if time == 0 then return end
 
 	if time > CurTime() then return end
 
-	self:SetClip1( 35 )
+	self:SetClip1( self.Primary.ClipSize )
 	self:SetDTFloat( 0, 0 )
 end
 
 --================================Primary Fire Section================================--
 function SWEP:PrimaryAttack()
-    if self:Clip1() == 0 then return end
-	if IsReloading == true then return end
-    self:TakePrimaryAmmo( 1 )
-    self:SetNextPrimaryFire( CurTime() + 0.055)
-    self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	if self:Clip1() == 0 then return end
+	self:TakePrimaryAmmo( 1 )
+	self:SetNextPrimaryFire( CurTime() + 0.055)
+	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 
-    --SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
+	--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
 	self:SpawnProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1, false )
 
-    self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
+	self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.3, 6 )
 end
 
@@ -138,7 +136,7 @@ hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
 		if inflictor:Clip2() >= 1 then
 			npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
-			inflictor:SpawnProjectile( "primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+			inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
 		end
 	end
 end )
@@ -195,11 +193,11 @@ function SWEP:DeployTether( Time )
 
 	local entphys = ent:GetPhysicsObject()
 
-	if( not entphys:IsValid() ) then ent:Remove() return end
+	if ( not entphys:IsValid() ) then ent:Remove() return end
 
-    entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
+	entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	entphys:EnableGravity( true )
-	
+
 	ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 	entphys:SetBuoyancyRatio(0)
 	entphys:SetMass(250)
@@ -210,6 +208,7 @@ function SWEP:DeployTether( Time )
 	entphys:ApplyForceCenter( aimvec )
 
 	timer.Simple( Time, function()
+		if not IsValid(self:GetOwner()) then return end
 		entphys:EnableMotion( false )
 		ent:EmitSound( "artiwepsv2/exoshoot.mp3", 100, 110 + math.floor(math.random(0, 15)), 1, 1 )
 		ent:EmitSound( "artiwepsv2/plasmaexplosion.mp3", 100, 105, 1, 1 )

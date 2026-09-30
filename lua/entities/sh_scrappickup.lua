@@ -13,7 +13,7 @@ function ENT:SetupDataTables()
 end
 
 local ranMDLLut = {
-    [1] = { 
+    [1] = {
         Mdl = "models/Gibs/helicopter_brokenpiece_03.mdl",
         Scl = 0.3
     },
@@ -32,7 +32,7 @@ local ranMDLLut = {
 }
 
 
-if SERVER then 
+if SERVER then
     function ENT:Initialize()
         local owner = self:GetOwner()
         local colorID = 2 -- Blue by default
@@ -52,7 +52,7 @@ if SERVER then
 
         local random = math.floor(math.random( 1, 4 ))
         local sndEntry = ranMDLLut[random]
-        
+
         self:SetModel( sndEntry.Mdl )
         self:SetModelScale( sndEntry.Scl )
         self:SetMaterial( "models/props_combine/combine_bunker01" )
@@ -75,7 +75,7 @@ if SERVER then
             phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
             phys:EnableGravity( false )
             phys:SetMass(0)
-            
+
             phys:Wake()
         end
 
@@ -143,20 +143,18 @@ end
 
 
 
-if CLIENT then 
+if CLIENT then
     local spritemat = Material("sprites/physg_glow1")
-    
+
     function ENT:GetTrueColor()
-        if self:GetColorID() == 1 then
-            return Color(255, 51, 0)
-        end
+        if self:GetColorID() == 1 then return Color(255, 51, 0) end
 
         return Color(255, 243, 137)
     end
 
     function ENT:Draw()
         local truColor = self:GetTrueColor()
-        
+
         self:DrawModel()
         render.PushFilterMin(TEXFILTER.POINT)
         render.PushFilterMag(TEXFILTER.POINT)
@@ -197,12 +195,13 @@ if CLIENT then
         local emit = ParticleEmitter(self:GetPos())
         local remDist = 1
 
-        local R = self:GetTrueColor().r
-        local G = self:GetTrueColor().g
-        local B = self:GetTrueColor().b
+        local truColor = self:GetTrueColor()
+        local R = truColor.r
+        local G = truColor.g
+        local B = truColor.b
 
         for i = 1, 12 do
-            local part = emit:Add( "sprites/glow04_noz", self:GetPos() + Vector( math.random(-remDist, remDist), math.random(-remDist, remDist), math.random(-remDist, remDist*3) ) ) -- Create a new particle at pos
+            local part = emit:Add( "sprites/glow04_noz", self:GetPos() + Vector( math.random(-remDist, remDist), math.random(-remDist, remDist), math.random(-remDist, remDist * 3) ) ) -- Create a new particle at pos
             if ( part ) then
                 part:SetColor( R, G, B )
                 part:SetDieTime( 0.7 )

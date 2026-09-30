@@ -144,7 +144,7 @@ end
 
 local scope = surface and surface.GetTextureID("vgui/hud/xbox_reticle")
 function SWEP:DrawHUD()
-	local delta = self:GetDTFloat( 0 )
+	local delta = self:GetChargeStart()
 	if delta ~= 0 then
 		delta = CurTime() - delta
 		if delta > 1 then delta = 1 end

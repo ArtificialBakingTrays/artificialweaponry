@@ -87,7 +87,7 @@ function SWEP:PrimaryAttack()
 		Src = owner:GetShootPos(),
 		Dir = owner:GetAimVector(),
 		Spread = Vector( spred, spred ),
-		Damage = ( self:Clip1() <= 20 ) and 12 + ((round/10)/2) or 8 + ((round/10)/2),
+		Damage = ( self:Clip1() <= 20 ) and 12 + ((round / 10) / 2) or 8 + ((round / 10) / 2),
 		Attacker = owner,
 
 		Callback = function( att, tr, dmg )

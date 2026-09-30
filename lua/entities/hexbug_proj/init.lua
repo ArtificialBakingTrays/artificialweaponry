@@ -8,7 +8,7 @@ function ENT:Initialize()
 	self:SetModel("models/gibs/shield_scanner_gib4.mdl")
 	self:SetModelScale(0.25)
 	self:SetMaterial("model_color")
-	self:SetColor(Color(198, 255, 106))
+	self:SetColor(Color(235, 255, 204))
 
 	self.IsTraysProjectile = true
 	self.IsAvailable = true
@@ -24,7 +24,7 @@ function ENT:Initialize()
 	phys:SetBuoyancyRatio(0)
 	phys:SetMass(5)
 	phys:EnableGravity(false)
-	self.trailObj = util.SpriteTrail(self, 0, Color(166, 255, 106), false, 0.2, 0, 0.2, 1, "trails/smoke")
+	self.trailObj = util.SpriteTrail(self, 0, Color(166, 255, 106), false, 0.6, 0, 0.2, 1, "effects/halftone_trail")
 	phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 
 	self:Fire( "Kill", "", 12.5 )
@@ -39,10 +39,10 @@ function ENT:PhysicsCollide(data)
 	if (self.NextHit or 0) > CurTime() then return end
 
 	if not IsValid(enthit) then
-		if self.HadApplied then 
+		if self.HadApplied then
 			self:Remove()
 			self:EmitSound( "artiwepsv2/splathit1.mp3", 100, math.random(170, 185), 0.3, 6 )
-		end return 
+		end return
 	end
 
 	if enthit == self:GetOwner() then return end
@@ -74,7 +74,7 @@ end
 
 
 function ENT:OnTakeDamage(dmginfo)
-    self:Remove()
+	self:Remove()
 	local effectdata = EffectData()
 	effectdata:SetOrigin( self:GetPos() )
 	effectdata:SetScale(0.1)

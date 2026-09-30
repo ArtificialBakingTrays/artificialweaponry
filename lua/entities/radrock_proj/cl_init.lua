@@ -12,4 +12,7 @@ function ENT:Draw()
 		render.DrawSprite(self:GetPos(), 32, 32, ColorSprite)
 	render.PopFilterMag()
 	render.PopFilterMin()
+
+	render.SetMaterial(Material("materials/pngtexts/halftone_dotty.png"))
+	render.DrawSprite(self:GetPos(), 16, 16, Color(255, 255, 255) )
 end

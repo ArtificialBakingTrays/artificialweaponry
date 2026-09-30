@@ -31,8 +31,8 @@ function StatusBleed( dmg, ply, ent )
 			if not IsValid(ent) or ent:Health() <= 0 then ent.IsBleeding = false return end
 			if ent.IsBleeding == false then return end
 			ent:TakeDamage( dmg, ply )
-			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120) + (num*10), 1, 1)
-			ent:EmitSound("artiwepsv2/primebop.mp3", 75, math.random(110, 120) + (num*10), 1, 6)
+			ent:EmitSound("physics/flesh/flesh_bloody_impact_hard1.wav", 75, math.random(110, 120) + (num * 10), 1, 1)
+			ent:EmitSound("artiwepsv2/primebop.mp3", 75, math.random(110, 120) + (num * 10), 1, 6)
 			local FxData = EffectData()
 			FxData:SetOrigin( ent:GetPos() + Vector(0, 0, 40) )
 			util.Effect("BloodImpact", FxData, true, true)
@@ -64,11 +64,11 @@ function StatusTrickle( ent, dmgown, dmgtick, ticks )
 		timer.Simple( num, function()
 			if not IsValid(ent) or ent:Health() <= 0 then ent.IsCurrentlyTrickled = false return end
 			if ent.IsCurrentlyTrickled == false then return end
-			if ent:IsOnFire() then 
-				dmgtick = dmgtick * 2 
+			if ent:IsOnFire() then
+				dmgtick = dmgtick * 2
 				ent:EmitSound("sparkbound/elec_impact.mp3", 75, math.random(110, 120), 1, 1)
 			else
-				ent:EmitSound("sparkbound/spark.mp3", 75, math.random(110, 120), 1, 1)	
+				ent:EmitSound("sparkbound/spark.mp3", 75, math.random(110, 120), 1, 1)
 			end
 
 			ent:TakeDamage(dmgtick, dmgown, dmgown)
@@ -160,4 +160,13 @@ function StatusMagmatic( ply, lvl, dmginst, dmgown )
 			ply.isMagmafied = false
 		end
 	end)
+end
+
+
+function StatusMisplaceData( victim, DistMisp )
+	if not IsValid(victim) then return end
+	if not victim:IsPlayer() or not victim:IsNPC() then return end
+
+	victim:SetPos( victim:GetPos() + math.random(-DistMisp, DistMisp), victim:GetPos() + math.random(-DistMisp, DistMisp), 0 )
+	victim:EmitSound("artiwepsv3/missinsoundfire.mp3", 100, 100 + math.random(20, 40), 1, 1)
 end

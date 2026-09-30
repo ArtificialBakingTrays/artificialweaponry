@@ -65,7 +65,7 @@ function SWEP:PrimaryAttack()
 				realShootDir = realShootDir + (aimRight * offX) + (aimUp * offY)
 				realShootDir:Normalize()
 
-				owner:FireBullets({ 
+				owner:FireBullets({
 					Src = owner:GetShootPos(),
 					Dir = realShootDir,
 					Damage = 6,
@@ -77,7 +77,7 @@ function SWEP:PrimaryAttack()
 				 })
 			end
 		end
-		
+
 		if self:Clip2() == 4 then
 			self:SetClip2( 0 )
 			self:EmitSound( "artiwepsv2/secondaryfire01.mp3", 100, math.random( 105, 115 ), 0.4, 6 ) --PLEASE CHANGE THESE SOUNDS
@@ -94,8 +94,6 @@ function SWEP:SecondaryAttack()
 	if self:Clip2() < 3 then return end
 	self:SetClip2( 0 )
 	self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
-
-	
 end
 
 function SWEP:Reload()
@@ -158,11 +156,6 @@ end
 function SWEP:DrawHUD()
 	local h = ScrH()
 	local w = ScrW()
-	local RectSize = 100
-	local RectSizeHalf = RectSize / 2
-	local Speed = 100
-
-
 	draw.SimpleText("Ammo1: " .. self:Clip1(), "HudDefault", w * .555, h * .45, Color(255, 255, 255) )
 	draw.SimpleText("Ammo2: " .. self:Clip2(), "HudDefault", w * .555, h * .425, Color(255, 255, 255) )
 
