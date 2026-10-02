@@ -2,9 +2,9 @@ AddCSLuaFile("autorun/statuses.lua")
 include("autorun/statuses.lua")
 
 SWEP.PrintName = "LostMasks"
-SWEP.Author	= "ArtificialBakingTrays + zynx"
+SWEP.Author	= "IrradiatedRayne + zynx"
 SWEP.Instructions = "A smile is only 180 degrees away from a frown."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/lostmasks_generi.png"
 
 SWEP.Spawnable = true
@@ -96,19 +96,19 @@ function SWEP:SharedFire( specgun )
 	bullet.Dir = owner:GetAimVector()
 	bullet.Src = owner:GetShootPos()
 
-    local firedGun = specgun
+	local firedGun = specgun
 
-    bullet.Callback = function( attacker, tr )
-        if CLIENT then return end
-        if firedGun == "right" then
-            --StatusTrickle( ent, dmgown, dmgtick, ticks )
-            if IsValid(tr.Entity) then StatusTrickle( tr.Entity, attacker, 4, 5 ) end
-        elseif firedGun == "left" then
-            if IsValid(tr.Entity) and not tr.Entity:IsOnFire() then
-                tr.Entity:Ignite( 10 )
-            end
-        end
-    end
+	bullet.Callback = function( attacker, tr )
+		if CLIENT then return end
+		if firedGun == "right" then
+			--StatusTrickle( ent, dmgown, dmgtick, ticks )
+			if IsValid(tr.Entity) then StatusTrickle( tr.Entity, attacker, 4, 5 ) end
+		elseif firedGun == "left" then
+			if IsValid(tr.Entity) and not tr.Entity:IsOnFire() then
+				tr.Entity:Ignite( 10 )
+			end
+		end
+	end
 
 	owner:FireBullets( bullet )
 end

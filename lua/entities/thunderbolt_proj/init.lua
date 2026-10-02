@@ -5,7 +5,8 @@ include("shared.lua")
 local BaseColor = Color( 168, 167, 255)
 
 function ENT:Initialize()
-	self:SetModel("models/props_junk/PopCan01a.mdl")
+	self:SetModel("models/hunter/misc/sphere025x025.mdl")
+	self:SetModelScale( 0.5 )
 	self:SetMaterial("model_color")
 	self:SetColor( BaseColor )
 
@@ -52,7 +53,7 @@ function ENT:PhysicsCollide(data)
 		self:Remove()
 
 		enthit:TakeDamage( 45, self:GetOwner() )
-		StatusTrickle( enthit, self:GetOwner(), 45/5, 4 )
+		StatusTrickle( enthit, self:GetOwner(), 45 / 5, 4 )
 
 		local effectdata = EffectData()
 		effectdata:SetOrigin( self:GetPos() )

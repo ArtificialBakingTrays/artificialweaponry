@@ -1,7 +1,7 @@
 SWEP.PrintName = "Captain BootSector's Cannon"
 SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
 SWEP.Instructions	= "Bouncy Cannonball Weapon"
-SWEP.Category 		= "Artificial Weaponry"
+SWEP.Category 		= GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/cannon_generi.png"
 
 SWEP.Spawnable = true

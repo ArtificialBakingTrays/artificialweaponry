@@ -2,7 +2,7 @@ local RanID = math.random(-100, 100)
 SWEP.PrintName = "MISSINGID: " .. RanID
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "//:DataNotPresent:LeftoverDataPreserved/End[]"
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/missing_generi.png"
 --Not supposed to be a available for everyone
 
@@ -68,7 +68,7 @@ function SWEP:MainFireMode()
 	self:EmitSound( sndFile, 100, math.random( sndEntry.pitchMin, sndEntry.pitchMax ), 1, CHAN_STATIC )
 	self:EmitSound( "artiwepsv2/nucleoshoot.mp3", 100, math.random( sndEntry.pitchMin, sndEntry.pitchMax ), 1, CHAN_STATIC )
 
-	self:SpawnProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 3000 )
+	ArtiwepsProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 3000, true )
 end
 
 
@@ -84,7 +84,7 @@ function SWEP:BlastFireMode()
 	for i = 1, shots do
 		local dir = (self:GetOwner():GetAimVector() + VectorRand() * spread):GetNormalized()
 
-		self:SpawnProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), dir, 2000 )
+		ArtiwepsProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), dir, 2000, true )
 	end
 end
 
@@ -103,38 +103,6 @@ function SWEP:SecondaryAttack()
 end
 
 
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, Boost )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if Boost > 0 then
-		if Boost == nil then return end
-		local Speed = Boost
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
-end
-
-
-
-
-
-
-
-
 
 
 --============================[ Fancy Rendering Shit ]============================--
@@ -151,19 +119,9 @@ function GetFadeColour()
 	local col
 	if bsmath < 0.5 then
 		local frac = t * 2
-		col = Color(
-			Lerp(frac, col1.r, col2.r),
-			Lerp(frac, col1.g, col2.g),
-			Lerp(frac, col1.b, col2.b)
-		)
+		col = Color( Lerp(frac, col1.r, col2.r), Lerp(frac, col1.g, col2.g), Lerp(frac, col1.b, col2.b) )
 	else
-		-- Colour 2 -> Colour 3
-		local frac = (t - 0.5) * 2
-		col = Color(
-			Lerp(frac, col2.r, col3.r),
-			Lerp(frac, col2.g, col3.g),
-			Lerp(frac, col2.b, col3.b)
-		)
+		local frac = (t - 0.5) * 2 col = Color( Lerp(frac, col2.r, col3.r), Lerp(frac, col2.g, col3.g), Lerp(frac, col2.b, col3.b) )
 	end
 	return col
 end

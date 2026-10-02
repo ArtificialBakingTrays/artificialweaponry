@@ -3,7 +3,7 @@ ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Bulkball Projectile"
 ENT.Author = "ArtificialBakingTrays"
-ENT.Category = "Artificial Ents"
+ENT.Category = GetWeaponPack()
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for Nucleonic"
 ENT.Spawnable = false
@@ -37,25 +37,6 @@ if SERVER then
 		self:Fire( "Kill", "", 12.5 )
 	end
 
-	--Custom Projectile Spawning Func
-	--Now updated to work for MANY projectiles at once.
-	function ENT:SpawnProjectile( Entstring, Owner, Position, Angles )
-		if CLIENT then return end
-		local ent = ents.Create( Entstring )
-		if ( not ent:IsValid() ) then return end
-
-		ent:SetOwner( Owner )
-		ent:SetPos( Position )
-		ent:SetAngles( Angles )
-		ent:Spawn()
-
-		local entphys = ent:GetPhysicsObject()
-
-		if ( not entphys:IsValid() ) then ent:Remove() return end
-
-		entphys:EnableMotion(false)
-	end
-
 
 	function ENT:OnTakeDamage(dmginfo)
 		self:CheckNearby( 250, math.random(45, 60) )
@@ -69,7 +50,7 @@ if SERVER then
 		})
 
 		if tr.Hit then
-			self:SpawnProjectile( "sh_pool", self:GetOwner(), tr.HitPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+			ArtiwepsProjectile( "sh_pool", self:GetOwner(), tr.HitPos, tr.HitNormal:Angle() + Angle(90, 0, 0), 0, 0, false )
 
 			local effectdata = EffectData()
 			effectdata:SetOrigin( self:GetPos() )

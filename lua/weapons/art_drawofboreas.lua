@@ -1,12 +1,12 @@
 SWEP.PrintName = "Draw of Boreas"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "The bone-chilling tension of the string against my hands."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
-SWEP.DrawCrosshair = false
+SWEP.DrawCrosshair = true
 SWEP.ViewModel	= "models/weapons/c_crossbow.mdl"
 SWEP.WorldModel	= "models/weapons/w_crossbow.mdl"
 SWEP.DrawAmmo = true
@@ -28,7 +28,15 @@ SWEP.Secondary.Ammo		= "none"
 function SWEP:SecondaryAttack()
 	local ownertr = self:GetOwner():GetEyeTrace()
 	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
-	self:SpawnProjectile( "sh_borealrain", self:GetOwner(), targetpos, Angle(0,0,0), _, 0, false)
+	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	self:SetNextPrimaryFire( CurTime() + 0.4 )
+	self:SetNextSecondaryFire( CurTime() + 12.5 )
+
+	self:EmitSound("artiwepsv3/harpoonshot.mp3", 100, math.random(120, 125), 0.7, CHAN_AUTO)
+	timer.Simple(0.2, function()
+		self:EmitSound("artiwepsv3/boreasmagic.mp3", 100, math.random(130, 145), 0.3, CHAN_AUTO)
+		ArtiwepsProjectile( "sh_borealrain", self:GetOwner(), targetpos, Angle(0,0,0), _, 0, false)
+	end)
 end
 
 function SWEP:SetChargeStart( time ) self:SetDTFloat( 0, time ) end
@@ -78,37 +86,11 @@ function SWEP:ChargeAttack( charge )
 		self:PerfectFire( charge )
 		self:EmitSound( "artiwepsv3/staticfire.mp3", 75, math.random(105.5, 110), 0.7, 6 )
 	else
-		self:SpawnProjectile( "sh_boreasarrow", self:GetOwner(), ownshopos, self:GetOwner():EyeAngles(), ownvec, 4000 * charge, true )
+		ArtiwepsProjectile( "sh_boreasarrow", self:GetOwner(), ownshopos, self:GetOwner():EyeAngles(), ownvec, 4000 * charge, true )
 		self:EmitSound( "artiwepsv2/smack1.mp3", 75, math.random(105.5, 110), 0.7, 6 )
 	end
 
 	owner:LagCompensation( false )
-end
-
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, Boost, Gravity )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	if Angles ~= nil then ent:SetAngles( Angles ) end
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-	entphys:EnableGravity( Gravity )
-
-	if Boost > 0 then
-		if Boost == nil then return end
-		local Speed = Boost
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
 end
 
 local offsetSpread = 0.025
@@ -138,7 +120,7 @@ function SWEP:PerfectFire( ChargeAm )
 		realShootDir = realShootDir + (aimRight * offX) + (aimUp * offY)
 		realShootDir:Normalize()
 
-		self:SpawnProjectile( "sh_boreasarrow", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles(), realShootDir, 4000 * ChargeAm, true )
+		ArtiwepsProjectile( "sh_boreasarrow", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles(), realShootDir, 4000 * ChargeAm, true )
 	end
 end
 
@@ -179,15 +161,17 @@ function SWEP:DrawHUD()
 		end
 
 		surface.SetMaterial(reticle)
-		surface.SetDrawColor(Color(81,151,255))
+		surface.SetDrawColor(Color(81,151,255, 125 * delta))
 		surface.DrawTexturedRectRotated( w / 2, h / 2, (w / 2) / 6, (w / 2) / 6, 0 )
 
+		--[[
 		local text
 
 		if delta == 1 then text = "Ready!"
 		else text = string.format("%.2f", delta) end --ty tiddymso for this format thing
 
 		draw.SimpleText("Arrow: " .. text, "HudDefault", w * .53, h * .48, Color(81,151,255) )
+		]]--
 
 		surface.SetMaterial(Material("materials/pngtexts/icearrow.png"))
 		surface.SetDrawColor(Color(198,221,255, 255 * delta ))
@@ -202,7 +186,7 @@ end
 local bannedLUT = {
 	--["CHudHealth"]    = true,
 	["CHudAmmo"]      = true,
-	["CHudCrosshair"] = true,
+	--["CHudCrosshair"] = true,
 	--["CHudBattery"]	  = true,
 }
 

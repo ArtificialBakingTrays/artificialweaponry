@@ -1,7 +1,7 @@
 SWEP.PrintName = "Lethal Dose of Radiation"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Slingshot, but Pebbles of Uranium. Will bounce off of enemies, when it hits the floor: it will release mini pebbles that also do damage"
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/radsling_generi.png"
 
 SWEP.Spawnable = true
@@ -64,7 +64,6 @@ function SWEP:Think() --Help from zynx
 end
 
 function SWEP:PrimaryAttack()
-	local owner = self:GetOwner()
 	if self:Clip1() <= 0 then return end -- No Shoot
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
@@ -74,41 +73,14 @@ function SWEP:PrimaryAttack()
 	self:EmitSound( "tray_sounds/slingfire.mp3", 100, math.random( 100, 105 ), 1, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, math.random( 110, 120 ), 0.2, 6 )
 
+	local owner = self:GetOwner()
 
 	owner:LagCompensation( true )
 
-	self:SpawnProj()
+	ArtiwepsProjectile("radrock_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 3500, true)
 
 	owner:LagCompensation( false )
 end
-
-function SWEP:SpawnProj()
-	if CLIENT then return end
-
-	local ent = ents.Create( "radrock_proj" )
-
-	if ( not ent:IsValid() ) then return end
-
-	--yknow its bad when we have the CUBE OF VARIABLES
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
-	local aimvec = owner:GetAimVector()
-
-	ent:SetPos( ownerpos + Vector(0, 0, -5) )
-	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:SetOwner( owner )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	aimvec:Mul( 3500 * entphys:GetMass() )
-	entphys:ApplyForceCenter( aimvec )
-
-end
-
 
 function SWEP:SecondaryAttack()
 	self:SetScoped( not self:GetScoped() )
@@ -154,7 +126,7 @@ hook.Add("OnNPCKilled", "art_radiationsling", function(npc, attacker, inflictor)
 			local spawnPos = tr.HitPos + tr.HitNormal * 2
 			local owner = inflictor:GetOwner()
 			if IsValid(owner) then
-				inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+				ArtiwepsProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0), 0, 0, false )
 			end
 		end
 	end
@@ -175,7 +147,7 @@ hook.Add("PlayerDeath", "art_radiationsling", function(victim, inflictor)
 			local spawnPos = tr.HitPos + tr.HitNormal * 2
 			local owner = inflictor:GetOwner()
 			if IsValid(owner) then
-				inflictor:SpawnProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0) )
+				ArtiwepsProjectile( "sh_pool", owner, spawnPos, tr.HitNormal:Angle() + Angle(90, 0, 0), 0, 0, false )
 			end
 		end
 	end

@@ -2,7 +2,7 @@ SWEP.PrintName = "Subzero Standard"
 SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
 SWEP.Contact 		= "ArtificialBakingTrays"
 SWEP.Instructions	= "Standard Issue technology, Fires in a Tricorn Spread. Every 3rd Shot will be an icy micro missile,. "
-SWEP.Category 		= "Artificial Weaponry"
+SWEP.Category 		= GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/compacted_generi.png"
 
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
@@ -84,7 +84,7 @@ function SWEP:PrimaryAttack()
 			self:EmitSound( "sparkbound/crystal_proc.mp3", 100, math.random( 95, 105 ), 0.4, 6 )
 
 			--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
-			self:SpawnProjectile( "icerock_proj", self:GetOwner(), owner:GetShootPos(), owner:EyeAngles() + Angle( 90, 0, 0 ), owner:GetAimVector(), 1, False )
+			ArtiwepsProjectile( "icerock_proj", self:GetOwner(), owner:GetShootPos(), owner:EyeAngles() + Angle( 90, 0, 0 ), owner:GetAimVector(), 3000, false )
 		end
 
 	owner:LagCompensation( false )
@@ -128,30 +128,6 @@ function SWEP:CustomAmmoDisplay()
 	return self.AmmoDisplay
 end
 
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity)
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
-
-	entphys:EnableGravity( Gravity )
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if VelBool == 1 then
-		local Speed = 3000
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
-end
 
 function SWEP:DrawHUD()
 	local h = ScrH()

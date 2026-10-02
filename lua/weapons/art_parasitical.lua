@@ -1,7 +1,7 @@
 SWEP.PrintName = "Parasitical Arm-Implants"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Hold R to consume Armour to gain 2 rounds, Damage enemies to gain Armour, while at full armor, gain health for hits."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/parasite_generi.png"
 
 SWEP.Spawnable = true

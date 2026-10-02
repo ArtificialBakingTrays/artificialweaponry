@@ -1,7 +1,7 @@
 SWEP.PrintName = "The Slabshot"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Also known as: The Slopshot, Dexter's own design, a charged sniper rifle that packs a punch."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/slabshot_generi.png"
 
 SWEP.Spawnable = true

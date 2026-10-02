@@ -1,7 +1,7 @@
 SWEP.PrintName = "SpringLoaded ScatterSearch"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = ""
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/springload_generi.png"
 
 SWEP.Spawnable = true
@@ -140,33 +140,17 @@ end
 
 hook.Add( "OnNPCKilled", "art_springloaded", function( npc, attacker, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_springloaded" then
-		inflictor:SpawnProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0 )
+		ArtiwepsProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0, false )
 	end
 end )
 
 hook.Add( "PlayerDeath", "art_springloaded", function( victim, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_springloaded" then
 		local inflown = inflictor:GetOwner()
-		inflictor:SpawnProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0 )
+		ArtiwepsProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,30), Angle(0,0,0), _, 0, false )
 	end
 end )
 
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-end
 
 function SWEP:CustomAmmoDisplay()
 	self.AmmoDisplay = self.AmmoDisplay or {}

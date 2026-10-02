@@ -1,7 +1,7 @@
 SWEP.PrintName = "SparkBound Compass"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "They say it will lead you in the direction of a raging storm"
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/sparkbound_generi.png"
 
 SWEP.Spawnable = true
@@ -95,10 +95,10 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( true )
 
 	if self:Clip1() <= 4 then
-		self:SpawnProj( "thunderbolt_proj", 5000 * 1000 )
+		ArtiwepsProjectile( "thunderbolt_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, false )
 		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 1 )
 	else
-		self:SpawnProj( "sharpshot_proj", 7500 * 2000 )
+		ArtiwepsProjectile( "sharpshot_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, true )
 		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 6 )
 		if self:Clip1() == 5 then self:SetClip1( 0 ) end
 	end
@@ -141,36 +141,15 @@ function SWEP:SecondaryAttack()
 		realShootDir = realShootDir + (aimRight * offX) + (aimUp * offY)
 		realShootDir:Normalize()
 
+		local own = self:GetOwner()
+		local ownpos = own:GetShootPos() + Vector(0, 0, -5)
+		local owneyes = own:EyeAngles() + Angle(90,0,0)
+
 		--Hehe idk what im doing
-		self:SpawnSparks(realShootDir)
+		ArtiwepsProjectile("sparkler_proj", own, ownpos, owneyes, realShootDir, 950, false)
 	end
 end
 
-function SWEP:SpawnSparks( targetDir )
-	if CLIENT then return end
-
-	local ent = ents.Create( "sparkler_proj" )
-
-	if ( not ent:IsValid() ) then return end
-
-	--yknow its bad when we have the CUBE OF VARIABLES
-	local ownerpos = self:GetOwner():GetShootPos()
-	local ownereyes = self:GetOwner():EyeAngles()
-
-	ent:SetOwner( self:GetOwner() )
-	ent:SetPos( ownerpos + Vector(0, 0, -5) )
-	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:Spawn()
-
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	local Speed = 950
-	targetDir:Mul( Speed * entphys:GetMass() )
-	entphys:ApplyForceCenter( targetDir )
-end
 
 -- this is neccessary so that the hands dont glow aswell
 SWEP.UseHands = false

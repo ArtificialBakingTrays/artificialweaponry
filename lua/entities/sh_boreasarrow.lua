@@ -3,7 +3,7 @@ ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Boreas Arrow Projectile"
 ENT.Author = "ArtificialBakingTrays"
-ENT.Category = "Artificial Ents"
+ENT.Category = GetWeaponPack()
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for Boreas' Draw"
 ENT.Spawnable = false
@@ -42,7 +42,7 @@ if SERVER then
 		if ( not self:IsValid() ) then return end
 		if enthit == self:GetOwner() then return end
 		if enthit.IsTraysProjectile then return end
-		self:EmitSound( "tray_sounds/glacialchuck.mp3", 75, math.random(95, 100), 1, 6 )
+		self:EmitSound( "sparkbound/chillhitproc.mp3", 75, math.random(85, 115), 0.5, 6 )
 
 		if not IsValid(enthit) then
 				local effectdata = EffectData() --I love copy pasting
@@ -69,8 +69,7 @@ end
 
 if CLIENT then
 	function ENT:Draw()
-		local glow1 = Material("particle/Particle_Glow_02")
-		local glowmat = Material("particle/glow_haze_nofog")
+		local glowmat = Material("addons/artificialweaponry/materials/materials/pngtexts/iceprojtext.png")
 
 		local m = Matrix()
 		local width = 1
@@ -84,9 +83,6 @@ if CLIENT then
 
 		render.SetMaterial(glowmat)
 		render.DrawSprite(self:GetPos(), 24 * scale, 24 * scale, Color(246, 249, 255))
-
-		render.SetMaterial(glow1)
-		render.DrawSprite(self:GetPos(), 24 * scale, 24 * scale, Color(133, 147, 255) )
 
 		render.SetMaterial(Material("materials/pngtexts/halftone_dotty.png"))
 		render.DrawSprite(self:GetPos(), 24 * scale, 24 * scale, Color(255, 255, 255) )

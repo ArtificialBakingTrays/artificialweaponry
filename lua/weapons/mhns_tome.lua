@@ -2,7 +2,7 @@ SWEP.PrintName = "BookWyrm's Tome of the Risen"
 SWEP.Author			= "ArtiBakingTrays" -- These two options will be shown when you have the weapon highlighted in the weapon selection menu
 SWEP.Contact 		= "ArtificialBakingTrays"
 SWEP.Instructions	= "A book that raises Sunless fools, and cursed on primary attacks."
-SWEP.Category 		= "Artificial Weaponry"
+SWEP.Category 		= GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/tome_generi.png"
 
 SWEP.Spawnable = true
@@ -38,10 +38,10 @@ function SWEP:PrimaryAttack() --Cursing Rounds
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
 
-	self:DeployCurse()
+	ArtiwepsProjectile("tome_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 1500, false)
 
 	timer.Simple( time, function()
-		self:DeployCurse()
+		ArtiwepsProjectile("tome_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 1500, false)
 		self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
 		self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
 	end)
@@ -50,33 +50,6 @@ function SWEP:PrimaryAttack() --Cursing Rounds
 
 end
 
-function SWEP:DeployCurse()
-	if CLIENT then return end
-
-	local ent = ents.Create( "tome_proj" )
-
-	if ( not ent:IsValid() ) then return end
-
-	--yknow its bad when we have the CUBE OF VARIABLES
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
-	local aimvec = owner:GetAimVector()
-
-	ent:SetPos( ownerpos + Vector(0, 0, -5) )
-	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:SetOwner( owner )
-	ent:SetGravity( 0 )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	aimvec:Mul( 1500 * entphys:GetMass() )
-	entphys:ApplyForceCenter( aimvec )
-
-end
 
 function SWEP:SecondaryAttack()	--Will summon Sunless Fool
 	if self.HasSpawnedNpc == true then return end
@@ -207,10 +180,6 @@ We both know he has found greater apprentices than us, it is only a matter of ti
 This message remains unread by its Recipient.
 ]]--
 
--- circle renderer
--- mesh first
-
-
 AXIS_X_POS = 1
 AXIS_X_NEG = 2
 
@@ -220,7 +189,7 @@ AXIS_Y_NEG = 4
 AXIS_Z_POS = 5
 AXIS_Z_NEG = 6
 
-
+--LKcode here
 -- Creates a generic cube mesh that on each face has full 0-1 UVs
 -- This is merely for me to first learn how to procedurally generate cube meshes
 -- This function is from ZVox! (https://github.com/lokachop/zvox/blob/main/gamemodes/zvox_classicbuild/gamemode/zvox/cl/meshutils/cl_meshutils_cube.lua#L14)

@@ -3,7 +3,7 @@ ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "BoreasRain Projectile"
 ENT.Author = "ArtificialBakingTrays"
-ENT.Category = "Artificial Ents"
+ENT.Category = GetWeaponPack()
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for Boreas' Draw"
 ENT.Spawnable = true
@@ -15,6 +15,9 @@ if SERVER then
 		self:SetModelScale( 0.5 )
 		self:SetMaterial("model_color")
 		self:SetColor(Color(247, 255, 239))
+
+		self:EmitSound("artiwepsv3/boreascloudsummon.mp3", 100, math.random(95, 105), 0.5, CHAN_AUTO )
+		self:EmitSound("artiwepsv3/wind_amb.mp3", 100, math.random(95, 105), 0.5, CHAN_AUTO )
 
 		self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
 		self:PhysicsInit( SOLID_VPHYSICS )
@@ -41,36 +44,12 @@ if SERVER then
 	end
 
 	function ENT:RainArrow()
-		local Delay = 0.125
+		local Delay = 0.08
 		if CurTime() < (self.SpawnNext or 0) then return end
 		self.SpawnNext = CurTime() + Delay
 
-		self:SpawnProjectile( "sh_boreasarrow", self:GetOwner(), self:GetPos() + Vector(math.random(-90, 90), math.random(-90, 90), 0), Angle(90,0,0), 0, 0)
-	end
-
-	--Custom Projectile Spawning Func
-	--Now updated to work for MANY projectiles at once.
-	function ENT:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, Boost )
-		if CLIENT then return end
-		local ent = ents.Create( Entstring )
-		if ( not ent:IsValid() ) then return end
-
-		ent:SetOwner( Owner )
-		ent:SetPos( Position )
-		if Angles ~= nil then ent:SetAngles( Angles ) end
-		ent:Spawn()
-
-		local entphys = ent:GetPhysicsObject()
-
-		if ( not entphys:IsValid() ) then ent:Remove() return end
-
-		if Boost > 0 then
-			if Boost == nil then return end
-			local Speed = Boost
-
-			AimVec:Mul( Speed * entphys:GetMass() )
-			entphys:ApplyForceCenter( AimVec )
-		end
+		--ArtiwepsProjectile( Entstring, Owner, Position, Angles, AimVec, Boost, Gravity )
+		ArtiwepsProjectile( "sh_boreasarrow", self:GetOwner(), self:GetPos() + Vector(math.random(-90, 90), math.random(-90, 90), 0), Angle(90,0,0), 0, 0, true )
 	end
 
 	function ENT:PhysicsCollide(data) return end
@@ -93,11 +72,10 @@ local ranCldLut = {
 
 if CLIENT then
 	function ENT:Draw()
-
 		self:DrawModel()
 
 		render.SetMaterial(Material("materials/pngtexts/halftone_dotty.png"))
-		render.DrawSprite(self:GetPos(), 164 * 4, 164 * 4, Color(255, 255, 255) )
+		render.DrawSprite(self:GetPos(), 164 * 4, 164 * 4, Color(255, 255, 255, 195) )
 	end
 
 	function ENT:DoParticlesIfWeShould()
@@ -105,11 +83,11 @@ if CLIENT then
 		if (self._nextPart or 0) > CurTime() then return end
 		local random = math.floor(math.random( 1, 4 ))
 		local sndEntry = ranCldLut[random]
-		local emitter = ParticleEmitter( self:GetPos() ) -- Particle emitter in this position
+		local emitter = ParticleEmitter(self:GetPos())
 		local randompos = 60
 		local dietime = 4
 
-		self._nextPart = CurTime() + 0.1 -- set the next time to make a particle to 0.5 seconds in the future
+		self._nextPart = CurTime() + 0.1
 
 		for i = 1, 7 do
 			local part = emitter:Add( sndEntry.Str, self:GetPos() + Vector( math.random(-randompos + math.random(-50, 50), randompos + math.random(-50, 50)), math.random(-randompos + math.random(-50, 50), randompos + math.random(-50, 50)),  math.random(-randompos + math.random(-50, 50), randompos + math.random(-50, 50)))) -- Create a new particle at pos

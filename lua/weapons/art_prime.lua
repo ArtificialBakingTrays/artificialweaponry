@@ -1,7 +1,7 @@
 SWEP.PrintName = "Atomiprimed Glassbreaker"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Incase you need to Pack-A-Punch."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/primed_generi.png"
 
 SWEP.Spawnable = true
@@ -48,34 +48,6 @@ function SWEP:PostDrawViewModel( _, _, ply )
 	if IsValid( ply ) then ply:GetHands():DrawModel() end
 end
 
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	entphys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
-	entphys:EnableGravity( Gravity )
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if VelBool == 1 then
-		if AimVec == nil then return end
-
-		if AimVec ~= nil then
-			local Speed = 2000
-			AimVec:Mul( Speed * entphys:GetMass() )
-			entphys:ApplyForceCenter( AimVec )
-		end
-	end
-end
 
 --================================Reload Section================================--
 function SWEP:Reload()
@@ -109,7 +81,7 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 
 	--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
-	self:SpawnProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1, false )
+	ArtiwepsProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 2000, false )
 
 	self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.3, 6 )
@@ -123,7 +95,7 @@ hook.Add( "PlayerDeath", "art_prime", function( victim, inflictor )
 		if inflictor:Clip2() >= 1 then
 			victim:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
-			inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+			ArtiwepsProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
 		end
 	end
 end)
@@ -136,14 +108,10 @@ hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
 		if inflictor:Clip2() >= 1 then
 			npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
 			inflictor:SetClip2(0)
-			inflictor:SpawnProjectile( "primeseeker_proj", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 1, false)
+			ArtiwepsProjectile( "primeseeker_proj", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
 		end
 	end
 end )
-
-
-
-
 
 
 --================================ALT FIRE Section================================--

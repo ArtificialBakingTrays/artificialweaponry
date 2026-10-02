@@ -3,7 +3,7 @@ ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Meat Skull Harassment Projectile"
 ENT.Author = "ArtificialBakingTrays"
-ENT.Category = "Artificial Ents"
+ENT.Category = GetWeaponPack()
 ENT.Contact = "ArtificialBakingTrays"
 ENT.Purpose = "Projectile for the Meatgrinder"
 ENT.Spawnable = true
@@ -60,11 +60,8 @@ if SERVER then
             closestPlayer = ply
         end
 
-        -- no player found to home, return...
         if not closestPlayer then return end
-
         local plyPos = closestPlayer:GetPos()
-        -- raise so it doesn't go for their feet
         plyPos.z = plyPos.z + 64
 
         local targetDir = plyPos - selfPos

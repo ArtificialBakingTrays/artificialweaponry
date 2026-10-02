@@ -1,7 +1,7 @@
 SWEP.PrintName = "Hexbuggler"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Deploy little nano rounds that float in the air with LMB, RMB to track onto a target."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/hexbug_generi.png"
 
 SWEP.ViewModel	= "models/weapons/c_smg1.mdl"
@@ -46,7 +46,7 @@ function SWEP:PrimaryAttack()
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
 
-	self:DeployBugs()
+	ArtiwepsProjectile("hexbug_proj", owner, owner:GetShootPos() + Vector(0,0,-5), owner:EyeAngles() + Angle(90,0,0), owner:GetAimVector(), 1500, false)
 
 	owner:LagCompensation( false )
 end
@@ -129,33 +129,6 @@ function SWEP:CustomAmmoDisplay()
 	return self.AmmoDisplay
 end
 
-function SWEP:DeployBugs()
-	if CLIENT then return end
-
-	local ent = ents.Create( "hexbug_proj" )
-
-	if ( not ent:IsValid() ) then return end
-
-	--yknow its bad when we have the CUBE OF VARIABLES
-	local owner = self:GetOwner()
-	local ownerpos = owner:GetShootPos()
-	local ownereyes = owner:EyeAngles()
-	local aimvec = owner:GetAimVector()
-
-	ent:SetPos( ownerpos + Vector(0, 0, -5) )
-	ent:SetAngles( ownereyes + Angle(90,0,0) )
-	ent:SetOwner( owner )
-	ent:SetHealth(20)
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	aimvec:Mul( 1500 * entphys:GetMass() )
-	entphys:ApplyForceCenter( aimvec )
-
-end
 
 -- this is neccessary so that the hands dont glow aswell
 SWEP.UseHands = false

@@ -1,7 +1,7 @@
 SWEP.PrintName = "Staticurrent"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "Chain Reaction M1 Projectile, Alt Fire to become a Staticurrent Orb"
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/staticurrent_generi.png"
 
 SWEP.Spawnable = true
@@ -52,7 +52,6 @@ function SWEP:PostDrawViewModel( _, _, ply )
 end
 
 
-
 --======================================Actual Gun Code Here======================================--
 
 
@@ -62,34 +61,10 @@ function SWEP:PrimaryAttack()
 	self:TakePrimaryAmmo( 1 )
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 
-	self:SpawnProjectile( "sh_electroball", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 1 )
+	ArtiwepsProjectile( "sh_electroball", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 4000, 0, false )
 
 	self:EmitSound( "artiwepsv3/staticfire2.mp3", 100, math.random( 95, 105 ) + (self:Clip1() * 10), 0.4, 1 )
 	self:EmitSound( "artiwepsv3/staticfire.mp3", 100, math.random( 105, 115 ) + (self:Clip1() * 10), 0.4, 6 )
-end
-
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if VelBool == 1 then
-		local Speed = 4000
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
 end
 
 

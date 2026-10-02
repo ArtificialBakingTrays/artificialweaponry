@@ -13,7 +13,7 @@ SWEP.UseHands = true
 SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 SWEP.BobScale = 1.15
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -77,36 +77,11 @@ function SWEP:PrimaryAttack()
 	local ownerpos = self:GetOwner():GetShootPos()
 	local ownereyes = self:GetOwner():EyeAngles()
 	local ownaimvec = self:GetOwner():GetAimVector()
-	self:SpawnProjectile( "lavarock_proj", self:GetOwner(), ownerpos, ownereyes + Angle( 90, 0, 0 ), ownaimvec, 1 )
+	ArtiwepsProjectile( "lavarock_proj", self:GetOwner(), ownerpos, ownereyes + Angle( 90, 0, 0 ), ownaimvec, 2000, true )
 
 	self:GetOwner():LagCompensation( false )
 
 end
-
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if VelBool == 1 then
-		local Speed = 2000
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
-end
-
 
 function SWEP:SecondaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
@@ -125,7 +100,7 @@ function SWEP:SecondaryAttack()
 
 	local ownertr = self:GetOwner():GetEyeTrace()
 	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
-	self:SpawnProjectile( "lavamortar_proj", self:GetOwner(), targetpos, Angle(0,0,0), _, 0 )
+	ArtiwepsProjectile( "lavamortar_proj", self:GetOwner(), targetpos, Angle(0,0,0), _, 0, true )
 
 	self:GetOwner():LagCompensation( false )
 

@@ -1,7 +1,7 @@
 SWEP.PrintName = "Nucleonic"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "We are become death, the destroyer of worlds."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/nucleonic_generi.png"
 
 SWEP.Spawnable = true
@@ -185,32 +185,8 @@ function SWEP:SecondaryAttack()
 		self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
 		self:EmitSound( "artiwepsv2/nucleouse.mp3", 100, 110 + math.floor(math.random(0, 15)), nil, CHAN_STATIC )
 		self:EmitSound( "artiwepsv2/nucleoshoot.mp3", 100, math.random(90, 110), nil, CHAN_STATIC )
-		self:SpawnProjectile("sh_bulkball", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles(), self:GetOwner():GetAimVector(), 1 )
+		ArtiwepsProjectile("sh_bulkball", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles(), self:GetOwner():GetAimVector(), 750, true )
 	end)
-end
-
---Custom Projectile Spawning Func
---Now updated to work for MANY projectiles at once.
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-
-	if VelBool == 1 then
-		local Speed = 1000
-
-		AimVec:Mul( Speed * entphys:GetMass() )
-		entphys:ApplyForceCenter( AimVec )
-	end
 end
 
 if CLIENT then

@@ -1,7 +1,7 @@
 SWEP.PrintName = "Directed Animosity"
 SWEP.Author	= "ArtificialBakingTrays" -- Shows up while hovering
 SWEP.Instructions = "Slow fire rate, Increases Rate of Fire as you hold the trigger. Returns rounds on kills."
-SWEP.Category = "Artificial Weaponry"
+SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/directed_generi.png"
 
 SWEP.Spawnable = true
@@ -100,31 +100,16 @@ end
 
 hook.Add( "OnNPCKilled", "art_hatred", function( npc, attacker, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
-		inflictor:SpawnProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0 )
+		ArtiwepsProjectile( "sh_scrappickup", attacker, npc:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0, 0, false )
 	end
 end )
 
 hook.Add( "PlayerDeath", "art_hatred", function( victim, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_hatred" then
 		local inflown = inflictor:GetOwner()
-		inflictor:SpawnProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0 )
+		ArtiwepsProjectile( "sh_scrappickup", inflown, victim:GetPos() + Vector(0,0,50), Angle(0,0,0), _, 0, 0, false )
 	end
 end )
-
-function SWEP:SpawnProjectile( Entstring, Owner, Position, Angles )
-	if CLIENT then return end
-	local ent = ents.Create( Entstring )
-	if ( not ent:IsValid() ) then return end
-
-	ent:SetOwner( Owner )
-	ent:SetPos( Position )
-	ent:SetAngles( Angles )
-	ent:Spawn()
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ( not entphys:IsValid() ) then ent:Remove() return end
-end
 
 local function drawCircleLine(x, y, sx, sy, itr)
 	for i = 0, (itr - 1) do
