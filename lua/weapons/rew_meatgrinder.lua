@@ -161,14 +161,11 @@ local offsetLUT = {
 }
 
 function SWEP:SecondaryAttack()
-	--Distraction/Projectile attack
-	--self:SetNextSecondaryFire( CurTime() + 1.1 )
 	if self:Clip1() == 0 then return end
 	self:TakePrimaryAmmo( 1 )
 
 	self:EmitSound( "artiwepsv2/usesfx.wav", 100, math.random(85, 95), 0.5, 1 )
 	self:EmitSound( "artiwepsv2/splathit1.mp3", 100, math.random(85, 95), 0.5, 6 )
-	--artiwepsv2/splathit1.mp3
 
 	self:GetOwner():LagCompensation( true )
 
@@ -190,7 +187,6 @@ function SWEP:SecondaryAttack()
 		realShootDir = realShootDir + (aimRight * offX) + (aimUp * offY)
 		realShootDir:Normalize()
 
-		--Hehe idk what im doing
 		ArtiwepsProjectile("sh_gibbler", own, own:GetShootPos(), own:EyeAngles(), realShootDir, 950, true)
 	end
 
@@ -221,7 +217,6 @@ end
 
 --==================RELOAD MECHANIC STUFF==================--
 
-
 function SWEP:Reload()
 	if self:Clip1() == 3 then
 		if self:CheckEnabled() == true then return end
@@ -238,5 +233,6 @@ function SWEP:Reload()
 end
 
 function SWEP:CheckEnabled()
+	if not IsValid(self) then return end
 	return self.ModeActive
 end

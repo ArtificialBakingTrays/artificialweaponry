@@ -57,7 +57,11 @@ if SERVER then
 			if not IsValid(self) then return end
 			self:Remove()
 
-			enthit:TakeDamage( 15 + ((self:GetVelocity():Length() / 10) / 2), self:GetOwner() )
+			local DmgVelScaled = math.floor(((self:GetVelocity():Length() / 10) / 2) + self:GetOwner():GetVelocity():Length())
+
+			print( 15 + (DmgVelScaled / 4) )
+
+			enthit:TakeDamage( 15 + (DmgVelScaled / 10) )
 
 			local effectdata = EffectData()
 			effectdata:SetOrigin( self:GetPos() )

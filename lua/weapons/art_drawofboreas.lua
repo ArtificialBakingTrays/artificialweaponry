@@ -2,7 +2,7 @@ SWEP.PrintName = "Draw of Boreas"
 SWEP.Author	= "ArtificialBakingTrays"
 SWEP.Instructions = "The bone-chilling tension of the string against my hands."
 SWEP.Category = GetWeaponPack()
-SWEP.IconOverride = "vgui/weaponvgui/placehold_generi.png"
+SWEP.IconOverride = "vgui/weaponvgui/draw_generi.png"
 
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
