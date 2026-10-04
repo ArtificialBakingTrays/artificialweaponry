@@ -28,28 +28,25 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack() --Cursing Rounds
-	local time = 0.05
-	local Vol = 0.6
-
-	self:SetNextPrimaryFire( CurTime() + 0.425 )
-	self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
-	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
-
+	self:SetNextPrimaryFire( CurTime() + 0.225 )
+	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	self:EmitSound( "artiwepsv3/boreasmagic.mp3", 100, math.random( 135, 165 ), 0.6, 1 )
+	self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), 0.6, 6 )
 	local owner = self:GetOwner()
+
+	local shots = math.random( 1, 5 )
+	local spread = 0.35
+
 	owner:LagCompensation( true )
 
-	ArtiwepsProjectile("tome_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 1500, false)
+	for i = 1, shots do
+		local dir = (self:GetOwner():GetAimVector() + VectorRand() * spread):GetNormalized()
 
-	timer.Simple( time, function()
-		ArtiwepsProjectile("tome_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 1500, false)
-		self:EmitSound( "tray_sounds/slingfire2.mp3", 100, math.random( 135, 165 ), Vol, 1 )
-		self:EmitSound( "artiwepsv2/tombfire_2.mp3", 100, math.random( 95, 105 ), Vol, 6 )
-	end)
+		ArtiwepsProjectile( "sh_tome", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), dir, 1500, false )
+	end
 
 	owner:LagCompensation( false )
-
 end
-
 
 function SWEP:SecondaryAttack()	--Will summon Sunless Fool
 	if self.HasSpawnedNpc == true then return end
@@ -155,18 +152,27 @@ hook.Add( "EntityTakeDamage", "EntityDamageExample", function( target, dmginfo )
 	dmginfo:SetAttacker( npcattack:GetOwner() )
 end )
 
-hook.Add("player_hurt", "player_hurt_example", function( victim )
-	if CLIENT then return end
-	if victim:IsNPC() then return end
-	attacker = victim:GetAttacker()
+SWEP.UseHands = false
 
-	victim.IsCursed = true
-	local time2 = 1.5
-	timer.Simple(time2, function()
-		victim.IsCursed = false
+function SWEP:DrawWorldModel( flags )
+	render.SetColorModulation( 1, 0.902, 0.51 )
+		render.SuppressEngineLighting( true )
+			self:DrawModel( flags )
+		render.SuppressEngineLighting( false )
+	render.SetColorModulation( 1, 1, 1 )
+end
 
-	end)
-end)
+function SWEP:PreDrawViewModel( vm )
+	render.SetColorModulation( 1, 0.902, 0.51 ) -- the glow
+	render.SuppressEngineLighting( true ) -- disable lighting
+end
+
+function SWEP:PostDrawViewModel( _, _, ply )
+	render.SuppressEngineLighting( false ) -- re enable lighting
+	render.SetColorModulation( 1, 1, 1 ) -- reset the glow
+
+	if IsValid( ply ) then ply:GetHands():DrawModel() end
+end
 
 
 --[[
@@ -179,6 +185,7 @@ We both know he has found greater apprentices than us, it is only a matter of ti
 
 This message remains unread by its Recipient.
 ]]--
+
 
 AXIS_X_POS = 1
 AXIS_X_NEG = 2

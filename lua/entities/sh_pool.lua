@@ -15,7 +15,6 @@ if SERVER then
         self:SetColor(Color(187, 255, 118, 125 ))
         self:SetRenderMode(RENDERMODE_TRANSCOLOR)
 
-
         self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
         self:PhysicsInit( SOLID_VPHYSICS )
         self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -26,6 +25,7 @@ if SERVER then
         local phys = self:GetPhysicsObject()
         phys:SetBuoyancyRatio(0)
         phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
+        phys:EnableMotion(false)
         phys:SetMass(25)
 
         if phys:IsValid() then phys:Wake() end

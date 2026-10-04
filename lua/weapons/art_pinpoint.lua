@@ -67,7 +67,7 @@ end
 
 function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
-	self:SetNextPrimaryFire( CurTime() + 0.325 )
+	self:SetNextPrimaryFire( CurTime() + 0.375 )
 
 	self:EmitSound( "weapons/mortar/mortar_fire1.wav", 75, math.random( 160, 170 ), 1, 1 )
 	self:EmitSound( "artiwepsv2/rockblast.mp3", 75, math.random( 100, 110 ), 1, 6 )
@@ -77,7 +77,7 @@ function SWEP:PrimaryAttack()
 	local ownerpos = self:GetOwner():GetShootPos()
 	local ownereyes = self:GetOwner():EyeAngles()
 	local ownaimvec = self:GetOwner():GetAimVector()
-	ArtiwepsProjectile( "lavarock_proj", self:GetOwner(), ownerpos, ownereyes + Angle( 90, 0, 0 ), ownaimvec, 2000, true )
+	ArtiwepsProjectile( "sh_lavarock", self:GetOwner(), ownerpos, ownereyes + Angle( 90, 0, 0 ), ownaimvec, 2000, true )
 
 	self:GetOwner():LagCompensation( false )
 
@@ -100,7 +100,7 @@ function SWEP:SecondaryAttack()
 
 	local ownertr = self:GetOwner():GetEyeTrace()
 	local targetpos = ownertr.HitPos + Vector(0, 0, 600)
-	ArtiwepsProjectile( "lavamortar_proj", self:GetOwner(), targetpos, Angle(0,0,0), _, 0, true )
+	ArtiwepsProjectile( "sh_lavamortar", self:GetOwner(), targetpos, Angle(0,0,0), _, 0, true )
 
 	self:GetOwner():LagCompensation( false )
 

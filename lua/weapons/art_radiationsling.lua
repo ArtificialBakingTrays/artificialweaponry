@@ -77,7 +77,7 @@ function SWEP:PrimaryAttack()
 
 	owner:LagCompensation( true )
 
-	ArtiwepsProjectile("radrock_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 3500, true)
+	ArtiwepsProjectile("sh_radrock", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 3500, true)
 
 	owner:LagCompensation( false )
 end

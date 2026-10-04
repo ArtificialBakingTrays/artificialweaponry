@@ -33,6 +33,8 @@ function SWEP:Deploy()
 	self.ThunderActive = false
 	self.ComboTrue = false
 	self:SetClip1( 0 )
+
+	return true
 end
 
 local bannedLUT = {
@@ -79,7 +81,7 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:SetClip1( self:Clip1() + 1 )
 
-	local Delay = 0.65
+	local Delay = 0.55
 
 	self:EmitSound( "sparkbound/shoot.mp3", 75, math.random( 90, 100 ) + ( self:Clip1() * 10 ), 0.4, CHAN_STATIC)
 
@@ -95,10 +97,10 @@ function SWEP:PrimaryAttack()
 	owner:LagCompensation( true )
 
 	if self:Clip1() <= 4 then
-		ArtiwepsProjectile( "thunderbolt_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, false )
+		ArtiwepsProjectile( "sh_thunderbolt", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, false )
 		self:EmitSound( "sparkbound/cloudstrikefire.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 1 )
 	else
-		ArtiwepsProjectile( "sharpshot_proj", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, true )
+		ArtiwepsProjectile( "sh_sharpshot", owner, owner:GetShootPos(), owner:EyeAngles(), owner:GetAimVector(), 5000, true )
 		self:EmitSound( "sparkbound/surgeblast.mp3", 75, math.random( 120, 130 ) + ( self:Clip1() * 10 ), 0.5, 6 )
 		if self:Clip1() == 5 then self:SetClip1( 0 ) end
 	end
@@ -146,7 +148,7 @@ function SWEP:SecondaryAttack()
 		local owneyes = own:EyeAngles() + Angle(90,0,0)
 
 		--Hehe idk what im doing
-		ArtiwepsProjectile("sparkler_proj", own, ownpos, owneyes, realShootDir, 950, false)
+		ArtiwepsProjectile("sh_sparkler", own, ownpos, owneyes, realShootDir, 950, false)
 	end
 end
 

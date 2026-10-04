@@ -46,7 +46,7 @@ function SWEP:PrimaryAttack()
 	local owner = self:GetOwner()
 	owner:LagCompensation( true )
 
-	ArtiwepsProjectile("hexbug_proj", owner, owner:GetShootPos() + Vector(0,0,-5), owner:EyeAngles() + Angle(90,0,0), owner:GetAimVector(), 1500, false)
+	ArtiwepsProjectile("sh_hexbug", owner, owner:GetShootPos() + Vector(0,0,-5), owner:EyeAngles() + Angle(90,0,0), owner:GetAimVector(), 1500, false)
 
 	owner:LagCompensation( false )
 end
@@ -154,6 +154,11 @@ if CLIENT then
 		if IsValid( ply ) then ply:GetHands():DrawModel() end
 	end
 end
+
+function SWEP:Deploy()
+	return true
+end
+
 --Hexbug my beloved
 --                                                     *****,.                    
 --                                                ,,,,,*********/*******/         

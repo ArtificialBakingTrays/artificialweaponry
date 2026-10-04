@@ -22,8 +22,8 @@ SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "Battery"
 SWEP.Primary.Force = 160
 
-SWEP.Secondary.ClipSize		= 0
-SWEP.Secondary.DefaultClip	= 0
+SWEP.Secondary.ClipSize		= 1
+SWEP.Secondary.DefaultClip	= 1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
@@ -81,7 +81,7 @@ function SWEP:PrimaryAttack()
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 
 	--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool, Gravity )
-	ArtiwepsProjectile( "primepellet_proj", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 2000, false )
+	ArtiwepsProjectile( "sh_primepellete", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), self:GetOwner():GetAimVector(), 2000, false )
 
 	self:EmitSound( "artiwepsv2/primebop.mp3", 100, 110, 0.7, 1 )
 	self:EmitSound( "artiwepsv2/primebop2.mp3", 100, 110, 0.3, 6 )
@@ -90,34 +90,24 @@ end
 
 hook.Add( "PlayerDeath", "art_prime", function( victim, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
-		inflictor:SetClip2( inflictor:Clip2() + 1 )
-
-		if inflictor:Clip2() >= 1 then
-			victim:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
-			inflictor:SetClip2(0)
-			ArtiwepsProjectile( "primeseeker_proj", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
-		end
+		victim:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
+		ArtiwepsProjectile( "sh_primeseeker", inflictor:GetOwner(), victim:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
 	end
 end)
 
 
 hook.Add( "OnNPCKilled", "art_prime", function( npc, attacker, inflictor )
 	if inflictor:IsValid() and inflictor:GetClass() == "art_prime" then
-		inflictor:SetClip2( inflictor:Clip2() + 1 )
-
-		if inflictor:Clip2() >= 1 then
-			npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
-			inflictor:SetClip2(0)
-			ArtiwepsProjectile( "primeseeker_proj", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
-		end
+		npc:EmitSound( "artiwepsv2/chemfire1.mp3", 100, 110, 1, 6 )
+		ArtiwepsProjectile( "sh_primeseeker", inflictor:GetOwner(), npc:GetPos() + Vector(0, 0, 30), Angle(0, math.random(0, 360), 0), nil, 0, false)
 	end
 end )
 
 
 --================================ALT FIRE Section================================--
 function SWEP:SecondaryAttack()
-	if ActiveTether == 1 then return end
-	ActiveTether = 1
+	if self:Clip2() == 0 then return end
+	self:TakeSecondaryAmmo( 1 )
 	local timedelay = 0.5
 
 	self:DeployTether( timedelay )
@@ -125,8 +115,10 @@ function SWEP:SecondaryAttack()
 
 	--Higher HP -> Fast CD
 	--Lower HP -> Slow CD
-	timer.Simple( timedelay + ((100 - HP) / 100), function() ActiveTether = 0 end)
-	print(timedelay + ((100 - HP) / 100))
+	timer.Simple( timedelay + ((100 - HP) / 100), function()
+		if not IsValid(self) then return end
+		self:SetClip2( self:Clip2() + 1 )
+	end)
 
 	local SFXRAN = math.floor(math.random( 1, 3 ))
 	if SFXRAN == 1 then self:EmitSound( "artiwepsv2/AstralSlash1.mp3", 100, 100, 1, 6 ) end
@@ -137,6 +129,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:DeployTether( Time )
+	if not IsValid(self:GetOwner()) then return end
 	if CLIENT then return end
 	local ent = ents.Create( "prop_physics" )
 	if ( not ent:IsValid() ) then return end
@@ -208,12 +201,9 @@ function SWEP:CheckNearby()
 		local dist = entPos:Distance( selfPos )
 		if dist > rad then continue end
 
-		v:TakeDamage( 22, self:GetOwner(), self )
+		v:TakeDamage( 22 + ((self:GetOwner():GetVelocity():Length() / 10) / 2), self:GetOwner(), self )
 	end
 end
-
-
-
 
 
 --================================Fancy Rendering Section================================--
@@ -230,7 +220,7 @@ function SWEP:DrawHUD()
 		draw.SimpleText("Ammo: " .. self:Clip1(), "HudDefault", w * .53, h * .45, Color(255, 255, 255) )
 		--draw.SimpleText("Seeker: " .. self:Clip2(), "HudDefault", w * .53, h * .43, Color(255, 255, 255) )
 
-		if ActiveTether == 1 then
+		if self:Clip2() == 1 then
 			draw.SimpleText("Tether: No", "HudDefault", w * .53, h * .47, Color(255, 255, 255) )
 		else
 			draw.SimpleText("Tether: Yes", "HudDefault", w * .53, h * .47, Color(255, 255, 255) )
@@ -250,13 +240,8 @@ function SWEP:HUDShouldDraw(element)
 	return true
 end
 
-function SWEP:Deploy()
-	ActiveTether = 0
-	if not self.isEquipped then return end
-end
-
 function SWEP:Holster()
-	if CLIENT then return end
+	if CLIENT then return true end
 	self.isEquipped = false
 	return true
 end

@@ -5,7 +5,7 @@ SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/meatgrind_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.DrawCrosshair = false
 SWEP.ViewModel	= "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel	= "models/weapons/w_crowbar.mdl"
@@ -50,10 +50,12 @@ function SWEP:Deploy() --Features Lokacode cus 3 line if statements
 		self.proccySound = CreateSound(self, "artiwepsv2/chainsawbrr-longfix-loop.wav")
 		self.proccySound:PlayEx(0.3, 100)
 	end)
+
+	return true
 end
 
 function SWEP:Holster()
-	if CLIENT then return end
+	if CLIENT then return true end
 	self.isEquipped = false
 
 	self:GetOwner():SetRunSpeed( 400 )
@@ -117,6 +119,8 @@ function SWEP:DoTrace( damage )
 	local boxMaxs = Vector(boxSize , boxSize , boxSize )
 	local ownerthing = self:GetOwner()
 
+	ownerthing:LagCompensation( true )
+
 	local tr = util.TraceHull({
 	  start = ownerthing:GetShootPos() + ( ownerthing:GetAimVector() * 10 ),
 	  endpos = ownerthing:GetShootPos() + ( ownerthing:GetAimVector() * 70 ),
@@ -124,6 +128,8 @@ function SWEP:DoTrace( damage )
 	  maxs = boxMaxs,
 	  filter = self:GetOwner(), ent.IsTraysProjectile, game.GetWorld() -- assuming you're doing this in a swep hook, make sure the owner can't hit itself
 	})
+
+	ownerthing:LagCompensation( false )
 
 	if tr.Entity:IsValid() and tr.Entity:IsPlayer() or tr.Entity:IsNPC() then
 		local trEnt = tr.Entity

@@ -15,8 +15,8 @@ SWEP.HoldType = "ar2"
 SWEP.Slot = 3
 SWEP.BobScale = 1.15
 
-SWEP.Primary.ClipSize = 3
-SWEP.Primary.DefaultClip = 3
+SWEP.Primary.ClipSize = 5
+SWEP.Primary.DefaultClip = 5
 SWEP.Primary.Automatic	= true
 SWEP.Primary.Ammo = "AR2"
 SWEP.Primary.Force = 160
@@ -48,7 +48,7 @@ function SWEP:ChargeAttack( charge )
 	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
 	self:TakePrimaryAmmo( 1 )
 
-	self:SetNextPrimaryFire( CurTime() + 0.65 )
+	self:SetNextPrimaryFire( CurTime() + 0.45 )
 
 	self:EmitSound( "tray_sounds/basicfire.mp3", 75, math.random(100.5, 105.5), 0.7, 1 )
 	self:EmitSound( "npc/sniper/echo1.wav", 75, math.random(105.5, 110), 0.7, 6 )

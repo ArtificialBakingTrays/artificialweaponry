@@ -197,10 +197,11 @@ function SWEP:Deploy() --Features Lokacode cus 3 line if statements
 	self:EmitSound( "tray_sounds/reload_1.mp3", 100, math.random( 95, 105 ), 0.4, 1 )
 	self:GetOwner():SetRunSpeed( 450 )
 	self.isEquipped = true
+	return true
 end
 
 function SWEP:Holster()
-	if CLIENT then return end
+	if CLIENT then return true end
 	self.isEquipped = false
 	self:GetOwner():SetRunSpeed( 400 )
 	return true

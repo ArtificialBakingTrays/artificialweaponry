@@ -5,7 +5,7 @@ SWEP.Category = GetWeaponPack()
 SWEP.IconOverride = "vgui/weaponvgui/draw_generi.png"
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.DrawCrosshair = true
 SWEP.ViewModel	= "models/weapons/c_crossbow.mdl"
 SWEP.WorldModel	= "models/weapons/w_crossbow.mdl"
@@ -24,6 +24,10 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
+
+function SWEP:Deploy()
+	return true
+end
 
 function SWEP:SecondaryAttack()
 	local ownertr = self:GetOwner():GetEyeTrace()

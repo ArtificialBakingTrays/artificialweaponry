@@ -7,7 +7,7 @@ SWEP.IconOverride = "vgui/weaponvgui/missing_generi.png"
 --Not supposed to be a available for everyone
 
 SWEP.Spawnable = true
-SWEP.AdminOnly = true
+SWEP.AdminOnly = false
 SWEP.DrawCrosshair = false
 SWEP.ViewModel	= "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel	= "models/weapons/w_shotgun.mdl"
@@ -84,7 +84,7 @@ function SWEP:BlastFireMode()
 	for i = 1, shots do
 		local dir = (self:GetOwner():GetAimVector() + VectorRand() * spread):GetNormalized()
 
-		ArtiwepsProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), dir, 2000, true )
+		ArtiwepsProjectile( "sh_missingdat", self:GetOwner(), self:GetOwner():GetShootPos(), self:GetOwner():EyeAngles() + Angle( 90, 0, 0 ), dir, 700, true )
 	end
 end
 
@@ -101,8 +101,6 @@ function SWEP:SecondaryAttack()
 	self:SetNextSecondaryFire( CurTime() + 0.5 )
 	self:SetMode( not self:GetFireMode() )
 end
-
-
 
 
 --============================[ Fancy Rendering Shit ]============================--

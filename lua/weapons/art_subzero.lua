@@ -84,7 +84,7 @@ function SWEP:PrimaryAttack()
 			self:EmitSound( "sparkbound/crystal_proc.mp3", 100, math.random( 95, 105 ), 0.4, 6 )
 
 			--SpawnProjectile( Entstring, Owner, Position, Angles, AimVec, VelBool )
-			ArtiwepsProjectile( "icerock_proj", self:GetOwner(), owner:GetShootPos(), owner:EyeAngles() + Angle( 90, 0, 0 ), owner:GetAimVector(), 3000, false )
+			ArtiwepsProjectile( "sh_icerock", self:GetOwner(), owner:GetShootPos(), owner:EyeAngles() + Angle( 90, 0, 0 ), owner:GetAimVector(), 3000, false )
 		end
 
 	owner:LagCompensation( false )

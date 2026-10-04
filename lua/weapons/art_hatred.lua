@@ -24,6 +24,10 @@ SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo		= "none"
 
+function SWEP:Deploy()
+	return true
+end
+
 function SWEP:Reload()
 	if self:GetDTFloat(0) ~= 0 then return end
 	if CurTime() < self:GetNextPrimaryFire() then return end

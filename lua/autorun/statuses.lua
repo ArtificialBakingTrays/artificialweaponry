@@ -5,13 +5,11 @@ if SERVER then
 		if not ply:IsListenServerHost() then return end
 		bool = not bool
 
-		if bool == true then print( "Status Effects have been set to true") end
+		if bool == true then ply:ChatPrint( "Status Effects have been set to true") end
 
-		if bool == false then print( "Status Effects have been set to false") end
+		if bool == false then ply:ChatPrint( "Status Effects have been set to false") end
 	end )
 end
-
-print("status working")
 
 --=================BLEED STATUS CODE===================--
 --For weapons of the GOREY Class
@@ -55,7 +53,6 @@ function StatusTrickle( ent, dmgown, dmgtick, ticks )
 	if not IsValid(ent) then return end
 
 	if ent.IsCurrentlyTrickled == true then return end
-
 	ent.IsCurrentlyTrickled = true
 
 	local num = 0
@@ -114,8 +111,6 @@ end
 
 
 
-
-
 --================NULLIFY STATUS CODE=================
 --EXCLUSIVELY FOR THE PARASITICAL ARM-IMPLANT
 function StatusNullify( ply, hp, armor )
@@ -136,7 +131,6 @@ function StatusNullify( ply, hp, armor )
 		end
 	end
 end
-
 
 
 
@@ -163,6 +157,7 @@ function StatusMagmatic( ply, lvl, dmginst, dmgown )
 end
 
 
+--EXCLUSIVELY ONLY ON MISSINGNO WEP
 function StatusMisplaceData( victim, DistMisp )
 	if not IsValid(victim) then return end
 	if not victim:IsPlayer() or not victim:IsNPC() then return end
